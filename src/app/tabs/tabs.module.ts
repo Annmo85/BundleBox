@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { TabsPageRoutingModule } from './tabs-routing.module';
 
 import { TabsPage } from './tabs.page';
+import {CommonComponent} from '../components/common/CommonComponent'
 
 @NgModule({
   imports: [
@@ -14,6 +15,9 @@ import { TabsPage } from './tabs.page';
     FormsModule,
     IonicModule,
     TabsPageRoutingModule
+  ],
+  exports :[
+    CommonComponent
   ],
   declarations: [TabsPage]
 })
