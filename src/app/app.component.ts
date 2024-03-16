@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { register } from 'swiper/element/bundle';
 import {
   ActionPerformed,
   PushNotificationSchema,
@@ -9,7 +10,10 @@ import {
 import {UserService} from './services/user.service';
 import {LocalNotifications, LocalNotificationSchema, ActionPerformed as LocalActionPerformed} from '@capacitor/local-notifications';
 import { Capacitor } from '@capacitor/core';
-import { NavController } from '@ionic/angular';
+import { NavController, Platform } from '@ionic/angular';
+import { Router } from '@angular/router';
+
+register();
 
 @Component({
   selector: 'app-root',
@@ -17,7 +21,16 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(private nav:NavController, private userService:UserService) {this.initPush();}
+  constructor(private nav:NavController, private userService:UserService,private platform: Platform,private router: Router,) {
+    this.initPush();
+
+    this.platform.backButton.subscribeWithPriority(5, () => {
+
+      console.log("go back presed",this.router.url);
+      if (this.router.url!=="/tabs/main") this.nav.back();
+    });    
+
+  }
 
   async initPush() {
     if (Capacitor.getPlatform()!=='web') {

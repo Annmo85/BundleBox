@@ -12,9 +12,43 @@ export class UserService {
 
   private openOrder = new BehaviorSubject<any>(null);
   private payments_info = new BehaviorSubject<any>(null);
-
-
   public leadChange = new Subject<any>();
+
+  public dashboardData = new BehaviorSubject<any>(null);
+  getDashboardInfo() {
+    return this.dashboardData.asObservable();
+  }
+
+  loadDashboardData():Promise<any> {
+    let lastOrders:any[] = [];
+    let stores:any[] = [];
+    let currencies:any[] = [];
+    let calls = [this.loadLastOrders(),this.loadNews()];
+    
+    return new Promise( (resolve,reject)=>{
+      Promise.all(calls).then((response:any)=>{
+        // console.log("this.userService.loadLeads:");
+        // console.log(response);
+        lastOrders = response[0].last_orders;
+        stores = response[1].stores;
+        currencies = response[1].currencies;
+        currencies.forEach((currency:any) => {
+          localStorage.setItem(environment.prefix+"_"+currency.name,JSON.stringify(currency));
+        });
+        let data = {
+          lastOrders:lastOrders,
+          stores:stores,
+          currencies:currencies,
+        };
+        this.dashboardData.next(data);
+        resolve (data);
+      })
+
+    });
+
+    
+    
+  }
 
   constructor(private _request:RequestWrapperService) { }
 
@@ -32,14 +66,16 @@ export class UserService {
     return this.payments_info.asObservable();
   }
 
-  private async makeRequest(action, data):Promise<any>
+
+
+  private async makeRequest(action:any, data:any):Promise<any>
   {
      //add session data
      let new_data = data;
 
     let promise = new Promise( (resolve,reject)=>{
 
-      let response = this._request.post( action,new_data).toPromise().then( data =>{
+      let response = this._request.post( action,new_data).then( data =>{
         resolve (data.data);
       })
     })
@@ -47,14 +83,14 @@ export class UserService {
 
   }
 
-  private async makeRequestL(action, data):Promise<any>
+  private async makeRequestL(action:any, data:any):Promise<any>
   {
      //add session data
      let new_data = data;
 
     let promise = new Promise( (resolve,reject)=>{
 
-      let response = this._request.postL( action,new_data).toPromise().then( data =>{
+      let response = this._request.postL( action,new_data).then( data =>{
         resolve (data.data);
       })
     })

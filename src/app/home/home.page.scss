@@ -6,6 +6,15 @@
   right: 0;
   top: 50%;
   transform: translateY(-50%);
+
+  img {
+    max-width: 100px;
+  }
+
+  ion-spinner {
+    margin-top: 20px;
+  }
+
 }
 
 #container strong {
@@ -20,6 +29,7 @@
   color: #8c8c8c;
 
   margin: 0;
+
 }
 
 #container a {

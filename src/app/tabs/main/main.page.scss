@@ -1,10 +1,177 @@
 ion-content {
+
+
     div.currencies-block {
-        position: absolute;
-        width: calc(100% - 16px);
+        width: 100%;
         height: 150px;
         background: linear-gradient(90deg, #F6D28B 0%, #FFE4AF 100%);
         border-radius: 16px;
+        padding: 16px;;
 
+        div.text {
+            /* Сегодня заказы выкупаются по курсу: */
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 17px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+        }
+
+        div.rates {
+            padding-top: 15px;
+            padding-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+
+            div.rate {
+                width: 65px;
+                div.name{
+                    font-weight: 300;
+                    font-size: 20px;
+                    line-height: 24px;
+                    letter-spacing: 0.001em;
+                    color: #2D2D2D;
+                    text-align: center;
+                }
+                div.value {
+                    text-align: center;
+                    font-weight: 700;
+                    font-size: 20px;
+                    line-height: 24px;
+                    letter-spacing: 0.001em;
+                    color: #2D2D2D;
+
+
+                }
+            }
+        }
+    }
+
+    div.last_order {
+        margin-top: 20px;
+        width: 100%;
+        border-radius: 16px;
+ 
+        div.text {
+            font-style: normal;
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 24px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+        }    
+        div.text2 {
+            padding-top: 5px;
+            padding-bottom: 15px;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 20px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+        }
+
+        swiper-slide {
+            div.last_order_card {
+                background: #FFFFFF;
+                border-radius: 16px;
+                aspect-ratio: 285 / 165;
+                display: flex;
+
+                div.image {
+                    aspect-ratio: 117 / 153;
+                    background-size: cover;
+                    background-position: 50% 50%;
+                    margin: 5px;
+                    border-radius: 16px;
+                    img {
+                        border-radius: 16px;
+                    }
+                }
+
+                div.info {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    margin: 5px;
+                    div.title {
+                        font-weight: 600;
+                        font-size: 16px;
+                        line-height: 20px;
+                        letter-spacing: 0.001em;
+                        color: #2D2D2D;
+                    }
+                    div.desc {
+                        font-weight: 400;
+                        font-size: 14px;
+                        line-height: 17px;
+                        letter-spacing: 0.001em;
+                        color: rgba(45, 45, 45, 0.4);
+                    }
+                    div.bottom-line {
+                        display: flex;
+                        align-items: flex-end;
+                        justify-content: space-between;
+
+                        div.price {
+                            span {
+                                font-weight: 400;
+                                font-size: 12px;
+                                line-height: 14px;
+                                letter-spacing: 0.001em;
+                                color: rgba(45, 45, 45, 0.4);
+                                display: block;
+                            }
+                            font-weight: 600;
+                            font-size: 16px;
+                            line-height: 20px;
+                            letter-spacing: 0.001em;
+                            color: #2D2D2D;
+                        }
+                    }
+                }
+            }
+    
+        }
+    }
+
+    div.make-request {
+        margin-top: 15px;
+        width: 100%;
+        background: #FFFFFF;
+        border-radius: 16px;
+        padding: 16px;;
+
+        div.text {
+            font-style: normal;
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 24px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+        }
+
+        div.flags {
+            padding-top: 15px;
+            padding-bottom: 15px;
+            display: flex;
+            justify-content: space-between; 
+            gap: 10px;           
+            div.flag {
+                flex: 0 0 auto;
+                width: 63px;
+                height: 63px;                
+                img {
+                    width: 100%;
+                    // background: #737373;
+                    box-shadow: 0px 0px 12px 4px rgba(0, 0, 0, 0.15);
+                    border-radius: 100px;
+                }
+            }
+        }
+
+        div.button {
+            padding-top: 15px;
+            
+        }
     }
 }
