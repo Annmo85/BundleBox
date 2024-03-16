@@ -1,0 +1,10 @@
+ion-content {
+    div.currencies-block {
+        position: absolute;
+        width: calc(100% - 16px);
+        height: 150px;
+        background: linear-gradient(90deg, #F6D28B 0%, #FFE4AF 100%);
+        border-radius: 16px;
+
+    }
+}

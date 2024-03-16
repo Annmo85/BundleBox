@@ -3,7 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  prefix:'bbox_',
+  api_url: "https://bundlebox.ru/mobile/",
+  api_urlL: "https://bundlebox.ru/api/",
 };
 
 /*

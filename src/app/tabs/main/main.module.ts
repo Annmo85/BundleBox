@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { MainPageRoutingModule } from './main-routing.module';
-
+import {CommonComponent} from '../../components/common/CommonComponent'
 import { MainPage } from './main.page';
 
 @NgModule({
@@ -13,6 +13,7 @@ import { MainPage } from './main.page';
     CommonModule,
     FormsModule,
     IonicModule,
+    CommonComponent,
     MainPageRoutingModule
   ],
   declarations: [MainPage]
