@@ -6,6 +6,8 @@ import { NgModule } from '@angular/core';
 
 import { HeaderComponent } from '../header/header.component';
 import { ButtonComponent } from '../button/button.component';
+import { StoreCardComponent } from '../store-card/store-card.component';
+import {MakeOrderModalComponent} from '../make-order-modal/make-order-modal.component';
 
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -22,7 +24,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   ],
   declarations: [
     HeaderComponent,
+    StoreCardComponent,
     ButtonComponent,
+    MakeOrderModalComponent,
   ],
   exports: [
     CommonModule,
@@ -30,6 +34,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     RouterModule,
     ReactiveFormsModule,
     ButtonComponent,
+    StoreCardComponent,
+    MakeOrderModalComponent,
     HeaderComponent
   ],
   providers: []

@@ -4,6 +4,9 @@ import { environment } from 'src/environments/environment';
 import Swiper from 'swiper';
 import { Autoplay } from 'swiper/modules';
 import { IonicSlides, NavController } from '@ionic/angular';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ModalController } from '@ionic/angular';
+import { MakeOrderModalComponent } from 'src/app/components/make-order-modal/make-order-modal.component';
 
 @Component({
   selector: 'app-main',
@@ -25,7 +28,9 @@ export class MainPage implements OnInit {
   }
   swiperModules = [Autoplay, IonicSlides];
 
-  constructor(private userService:UserService) {
+  make_order_modal: boolean = false;
+
+  constructor(private userService:UserService, public sanitizer:DomSanitizer,private modalCtrl: ModalController) {
 
     this.userService.dashboardData.asObservable().subscribe((data:any)=>{
       console.log("this.userService.dashboardData.asObservable().subscribe",data);
@@ -54,4 +59,20 @@ export class MainPage implements OnInit {
 
   }
 
+
+  openOferta(ev:any) {
+    
+  }
+
+
+  async openMakeOrderModal() {
+    const modal = await this.modalCtrl.create({
+      component: MakeOrderModalComponent,
+      initialBreakpoint: 0.3,
+      breakpoints: [0,0,3],
+      cssClass: "makeOrderModal",
+      mode: 'ios'
+    });
+    modal.present();
+  }  
 }

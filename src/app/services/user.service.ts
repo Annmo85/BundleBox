@@ -23,6 +23,7 @@ export class UserService {
     let lastOrders:any[] = [];
     let stores:any[] = [];
     let currencies:any[] = [];
+    let usl_text:any[] = [];
     let calls = [this.loadLastOrders(),this.loadNews()];
     
     return new Promise( (resolve,reject)=>{
@@ -32,6 +33,7 @@ export class UserService {
         lastOrders = response[0].last_orders;
         stores = response[1].stores;
         currencies = response[1].currencies;
+        usl_text = response[1].usl_text;
         currencies.forEach((currency:any) => {
           localStorage.setItem(environment.prefix+"_"+currency.name,JSON.stringify(currency));
         });
@@ -39,6 +41,7 @@ export class UserService {
           lastOrders:lastOrders,
           stores:stores,
           currencies:currencies,
+          usl_text:usl_text,
         };
         this.dashboardData.next(data);
         resolve (data);

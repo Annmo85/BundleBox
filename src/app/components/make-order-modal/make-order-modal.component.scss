@@ -1,0 +1,54 @@
+ion-header {
+    ion-toolbar {
+        background-color: #ffffff;
+        --background: #ffffff;
+
+        ion-title {
+            /* Выберете мессенджр */
+
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 24px;
+            text-align: center;
+            letter-spacing: 0.001em;
+
+            padding-inline: 0px;
+            color: #2D2D2D;
+
+
+        }
+    }
+}
+
+ion-content {
+    --background: #ffffff;
+
+    div.block {
+
+        p {
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 20px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+        }
+    
+        div.icons {
+            padding-top: 15px;
+            padding-bottom: 15px;
+            display: flex;
+            justify-content: space-between; 
+            gap: 10px;   
+            div.icon {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                overflow: hidden;
+                border-radius: 100px;
+            }        
+        }
+    }
+
+}
