@@ -1,13 +1,55 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Community</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header2 title="Сообщество"> </app-header2>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Community</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    
+    <!-- butons-->
+    <div class="page-wrapper">
+        <div class="buttons-slider">
+            <swiper-container [spaceBetween]="15" [slidesPerView]="'auto'" [freeMode]="true">
+
+                <swiper-slide>
+                    <div class="slider-button ion-activatable" (click)="tab_selected='actions'" [ngClass]="{'active': tab_selected==='actions'}">Акции<ion-ripple-effect type="bounded"></ion-ripple-effect></div>
+                </swiper-slide>
+
+                <swiper-slide>
+                    <div class="slider-button ion-activatable"  (click)="tab_selected='news'" [ngClass]="{'active': tab_selected==='news'}">Новости<ion-ripple-effect type="bounded"></ion-ripple-effect></div>
+                </swiper-slide>
+
+                <swiper-slide>
+                    <div class="slider-button ion-activatable"  (click)="tab_selected='reviews'" [ngClass]="{'active': tab_selected==='reviews'}">Отзывы<ion-ripple-effect type="bounded"></ion-ripple-effect></div>
+                </swiper-slide>
+
+            </swiper-container>
+        </div>
+    </div>
+
+    <!-- новости-->
+    <div class="page-wrapper" *ngIf="tab_selected==='news' && news_is_load">
+
+        <div class="news_list">
+
+            <div class="news_card"  *ngFor="let news_item of news" >
+    
+                <div class="image" style='background-image: url("{{news_item.image}}")'></div> 
+                <div class="info">
+                    <div class="line">
+                        <div class="desc" [innerHtml]="news_item.public_date"></div>
+                        <div class="title" [innerHtml]="news_item.category_name"></div>
+                    </div>
+                    <div class="desc" [innerHtml]="news_item.title"></div>
+                </div>
+              </div>
+
+
+        </div>
+
+
+        <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMoreNewsData($event)">
+            <ion-infinite-scroll-content
+              loadingSpinner="bubbles"
+              loadingText="Загрузка...">
+            </ion-infinite-scroll-content>
+          </ion-infinite-scroll>
+
+    </div>
 </ion-content>

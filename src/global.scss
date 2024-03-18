@@ -184,6 +184,30 @@ div.page-wrapper {
     padding-top: 12px;
 }
 
-ion-modal.cssClass {
+div.slider-button {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 16px;
+    height: 40px;
+    background: #FFFFFF;
+    border-radius: 100px;
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 0.001em;
+    color: #2D2D2D;
+    width: 150px;
 
+}
+
+div.slider-button.active {
+    background: #F98112;
+    color: #FFFFFF;
 }

@@ -5,6 +5,7 @@
 import { NgModule } from '@angular/core';
 
 import { HeaderComponent } from '../header/header.component';
+import { Header2Component } from '../header2/header2.component';
 import { ButtonComponent } from '../button/button.component';
 import { StoreCardComponent } from '../store-card/store-card.component';
 import {MakeOrderModalComponent} from '../make-order-modal/make-order-modal.component';
@@ -26,6 +27,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     HeaderComponent,
     StoreCardComponent,
     ButtonComponent,
+    Header2Component,
     MakeOrderModalComponent,
   ],
   exports: [
@@ -35,6 +37,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule,
     ButtonComponent,
     StoreCardComponent,
+    Header2Component,
     MakeOrderModalComponent,
     HeaderComponent
   ],
