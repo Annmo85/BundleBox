@@ -4,6 +4,21 @@ swiper-slide {
 
 ion-content {
     div.page-wrapper {
+        h3 {
+            font-weight: 600;
+            font-size: 18px;
+            line-height: 22px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+        }
+        p {
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 20px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+        }
+
         div.news_list {
             display: flex;
             flex-direction: column;

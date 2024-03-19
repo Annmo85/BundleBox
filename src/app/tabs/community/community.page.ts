@@ -26,10 +26,15 @@ export class CommunityPage implements OnInit {
   news: any = [];
   news_is_load: boolean = false;
 
+  //Акции
+  actions:any = [];
+  actions_is_load: boolean = false;
+
   constructor(private userService:UserService, public sanitizer:DomSanitizer,private modalCtrl: ModalController) {}
 
   ngOnInit() {
     this.loadNews();
+    this.loadActions();
   }
 
   loadNews() {
@@ -58,6 +63,18 @@ export class CommunityPage implements OnInit {
         event.target.complete();
       },100);
     })    
+  }
+
+  loadActions() {
+    this.actions = []
+    this.userService.loadLeads().then(response =>{
+      console.log("this.userService.loadLeads:");
+      console.log(response);
+      response.actions.forEach((lead:any) => {
+        this.actions.push(lead);
+      });
+      this.actions_is_load = true;
+    })
   }
 
 }

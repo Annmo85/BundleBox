@@ -1,0 +1,103 @@
+div.action-list-item {
+    width: 100%;
+    padding-bottom: 35px;
+    div.action-content {
+        background: #FFFFFF;
+        border-radius: 16px;
+        div.action-description {
+
+            display: flex;
+            justify-content: space-between;
+            min-height: 100px;
+            
+            div.left-block {
+                display: flex;
+                flex-direction: column;
+                padding-left: 15px;
+                gap:5px;
+                div.store-name {
+                    font-weight: 600;
+                    font-size: 15px;
+                    line-height: 29px;
+                    a {
+                        color: #EE6F03;
+                        text-decoration: none;
+                    }
+                }
+
+                div.action-type {
+                    font-weight: 400;
+                    font-size: 14px;
+                    line-height: 17px;
+                    letter-spacing: 0.001em;
+                    color: #2D2D2D;
+                }
+
+                div.action-info {
+                    font-weight: 400;
+                    font-size: 14px;
+                    line-height: 17px;
+                    letter-spacing: 0.001em;
+                    color: #2D2D2D;
+                    span {
+                        color: #EE6F03;
+                        font-weight: 600;
+                    }
+                }
+
+                div.action-timers {
+                    min-height: 50px;
+                    div.action-timers-descrption {
+                        font-weight: 400;
+                        font-size: 12px;
+                        line-height: 15px;
+                        letter-spacing: 0.001em;
+                        color: rgba(45, 45, 45, 0.4);
+                    }
+
+                    div.timer-items {
+                        display: flex;
+                        font-weight: 600;
+                        justify-content: space-around;
+                        padding-bottom: 10px;
+                        div.timer-item {
+                            text-align: center;
+
+                            span {
+                                color: #EE6F03;
+                                font-weight: 600;                                
+                            }
+                            
+                            div.time-description {
+                                font-weight: 400;
+                                font-size: 12px;
+                                line-height: 15px;
+                                letter-spacing: 0.001em;
+                                color: rgba(45, 45, 45, 0.4);
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            div.right-block {
+                display: flex;
+                aspect-ratio: 131 / 153;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center;
+                border-radius: 16px;
+                margin: 5px;
+                flex:1;
+            }
+
+        }        
+
+    }
+
+    div.button {
+        padding: 10px;
+        width: 100%;
+    }
+}

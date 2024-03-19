@@ -1,0 +1,117 @@
+
+
+
+<div class="action-list-item">
+  <div class="action-content" (click)="openItem2()">
+    <div class="action-description">
+
+      <div class="left-block">
+        <div class="store-name"><a href="{{_order.store_link}}" target="_blank">{{_order.store_name}}</a></div>
+        <div class="action-type">{{_order.title_group}}</div>
+        <div class="action-info">Размер скидки <span>{{_order.discount_size_group}}</span></div>
+        
+        <div class="action-timers" *ngIf="_order.action_type=='discont'">
+          <div class="action-timers-descrption ">До конца суммы осталось</div>
+          <div class="timer-items">
+            <div class="timer-item">
+              <div class="time"><span>{{_order.discount_buy_on_price_group}}</span></div>
+              <div class="time-description">{{_order.discount_buy_on_price_currency_group}}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-timers" *ngIf="_order.action_type=='timer'">
+          <div class="action-timers-descrption " *ngIf="has_timer">До конца акции осталось</div>
+          <div class="timer-items" *ngIf="has_timer">
+            
+            <div class="timer-item">
+              <div class="time">{{days}}</div>
+              <div class="time-description">дней</div>
+            </div>
+            
+            <div class="timer-item">
+              <div class="time">{{hours}}</div>
+              <div class="time-description">часов</div>
+            </div>
+            
+            <div class="timer-item">
+              <div class="time">{{minuts}}</div>
+              <div class="time-description">минут</div>
+            </div>
+            
+            <div class="timer-item">
+              <div class="time">{{seconds}}</div>
+              <div class="time-description">секунд</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="right-block" [style.background-image]="'url(' + _order.image + ')'"></div>
+
+    </div>
+
+    <div class="button">
+      <app-button title="Присоединиться">Присоединиться</app-button>
+    </div>
+
+  </div>
+</div>
+
+
+
+<!--
+<div class="order-list-item">
+  <div class="order-date">
+    <img class="icon" src="../../../assets/schedule.png">
+    <span><img class="country" [src]="_order.FLAG" *ngIf="_order.FLAG!=''"> {{_order.DATE}}</span>
+  </div>
+  <div class="order-content">
+    <div class="order-image" style="background-image: url('{{_order.IMAGE}}');"> </div>
+    <div class="order-info">
+      
+      <div class="order-info-item">
+        <span class="order-item-store">Магазин</span>
+        <div class="order-item-delimiter"></div>
+        <span class="order-item-value">{{_order.STORE}}</span>
+      </div>
+      
+      <div class="order-info-item">
+        <span class="order-item-store">Сумма</span>
+        <div class="order-item-delimiter"></div>
+        <span class="order-item-value">{{_order.SUM}}</span>
+      </div>
+      
+      <div class="order-info-item">
+        <span class="order-item-store">№ заказа</span>
+        <div class="order-item-delimiter"></div>
+        <span class="order-item-value">{{_order.NUM}}</span>
+      </div>
+
+
+    </div>
+  </div>
+  <div class="order-status">
+    <div class="order-status-line">
+      <div class="wrapper_line">
+        <span class="order-item-store">Статус</span>
+        <div class="order-item-delimiter"></div>
+        <span class="order-item-value" [ngClass]="{' animate__animated animate__flash animate__infinite': _order.FLASH}">{{_order.STAGE}}</span>
+      </div>
+      <div class="pay_button" *ngIf="_order.STAGE=='Оплатите заказ' || _order.STAGE=='Отправлен счёт'">
+        <ion-button  (click)="openPayment()" color="danger"  shape="round" class="button-round">Оплатить</ion-button>
+      </div>
+      <div class="pay_button" *ngIf="_order.STAGE=='Оплатите доставку'">
+        <ion-button  (click)="openPaymentDeliver()" color="danger"  shape="round" class="button-round">Оплатить</ion-button>
+      </div>
+      <div class="help-button">
+        <ion-button (click)="openHelpPopover(_order.STAGE_HELPER, $event)" color="button-color" fill="clear" class="button-round" shape="round"><ion-icon slot="icon-only" name="help-circle-outline"></ion-icon></ion-button>
+      </div>
+    </div>
+  </div>
+  <div class="order-more">
+    <ion-button color="button-color" expand="block" (click)="openItem()" shape="round">Подробнее</ion-button>
+  </div>
+</div>
+-->
