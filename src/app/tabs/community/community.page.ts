@@ -30,12 +30,34 @@ export class CommunityPage implements OnInit {
   actions:any = [];
   actions_is_load: boolean = false;
 
+  //Отзывы
+  private reviews_limit:number = 20;
+  private reviews_page:number = 0;
+  stores: number = 0;
+  public stores_list: any = [];
+  reviews_is_load: boolean = false;
+  reviews: any = [];
+  
   constructor(private userService:UserService, public sanitizer:DomSanitizer,private modalCtrl: ModalController) {}
 
   ngOnInit() {
     this.loadNews();
     this.loadActions();
+    this.loadReviews();
   }
+
+  loadReviews() {
+    this.reviews = [];
+
+    this.userService.loadReviewsList(this.reviews_page,this.reviews_limit,this.stores).then( (response:any) => {
+      console.log("this.userService.loadReviewsList:");
+      console.log(response);
+      this.reviews = response.reviews;
+      if (this.reviews_page==0) this.stores_list = response.stores;
+      this.reviews_is_load = true;    
+      this.reviews_page++;  
+    })
+  }  
 
   loadNews() {
     this.news = [];

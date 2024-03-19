@@ -1,0 +1,85 @@
+div.review_card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+
+    div.top-line {
+        display: flex;
+        justify-content: space-between;
+        padding-left: 5px;        
+        padding-right: 5px;
+        padding-top: 5px; 
+        gap:5px;       
+        div.store_logo {
+            width: 80px;
+            height: 50px;
+            border-radius: 12px;
+            background-size: contain;
+            background-position: center;
+        
+            background-repeat: no-repeat;
+        }
+
+        div.titles {
+            padding-top: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            div.store_name {
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 20px;
+                letter-spacing: 0.001em;
+                color: #2D2D2D;
+            }
+            div.customer {
+                font-weight: 400;
+                font-size: 16px;
+                line-height: 20px;
+                letter-spacing: 0.001em;
+                color: #2D2D2D;
+            }
+        }
+
+        div.rates {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding-top: 5px;
+            div.date {
+                display: flex;
+                justify-content: flex-end;                
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 17px;
+                letter-spacing: 0.001em;
+                color: rgba(45, 45, 45, 0.4);
+            }
+            div.rate{
+                padding-top: 5px;
+                display: flex;
+                justify-content: flex-end;
+                gap:3px;
+            }
+        }
+    }
+
+    div.description {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 20px;
+        letter-spacing: 0.001em;
+        color: #2D2D2D;        
+        padding: 10px;
+    }
+
+    div.image {
+        aspect-ratio: 336 / 159;
+        background-size: cover;
+        background-repeat: no-repeat;        
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
+        background-position: center;
+    }
+}

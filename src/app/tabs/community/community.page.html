@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <!-- новости-->
+    <!-- акции-->
     <div class="page-wrapper" *ngIf="tab_selected==='actions' && actions_is_load">
         <p>Здесь ежедневно публикуются общие заказы, в которых вы можете поучаствовать совместно с другими клиентами и получить от бесплатной доставки по стране покупки до хорошего дисконта.</p>
         <div class="actions_list">
@@ -65,5 +65,15 @@
             </ion-infinite-scroll-content>
           </ion-infinite-scroll>
 
+    </div>
+
+
+    
+
+    <!-- отзывы-->
+    <div class="page-wrapper" *ngIf="tab_selected==='reviews' && reviews_is_load">
+        <div class="reviews_list">
+            <app-review-item [review]="review" *ngFor="let review of reviews"></app-review-item>
+        </div>
     </div>
 </ion-content>

@@ -19,6 +19,11 @@ ion-content {
             color: #2D2D2D;
         }
 
+        div.reviews_list {
+            display: flex;
+            flex-direction: column;
+            gap:15px;
+        }
         div.news_list {
             display: flex;
             flex-direction: column;

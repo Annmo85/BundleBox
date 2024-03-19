@@ -1,0 +1,42 @@
+<ion-content>
+  <div class="close-bar">
+    <ion-button (click)="close()" color="button" shape="circle"><ion-icon slot="icon-only" name="close"></ion-icon></ion-button>
+  </div>
+  <swiper-container>
+  
+  </swiper-container>
+  <swiper [config]="config" #swiper>
+
+    <ng-template swiperSlide>
+        <div class="swiper-zoom-container">
+          <img src="{{img}}">
+        </div>
+    </ng-template>
+  </swiper>
+
+</ion-content>
+<ion-footer>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="4" class="ion-text-center">
+        <ion-button (click)="zoom(false)" fill="clear" color="light">
+          <ion-icon slot="icon-only" name="remove"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col size="4" class="ion-text-center">
+        <ion-button (click)="close()" fill="clear" color="light">
+          <ion-icon slot="icon-only" name="close"></ion-icon>
+        </ion-button>
+
+      </ion-col>
+
+      <ion-col size="4" class="ion-text-center">
+        <ion-button (click)="zoom(true)" fill="clear" color="light">
+          <ion-icon slot="icon-only" name="add"></ion-icon>
+        </ion-button>
+
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+</ion-footer>

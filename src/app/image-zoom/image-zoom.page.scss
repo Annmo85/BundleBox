@@ -1,0 +1,22 @@
+ion-content {
+    --background: transparent;
+}
+
+ion-footer {
+    margin-bottom: 10px;
+}
+
+swiper {
+    height:100%;
+}
+
+div.close-bar {
+    position: fixed;
+    top:50px;
+    right: 24px;
+    z-index: 999;
+    ion-button {
+        background-color: rgba(200, 200, 200, 0.568627451);
+        border-radius: 50px;
+    }
+}
