@@ -11,6 +11,7 @@ import { StoreCardComponent } from '../store-card/store-card.component';
 import {MakeOrderModalComponent} from '../make-order-modal/make-order-modal.component';
 import {ActionItemComponent} from '../action-item/action-item.component';
 import {ReviewItemComponent} from '../review-item/review-item.component';
+import {NewsModalComponent} from '../news-modal/news-modal.component';
 
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -33,6 +34,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ActionItemComponent,
     MakeOrderModalComponent,
     ReviewItemComponent,
+    NewsModalComponent,
   ],
   exports: [
     CommonModule,
@@ -45,6 +47,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     Header2Component,
     MakeOrderModalComponent,
     ReviewItemComponent,
+    NewsModalComponent,
     HeaderComponent
   ],
   providers: []

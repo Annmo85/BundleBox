@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 import { IonicSlides, NavController } from '@ionic/angular';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ModalController } from '@ionic/angular';
-import { MakeOrderModalComponent } from 'src/app/components/make-order-modal/make-order-modal.component';
+import {NewsModalComponent} from '../../components/news-modal/news-modal.component';
 
 @Component({
   selector: 'app-community',
@@ -99,4 +99,13 @@ export class CommunityPage implements OnInit {
     })
   }
 
+
+  async openNewsItem(news_item: any) {
+    const modal = await this.modalCtrl.create({
+      component: NewsModalComponent,
+      componentProps: { news_item: news_item }
+    });
+    modal.present();
+  }    
+        
 }
