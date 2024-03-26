@@ -83,5 +83,12 @@
     <div class="content-block">
       <div class="description" [innerHtml]="sanitizer.bypassSecurityTrustHtml(news_item.text)"></div>
     </div>
+
+    <div class="order-block">
+      <h3>Сделать заказ</h3>
+      <p>Из любого испанского онлайн магазина крайне просто: выбирайте что нравится и нажмите на кнопку любого из мессенджеров:</p>
+      <app-button title="Сделать заказ" (click)="openMakeOrderModal()"></app-button>
+      <p>Ваш шоппинг-помощник Анна</p>
+    </div>
   </div>
 </ion-content>

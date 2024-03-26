@@ -1,12 +1,12 @@
 ion-content {
-    --background: transparent;
+    --background: #000;
 }
 
 ion-footer {
     margin-bottom: 10px;
 }
 
-swiper {
+swiper-container {
     height:100%;
 }
 
@@ -15,8 +15,4 @@ div.close-bar {
     top:50px;
     right: 24px;
     z-index: 999;
-    ion-button {
-        background-color: rgba(200, 200, 200, 0.568627451);
-        border-radius: 50px;
-    }
 }

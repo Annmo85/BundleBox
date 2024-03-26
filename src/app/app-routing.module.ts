@@ -15,6 +15,10 @@ const routes: Routes = [
     path: 'tabs',
     loadChildren: () => import('./tabs/tabs.module').then( m => m.TabsPageModule)
   },
+  {
+    path: 'image-zoom',
+    loadChildren: () => import('./image-zoom/image-zoom.module').then( m => m.ImageZoomPageModule)
+  },  
 ];
 
 @NgModule({

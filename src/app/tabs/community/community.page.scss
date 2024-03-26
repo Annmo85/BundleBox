@@ -98,3 +98,49 @@ ion-content {
         }
     }
 }
+
+ion-menu {
+    ion-header {
+        ion-toolbar {
+
+            --background:#fff;
+
+            ion-title {
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 20px;
+                letter-spacing: 0.001em;
+                color: rgba(45, 45, 45, 0.4);
+
+                display: flex;
+                justify-content: space-between;
+
+
+
+            }
+            ion-searchbar {
+
+            }
+        }
+    }
+    ion-content {
+        --background: #fff;
+
+        ion-list {
+            background-color: transparent;
+            ion-item {
+                --background: tranparent !important;
+                ion-label {
+                    font-weight: 400;
+                    font-size: 16px;
+                    line-height: 20px;
+                    letter-spacing: 0.001em;
+                    color: #2D2D2D;
+                }
+                ion-checkbox {
+                    --checkbox-background: #EFEFEF;
+                }
+            }
+        }
+    }
+}

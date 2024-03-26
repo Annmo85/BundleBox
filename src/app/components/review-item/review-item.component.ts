@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { environment } from '../../../environments/environment';
-// import { ImageZoomPage } from '../../image-zoom/image-zoom.page';
+import { ImageZoomPage } from '../../image-zoom/image-zoom.page';
 import { ModalController, LoadingController, NavController } from '@ionic/angular';
 
 @Component({
@@ -26,16 +26,17 @@ export class ReviewItemComponent  implements OnInit {
   }
 
   async openPreview() {
-    // const loading = await this.loadingCtrl.create({
-    //   message: 'Подождите...',
-    // });
-    // loading.present();
-    // const modal = await this.modalCtrl.create({
-    //   component: ImageZoomPage,
-    //   componentProps: {img: this.url + this.review.image},
-    //   cssClass: 'transparent-modal'
-    // });
-    // loading.dismiss();
-    // modal.present();
+    const loading = await this.loadingCtrl.create({
+       message: 'Подождите...',
+       mode: "ios"
+    });
+    loading.present();
+    const modal = await this.modalCtrl.create({
+      component: ImageZoomPage,
+       componentProps: {img: this.url + this.review.image},
+       cssClass: 'transparent-modal'
+     });
+    loading.dismiss();
+    modal.present();
   }
 }

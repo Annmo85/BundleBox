@@ -3,7 +3,7 @@ import Swiper from 'swiper';
 import { Autoplay } from 'swiper/modules';
 import {UserService} from '../../services/user.service'
 import { environment } from 'src/environments/environment';
-import { IonicSlides, NavController } from '@ionic/angular';
+import { InfiniteScrollCustomEvent, IonicSlides, MenuController, NavController } from '@ionic/angular';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ModalController } from '@ionic/angular';
 import {NewsModalComponent} from '../../components/news-modal/news-modal.component';
@@ -20,6 +20,8 @@ export class CommunityPage implements OnInit {
 
   tab_selected:string = "actions";
 
+  filterModalOpen: boolean = false;
+
   //новости
   news_limit:number = 20;
   news_page:number = 0;
@@ -33,17 +35,32 @@ export class CommunityPage implements OnInit {
   //Отзывы
   private reviews_limit:number = 20;
   private reviews_page:number = 0;
-  stores: number = 0;
+  // stores: number = 0;
+  stores: number[] = [];
   public stores_list: any = [];
+  public stores_list_filtered: any = [];
   reviews_is_load: boolean = false;
   reviews: any = [];
+
+  search:string = "";
   
-  constructor(private userService:UserService, public sanitizer:DomSanitizer,private modalCtrl: ModalController) {}
+  
+  constructor(private userService:UserService, public sanitizer:DomSanitizer,private modalCtrl: ModalController,public menuCtrl: MenuController) {}
 
   ngOnInit() {
     this.loadNews();
     this.loadActions();
     this.loadReviews();
+  }
+
+  doRefresh(event:any) {
+    this.news_page = 0;
+    this.reviews_page = 0;
+    this.loadNews();
+    this.loadActions();
+    this.loadReviews();
+    setTimeout(()=>event.target.complete(),2000);
+    
   }
 
   loadReviews() {
@@ -54,10 +71,39 @@ export class CommunityPage implements OnInit {
       console.log(response);
       this.reviews = response.reviews;
       if (this.reviews_page==0) this.stores_list = response.stores;
+      if (this.reviews_page==0) this.stores_list_filtered = response.stores;
       this.reviews_is_load = true;    
       this.reviews_page++;  
     })
   }  
+
+
+  loadReviewsAlt() {
+    this.reviews = [];
+
+    this.userService.loadReviewsList(this.reviews_page,this.reviews_limit,this.stores).then( (response:any) => {
+      console.log("this.userService.loadReviewsList:");
+      console.log(response);
+      this.reviews = response.reviews;
+      this.reviews_is_load = true;    
+      this.reviews_page++;  
+    })
+  }
+
+  loadMoreReviewsData(event:any) {
+    this.userService.loadReviewsList(this.reviews_page, this.reviews_page,this.stores).then( (response:any) => {
+      console.log("loadMoreData this.userService.loadReviewsList:");
+      console.log(response);
+      response.reviews.forEach((element:any) => {
+        this.reviews.push(element);
+      });
+      if (response.reviews.length==0) (event as InfiniteScrollCustomEvent).target.disabled = true;
+      this.reviews_page++;
+      setTimeout(() => {
+        (event as InfiniteScrollCustomEvent).target.complete();
+      },100);
+    })    
+  }
 
   loadNews() {
     this.news = [];
@@ -108,4 +154,31 @@ export class CommunityPage implements OnInit {
     modal.present();
   }    
         
+
+  handleSearchInput(ev:any) {
+    console.log(ev);
+
+    if (ev.detail.value==="") {
+      this.stores_list_filtered = this.stores_list;
+    } else {
+      this.stores_list_filtered = this.stores_list.filter((x:any)=>(x.name as string).toLowerCase().includes(ev.detail.value.toLowerCase()) );
+    }
+
+  }
+
+
+  applyFilter() {
+
+    let stores:any = [];
+    this.stores_list_filtered.forEach((store:any) => {
+      if (store.selected) stores.push(store.id);
+    });
+
+    this.stores = stores;
+    this.reviews_page =0;
+    this.reviews_is_load = false; 
+    this.reviews = [];
+    this.loadReviewsAlt();
+  }
+
 }

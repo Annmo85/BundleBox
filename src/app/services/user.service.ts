@@ -277,7 +277,7 @@ export class UserService {
     let response = await this.makeRequest("news.php",{start:start,limit:limit});
     return response;
   }
-  public async loadReviewsList(start:number = 0, limit: number = 10, filter: number = 0) {
+  public async loadReviewsList(start:number = 0, limit: number = 10, filter: number[] = []) {
     let response = await this.makeRequestL("getReviews",{start:start,limit:limit,filter:filter});
     return response;
   }

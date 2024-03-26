@@ -3,7 +3,7 @@
  */
 
 import { NgModule } from '@angular/core';
-
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
 import { Header2Component } from '../header2/header2.component';
 import { ButtonComponent } from '../button/button.component';
@@ -12,13 +12,14 @@ import {MakeOrderModalComponent} from '../make-order-modal/make-order-modal.comp
 import {ActionItemComponent} from '../action-item/action-item.component';
 import {ReviewItemComponent} from '../review-item/review-item.component';
 import {NewsModalComponent} from '../news-modal/news-modal.component';
-
+import {ImageZoomPageModule} from '../../image-zoom/image-zoom.module'
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     CommonModule,
     IonicModule,

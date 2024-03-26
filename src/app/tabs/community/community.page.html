@@ -1,79 +1,132 @@
-<app-header2 title="Сообщество"> </app-header2>
+<ion-menu contentId="main-content" side="end">
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-title>Поиск</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="menuCtrl.close('end')"> <ion-icon slot="icon-only" name="close"></ion-icon></ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+    <ion-toolbar>
+      <ion-searchbar mode="ios" placeholder="Поиск" show-clear-button="always" [debounce]="300" (ionInput)="handleSearchInput($event)" [(ngModel)]="search"></ion-searchbar>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <div clas="stores-list">
 
-<ion-content [fullscreen]="true">
-    
+      <ion-list lines="full">
+        <ion-item *ngFor="let store of stores_list_filtered">
+          <ion-checkbox justify="space-between" mode="ios" color="accent" [(ngModel)]="store.selected" (ionChange)="applyFilter()">{{store.name}}</ion-checkbox>
+        </ion-item>
+      </ion-list>
+
+    </div>
+
+
+  </ion-content>
+</ion-menu>
+
+<div class="ion-page" id="main-content">
+
+
+
+  <app-header2 title="Сообщество" [has_filter]="tab_selected==='reviews'?true:false"
+    (filterClick)="menuCtrl.open('end')"> </app-header2>
+
+  <ion-content [fullscreen]="true">
+
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content
+        pullingIcon="chevron-down-circle-outline"
+        pullingText="Потяните для обновления"
+        refreshingSpinner="circles"
+        refreshingText="Загрузка...">
+      </ion-refresher-content>
+    </ion-refresher>
+
     <!-- butons-->
     <div class="page-wrapper">
-        <div class="buttons-slider">
-            <swiper-container [spaceBetween]="15" [slidesPerView]="'auto'" [freeMode]="true">
+      <div class="buttons-slider">
+        <swiper-container [spaceBetween]="15" [slidesPerView]="'auto'" [freeMode]="true">
 
-                <swiper-slide>
-                    <div class="slider-button ion-activatable" (click)="tab_selected='actions'" [ngClass]="{'active': tab_selected==='actions'}">Акции<ion-ripple-effect type="bounded"></ion-ripple-effect></div>
-                </swiper-slide>
+          <swiper-slide>
+            <div class="slider-button ion-activatable" (click)="tab_selected='actions'"
+              [ngClass]="{'active': tab_selected==='actions'}">Акции<ion-ripple-effect
+                type="bounded"></ion-ripple-effect></div>
+          </swiper-slide>
 
-                <swiper-slide>
-                    <div class="slider-button ion-activatable"  (click)="tab_selected='news'" [ngClass]="{'active': tab_selected==='news'}">Новости<ion-ripple-effect type="bounded"></ion-ripple-effect></div>
-                </swiper-slide>
+          <swiper-slide>
+            <div class="slider-button ion-activatable" (click)="tab_selected='news'"
+              [ngClass]="{'active': tab_selected==='news'}">Новости<ion-ripple-effect
+                type="bounded"></ion-ripple-effect></div>
+          </swiper-slide>
 
-                <swiper-slide>
-                    <div class="slider-button ion-activatable"  (click)="tab_selected='reviews'" [ngClass]="{'active': tab_selected==='reviews'}">Отзывы<ion-ripple-effect type="bounded"></ion-ripple-effect></div>
-                </swiper-slide>
+          <swiper-slide>
+            <div class="slider-button ion-activatable" (click)="tab_selected='reviews'"
+              [ngClass]="{'active': tab_selected==='reviews'}">Отзывы<ion-ripple-effect
+                type="bounded"></ion-ripple-effect></div>
+          </swiper-slide>
 
-            </swiper-container>
-        </div>
+        </swiper-container>
+      </div>
     </div>
 
     <!-- акции-->
     <div class="page-wrapper" *ngIf="tab_selected==='actions' && actions_is_load">
-        <p>Здесь ежедневно публикуются общие заказы, в которых вы можете поучаствовать совместно с другими клиентами и получить от бесплатной доставки по стране покупки до хорошего дисконта.</p>
-        <div class="actions_list">
-            <app-action-item [order]="action" *ngFor="let action of actions"></app-action-item>
-        </div>
-        <h3>Для отправки заказа:</h3>
-        <p>1. Нажмите кнопку "Присоединиться" для перехода в чат с оператором<br>
-            2. Отправляйте заказы в формате ссылка на товар + размер/цвет/ пожелания<br>
-            3. Получите обратную связь от оператора<br>
-            4. Проверьте свой заказ в разделе "Мои заказы"<br>
-            5. Ожидайте выкупа, вам придет уведомление о необходимости оплачивать заказ</p>
+      <p>Здесь ежедневно публикуются общие заказы, в которых вы можете поучаствовать совместно с другими клиентами и
+        получить от бесплатной доставки по стране покупки до хорошего дисконта.</p>
+      <div class="actions_list">
+        <app-action-item [order]="action" *ngFor="let action of actions"></app-action-item>
+      </div>
+      <h3>Для отправки заказа:</h3>
+      <p>1. Нажмите кнопку "Присоединиться" для перехода в чат с оператором<br>
+        2. Отправляйте заказы в формате ссылка на товар + размер/цвет/ пожелания<br>
+        3. Получите обратную связь от оператора<br>
+        4. Проверьте свой заказ в разделе "Мои заказы"<br>
+        5. Ожидайте выкупа, вам придет уведомление о необходимости оплачивать заказ</p>
     </div>
-    
+
     <!-- новости-->
     <div class="page-wrapper" *ngIf="tab_selected==='news' && news_is_load">
 
-        <div class="news_list">
+      <div class="news_list">
 
-            <div class="news_card"  *ngFor="let news_item of news" (click)="openNewsItem(news_item)">
-    
-                <div class="image" style='background-image: url("{{news_item.image}}")'></div> 
-                <div class="info">
-                    <div class="line">
-                        <div class="desc" [innerHtml]="news_item.public_date"></div>
-                        <div class="title" [innerHtml]="news_item.category_name"></div>
-                    </div>
-                    <div class="desc" [innerHtml]="news_item.title"></div>
-                </div>
-              </div>
+        <div class="news_card" *ngFor="let news_item of news" (click)="openNewsItem(news_item)">
 
-
+          <div class="image" style='background-image: url("{{news_item.image}}")'></div>
+          <div class="info">
+            <div class="line">
+              <div class="desc" [innerHtml]="news_item.public_date"></div>
+              <div class="title" [innerHtml]="news_item.category_name"></div>
+            </div>
+            <div class="desc" [innerHtml]="news_item.title"></div>
+          </div>
         </div>
 
 
-        <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMoreNewsData($event)">
-            <ion-infinite-scroll-content
-              loadingSpinner="bubbles"
-              loadingText="Загрузка...">
-            </ion-infinite-scroll-content>
-          </ion-infinite-scroll>
+      </div>
+
+
+      <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMoreNewsData($event)">
+        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Загрузка...">
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
 
     </div>
 
 
-    
+
 
     <!-- отзывы-->
     <div class="page-wrapper" *ngIf="tab_selected==='reviews' && reviews_is_load">
-        <div class="reviews_list">
-            <app-review-item [review]="review" *ngFor="let review of reviews"></app-review-item>
-        </div>
+      <div class="reviews_list">
+        <app-review-item [review]="review" *ngFor="let review of reviews"></app-review-item>
+      </div>
+
+      <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMoreReviewsData($event)">
+        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Загрузка...">
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>      
     </div>
-</ion-content>
+
+  </ion-content>
+</div>

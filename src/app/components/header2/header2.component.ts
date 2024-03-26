@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-header2',
@@ -9,6 +9,8 @@ export class Header2Component  implements OnInit {
 
   @Input() title: string ="";
   @Input() has_back: boolean = false;
+  @Input() has_filter: boolean = false;
+  @Output() filterClick = new EventEmitter();
 
   constructor() { }
 
