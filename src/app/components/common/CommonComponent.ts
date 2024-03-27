@@ -13,6 +13,11 @@ import {ActionItemComponent} from '../action-item/action-item.component';
 import {ReviewItemComponent} from '../review-item/review-item.component';
 import {NewsModalComponent} from '../news-modal/news-modal.component';
 import {StoreModalComponent} from '../store-modal/store-modal.component';
+import {CalcDeliveryComponent} from '../calc-delivery/calc-delivery.component';
+import {CalcOrderComponent} from '../calc-order/calc-order.component';
+import {UslPageComponent} from '../usl-page/usl-page.component';
+import {OfertaComponent} from '../oferta/oferta.component';
+
 import {ImageZoomPageModule} from '../../image-zoom/image-zoom.module'
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -25,6 +30,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     IonicModule,
     RouterModule,
+    FormsModule,
     ReactiveFormsModule,
     RouterModule
   ],
@@ -38,6 +44,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ReviewItemComponent,
     NewsModalComponent,
     StoreModalComponent,
+    CalcDeliveryComponent,
+    CalcOrderComponent,
+    UslPageComponent,
+    OfertaComponent,
   ],
   exports: [
     CommonModule,
@@ -52,7 +62,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ReviewItemComponent,
     NewsModalComponent,
     StoreModalComponent,
-    HeaderComponent
+    HeaderComponent,
+    CalcDeliveryComponent,
+    CalcOrderComponent,    
+    UslPageComponent,    
+    OfertaComponent,    
   ],
   providers: []
 })

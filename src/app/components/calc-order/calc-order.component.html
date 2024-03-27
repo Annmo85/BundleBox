@@ -1,0 +1,46 @@
+<div class="calc_form">
+
+  <div class="login input-field">
+    <div class="label">Цена товара <span class="required">*</span></div>
+      <div class="input">
+        <ion-input inputmode="numeric" type="number" [autofocus]="true" [(ngModel)]="cost" (ionChange)="recalculate()"></ion-input>
+      </div>
+  </div> 
+
+  <div class="login input-field">
+    <div class="label">Валюта <span class="required">*</span></div>
+      <div class="input">
+        <ion-select interface="popover" placeholder="Валюта" [(ngModel)]="selected_value" (ionChange)="recalculate()">
+          <ion-select-option value="USD">USD</ion-select-option>
+          <ion-select-option value="EUR">EUR</ion-select-option>
+          <ion-select-option value="GBP">GBP</ion-select-option>
+          <ion-select-option value="CNY">CNY</ion-select-option>
+        </ion-select>
+      </div>
+  </div>
+
+  <div class="login input-field">
+    <div class="label">Доставка по стране магазина</div>
+      <div class="input">
+        <ion-input inputmode="numeric" type="number"  [(ngModel)]="delivery" (ionChange)="recalculate()"></ion-input>
+      </div>
+  </div>
+
+  <div class="login input-field">
+    <div class="label">Размер скидки в %</div>
+      <div class="input">
+        <ion-input inputmode="numeric" type="number"  [(ngModel)]="discont"  (ionChange)="recalculate()"></ion-input>
+      </div>
+  </div>    
+
+  <div class="total">
+    <div class="title">Итого:</div>
+    <div class="sum">{{total}}</div>
+  </div>
+
+  <!--
+  <div class="order-more"> 
+    <ion-button color="button-color" expand="block" (click)="recalculate()" shape="round">Рассчитать</ion-button>
+  </div>-->
+
+</div>

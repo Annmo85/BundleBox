@@ -1,0 +1,98 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <div class="header">
+      <div class="left-block">
+
+        <div class="button" style="padding-top: 9px;" (click)="close()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="#2D2D2D" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 5-6 7 6 7"/>
+          </svg>
+          
+            <ion-ripple-effect></ion-ripple-effect>
+        </div>
+
+      </div>
+      
+      <div class="center-block">
+        <div class="title">Условия</div>
+      </div>
+      
+      <div class="right-block">
+
+        <!-- tg-->
+        <div class="button ion-activatable">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="none" viewBox="0 0 36 36">
+            <g clip-path="url(#a)">
+              <path fill="#2D2D2D" d="M23.666 10.572s1.665-.649 1.526.928c-.046.65-.462 2.922-.786 5.38l-1.11 7.281s-.093 1.067-.925 1.252c-.833.186-2.082-.649-2.313-.835-.185-.139-3.47-2.226-4.626-3.246-.323-.278-.693-.835.047-1.484l4.856-4.638c.555-.556 1.11-1.855-1.202-.278l-6.476 4.406s-.74.464-2.127.046l-3.007-.927s-1.11-.696.786-1.392c4.626-2.18 10.315-4.406 15.357-6.493Z"/>
+            </g>
+            <rect width="34.5" height="34.5" x=".75" y=".75" stroke="url(#b)" stroke-width="1.5" rx="17.25"/>
+            <defs>
+              <linearGradient id="b" x1="0" x2="36" y1="18" y2="18" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#EE6F03"/>
+                <stop offset="1" stop-color="#FFB422"/>
+              </linearGradient>
+              <clipPath id="a">
+                <rect width="36" height="36" fill="#fff" rx="18"/>
+              </clipPath>
+            </defs>
+          </svg>
+          
+            <ion-ripple-effect></ion-ripple-effect>
+        </div>
+
+        <!-- tg-->
+        <div class="button ion-activatable">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="none" viewBox="0 0 36 36">
+            <g clip-path="url(#a)">
+              <path fill="#2D2D2D" fill-rule="evenodd" d="M18.174 8.28a9.747 9.747 0 0 1 6.94 2.877 9.749 9.749 0 0 1 2.87 6.942c-.002 5.41-4.403 9.811-9.81 9.811h-.005a9.801 9.801 0 0 1-4.688-1.194L8.28 28.08l1.392-5.084a9.795 9.795 0 0 1-1.31-4.905c.002-5.41 4.404-9.811 9.812-9.811Zm-.003 17.973h.003c4.495 0 8.153-3.658 8.155-8.155a8.11 8.11 0 0 0-2.387-5.77 8.1 8.1 0 0 0-5.765-2.391c-4.498 0-8.156 3.658-8.158 8.154 0 1.541.43 3.042 1.247 4.34l.193.309-.823 3.009 3.086-.81.298.177a8.145 8.145 0 0 0 4.15 1.137Zm2.8-6.905c.226.082 1.43.674 1.676.797l.133.065c.171.083.287.14.337.222.06.102.06.593-.143 1.166-.205.572-1.184 1.095-1.655 1.165-.423.063-.957.09-1.544-.097a14.056 14.056 0 0 1-1.398-.516c-2.3-.993-3.853-3.222-4.145-3.642l-.043-.06v-.001c-.127-.168-1.001-1.331-1.001-2.535 0-1.129.554-1.72.81-1.993l.048-.052a.9.9 0 0 1 .654-.307c.163 0 .327.001.47.009h.055c.143 0 .32-.002.496.42.068.163.168.405.272.66.211.513.443 1.079.484 1.16.061.123.102.267.02.43a5.572 5.572 0 0 0-.034.07c-.062.126-.107.218-.21.339l-.126.15a4.278 4.278 0 0 1-.242.28c-.123.122-.25.254-.108.5.143.245.635 1.048 1.364 1.698.783.699 1.464.994 1.81 1.144.067.03.122.053.162.073.245.123.388.102.53-.061.144-.164.614-.716.777-.962.163-.245.327-.204.552-.122Z" clip-rule="evenodd"/>
+            </g>
+            <rect width="34.5" height="34.5" x=".75" y=".75" stroke="url(#b)" stroke-width="1.5" rx="17.25"/>
+            <defs>
+              <linearGradient id="b" x1="18" x2="18" y1="0" y2="36" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#EF7004"/>
+                <stop offset="1" stop-color="#FFB422"/>
+              </linearGradient>
+              <clipPath id="a">
+                <rect width="36" height="36" fill="#fff" rx="18"/>
+              </clipPath>
+            </defs>
+          </svg>
+          
+            <ion-ripple-effect></ion-ripple-effect>
+        </div>
+
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+
+  <div class="page-wrapper">
+
+
+    <div class="usl" >
+      <div class="text">Условия заказов</div>
+      
+      <div *ngFor="let item of usl_text">
+        <div class="text2" *ngIf="item.type=='text'" [innerHtml]="this.sanitizer.bypassSecurityTrustHtml(item.content)"></div>
+      
+      
+      
+        <div class="accordion" *ngIf="item.type=='accordion'">
+          <ion-accordion-group expand="inset" mode="ios">
+            <ion-accordion *ngFor="let subitem of item.items">
+              <ion-item slot="header" color="title-color" lines="none">
+                <ion-label [innerHtml]="this.sanitizer.bypassSecurityTrustHtml(subitem.title)"></ion-label>
+              </ion-item>
+              <div class="ion-padding" slot="content" [innerHtml]="this.sanitizer.bypassSecurityTrustHtml(subitem.content)"
+                (click)="openOferta($event)">
+      
+              </div>
+            </ion-accordion>
+          </ion-accordion-group>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

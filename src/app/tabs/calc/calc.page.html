@@ -1,13 +1,30 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Calc</ion-title>
-  </ion-toolbar>
-</ion-header>
-
+<app-header2 title="Рассчитать"> </app-header2>
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Calc</ion-title>
-    </ion-toolbar>
-  </ion-header>
+
+    <!-- butons-->
+    <div class="page-wrapper">
+      <div class="buttons-slider">
+        <swiper-container [spaceBetween]="15" [slidesPerView]="'auto'" [freeMode]="true">
+
+          <swiper-slide>
+            <div class="slider-button2 ion-activatable" (click)="tab_selected='cost-order'" [ngClass]="{'active': tab_selected==='cost-order'}">Стоимость заказа<ion-ripple-effect
+                type="bounded"></ion-ripple-effect></div>
+          </swiper-slide>
+
+
+          <swiper-slide>
+            <div class="slider-button2 ion-activatable" (click)="tab_selected='cost-delivery'" [ngClass]="{'active': tab_selected==='cost-delivery'}">Стоимость доставки<ion-ripple-effect type="bounded"></ion-ripple-effect></div>
+          </swiper-slide>          
+
+        </swiper-container>
+      </div>
+
+      <app-calc-order *ngIf="tab_selected==='cost-order'"></app-calc-order>
+      <app-calc-delivery *ngIf="tab_selected==='cost-delivery'"></app-calc-delivery>
+
+
+    </div>
+
+
+
 </ion-content>

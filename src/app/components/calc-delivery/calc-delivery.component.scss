@@ -1,0 +1,58 @@
+p {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: 0.001em;
+    color: #2D2D2D;
+}
+
+div.annotation {
+    margin-top: 20px;
+    width: 100%;
+    background: linear-gradient(90deg, #F6D28B 0%, #FFE4AF 100%);
+    border-radius: 16px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: 0.001em;
+    color: #2D2D2D;    
+}
+
+div.card {
+    margin-top: 20px;
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: 0.001em;
+    color: #2D2D2D;    
+}
+
+div.description {
+
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: 0.001em;
+    color: #2D2D2D; 
+
+    a {
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 17px;
+        letter-spacing: 0.001em;
+        color: #EF7004;
+    }
+}

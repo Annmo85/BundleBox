@@ -7,6 +7,7 @@ import { IonicSlides, NavController } from '@ionic/angular';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ModalController } from '@ionic/angular';
 import { MakeOrderModalComponent } from 'src/app/components/make-order-modal/make-order-modal.component';
+import {OfertaComponent} from '../../components/oferta/oferta.component';
 
 @Component({
   selector: 'app-main',
@@ -60,8 +61,15 @@ export class MainPage implements OnInit {
   }
 
 
-  openOferta(ev:any) {
-    
+  async openOferta(event:any) {
+    console.log(event);
+    // if (event.target.tagName=="A") {
+      const modal = await this.modalCtrl.create({
+        component: OfertaComponent,
+        componentProps: {deal:{ID:"________",DATE:"________"}}
+      });
+      modal.present();
+    // }
   }
 
 

@@ -1,0 +1,42 @@
+<div class="calc_form" >
+  <div class="login input-field">
+    <div class="label">Страна <span class="required">*</span></div>
+    <div class="input">
+      <ion-select interface="popover" [(ngModel)]="warehouse_id" placeholder="Страна магазина" [value]="warehouse_id"
+        [compareWith]="compareWith" (ionChange)="recalculate($event.detail.value)">
+        <ion-select-option [value]="w.id" *ngFor="let w of warehouses">{{w.country.name_ru}}</ion-select-option>
+      </ion-select>
+    </div>
+  </div>
+
+  <div class="login input-field">
+    <div class="label">Вес посылки <span class="required">*</span></div>
+    <div class="input">
+      <ion-input inputmode="numeric" type="number" [(ngModel)]="weight"
+        (ionChange)="recalculate(warehouse_id)"></ion-input>
+    </div>
+  </div>
+
+
+  <div class="total">
+    <div class="title" *ngIf="!is_process">Итого:</div>
+    <div class="sum" *ngIf="!is_process">{{total}}</div>
+
+    <div class="loader" *ngIf="!loaded || is_process">
+      <ion-spinner name="lines"></ion-spinner>
+    </div>
+
+  </div>
+</div>
+<div class="calc_form" *ngIf="loaded">
+  <div class="annotation" [innerHtml]="note_text" *ngIf="has_usl"></div>
+  <div class="description">
+    <div [innerHtml]="text1"></div>
+    <div class="card" [innerHtml]="text2"></div>
+    <div class="card" [innerHtml]="text3"></div>
+  </div>
+  <div class="description ion-padding-top">*со стоимостью доставки можно ознакомиться в <a
+      (click)="openUsl()">условиях</a></div>
+    <br>
+    <br>
+</div>

@@ -242,7 +242,154 @@ div.slider-button {
 
 }
 
+
+div.slider-button2 {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 16px;
+    height: 40px;
+    background: #FFFFFF;
+    border-radius: 100px;
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 0.001em;
+    color: #2D2D2D;
+    width: 250px;
+
+}
+
 div.slider-button.active {
     background: #F98112;
     color: #FFFFFF;
+}
+div.slider-button2.active {
+    background: #F98112;
+    color: #FFFFFF;
+}
+
+
+//Формы
+div.calc_form {
+    padding-top: 30px;
+    padding-left: 12px;
+    padding-right: 12px;
+
+    div.input-field {
+        padding-top: 15px;
+        display: flex;
+        flex-direction: column;
+        gap:10px;
+        div.label {
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 15px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+        }
+        div.input {
+            padding: 10px 14px;
+            height: 44px;
+            background: #FFFFFF;
+            border-radius: 8px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 20px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+        }
+    }
+
+    div.total {
+        margin-top: 30px;
+        background: #A3DEFF;
+        border-radius: 16px;
+        height: 76px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+
+        div.title {
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 20px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+        }
+
+        div.sum {
+            font-weight: 600;
+            font-size: 28px;
+            line-height: 34px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+        }
+    }
+
+}
+
+
+div.usl {
+    margin-top: 30px;
+    padding-bottom: 30px;
+    width: 100%;
+    border-radius: 16px;
+
+    div.text {
+        font-style: normal;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 24px;
+        letter-spacing: 0.001em;
+        color: #2D2D2D;
+    }    
+    div.text2 {
+        padding-top: 5px;
+        padding-bottom: 15px;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 20px;
+        letter-spacing: 0.001em;
+        color: #2D2D2D;
+    }
+
+    div.accordion {
+        ion-accordion-group {
+            margin: 0px;
+            ion-accordion {
+                background-color: #fff;
+                ion-item {
+
+                }
+                ion-label {
+                    font-weight: 600;
+                    font-size: 16px;
+                    line-height: 20px;
+                    letter-spacing: 0.001em;
+                    color: #2D2D2D;
+                }
+
+                ion-icon {
+                    --color:#2D2D2D;
+                    color:#2D2D2D;
+                }                    
+
+            }
+            ion-accordion:first-child {
+                border-top: 0px;
+            }
+        }
+    }
+
 }
