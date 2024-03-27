@@ -14,7 +14,7 @@
       </div>
       
       <div class="center-block">
-        <div class="title">Сообщество</div>
+        <div class="title">Магазины</div>
       </div>
       
       <div class="right-block">
@@ -69,19 +69,13 @@
 
   <div class="page-wrapper">
 
-    <div class="top-line">
-      <div class="date">{{news_item.public_date}}</div>
-      <div class="category">{{news_item.category_name}}</div>
 
-    </div>
-
-    <div class="title">{{news_item.title}}</div>
+    <div class="title"  [innerHtml]="sanitizer.bypassSecurityTrustHtml(store_item.name)"></div>
     <div class="image-block">
-      <div class="discont" *ngIf="news_item.discount">{{news_item.discount}}</div>
-      <div class="image"><img [src]="news_item.image"></div>
+      <div class="image"><a [href]="store_item.site_link"><img [src]="store_item.image"></a></div>
     </div>    
     <div class="content-block">
-      <div class="description" [innerHtml]="sanitizer.bypassSecurityTrustHtml(news_item.text)"></div>
+      <div class="description" [innerHtml]="sanitizer.bypassSecurityTrustHtml(store_item.desc)"></div>
     </div>
 
     <div class="order-block">
@@ -90,5 +84,6 @@
       <app-button title="Сделать заказ" (click)="openMakeOrderModal()"></app-button>
       <p>Ваш шоппинг-помощник Анна</p>
     </div>
+
   </div>
 </ion-content>

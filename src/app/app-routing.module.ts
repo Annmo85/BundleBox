@@ -18,7 +18,12 @@ const routes: Routes = [
   {
     path: 'image-zoom',
     loadChildren: () => import('./image-zoom/image-zoom.module').then( m => m.ImageZoomPageModule)
-  },  
+  },
+  {
+    path: 'store-item',
+    loadChildren: () => import('./tabs/stores/store-item/store-item.module').then( m => m.StoreItemPageModule)
+  },
+ 
 ];
 
 @NgModule({

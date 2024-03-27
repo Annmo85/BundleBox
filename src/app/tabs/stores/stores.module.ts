@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { StoresPageRoutingModule } from './stores-routing.module';
-
+import {CommonComponent} from '../../components/common/CommonComponent'
 import { StoresPage } from './stores.page';
 
 @NgModule({
@@ -13,6 +13,7 @@ import { StoresPage } from './stores.page';
     CommonModule,
     FormsModule,
     IonicModule,
+    CommonComponent,
     StoresPageRoutingModule
   ],
   declarations: [StoresPage]
