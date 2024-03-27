@@ -33,8 +33,14 @@ export class ImageZoomPage implements OnInit {
 
 
   zoom(state:boolean) {
-    let zoom = this.swiper.nativeElement;
-    if (state) zoom.in(); else zoom.out();
+    const swiperElement = this.swiper.nativeElement;
+    if (swiperElement.swiper) {
+      if (state) {
+        swiperElement.swiper.zoom.in();
+      } else {
+        swiperElement.swiper.zoom.out();
+      }
+    }
   }
 
   close() {
