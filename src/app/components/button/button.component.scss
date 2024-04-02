@@ -15,3 +15,8 @@ div.button {
     letter-spacing: 0.001em;
     color: #FFFFFF;
 }
+
+div.button.disabled {
+    color: #eeeeee;
+    background: linear-gradient(90deg, #ffac65 0%, #ecc270 100%);
+}

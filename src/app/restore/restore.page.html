@@ -1,0 +1,74 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="dark" (click)="back()">
+        <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>Сброс пароля</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="dark"></ion-button>
+    </ion-buttons>    
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <div class="login_page2">
+
+    <div class="container">
+
+      
+
+      <div class="form">
+        <form [formGroup]="ionicForm!" (ngSubmit)="submitForm()" novalidate>
+
+          <div class="login input-field">
+            <div class="text">Введите номер телефона и мы отправим на него СМС с новым паролем</div>
+          </div>
+          <div class="login input-field">
+            <div class="label">Номер телефона <span class="required"></span></div>
+            <div class="input" style="gap:5px" [ngClass]="{'error':ionicForm?.touched && ionicForm?.get('phone')?.invalid}">
+              <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
+                  <path stroke="#2D2D2D" stroke-width="1.2" d="M3 7.5c0-2.828 0-4.243.879-5.121C4.757 1.5 6.172 1.5 9 1.5c2.828 0 4.243 0 5.121.879C15 3.257 15 4.672 15 7.5v3c0 2.828 0 4.243-.879 5.121-.878.879-2.293.879-5.121.879-2.828 0-4.243 0-5.121-.879C3 14.743 3 13.328 3 10.5v-3Z"/>
+                  <path stroke="#2D2D2D" stroke-linecap="round" stroke-width="1.2" d="M11.25 14.25h-4.5m5.811-12.467-.063.095c-.567.85-.85 1.276-1.265 1.533a2.25 2.25 0 0 1-.256.137c-.444.202-.955.202-1.977.202-1.022 0-1.533 0-1.977-.202a2.25 2.25 0 0 1-.256-.137c-.415-.257-.698-.683-1.265-1.533l-.063-.095"/>
+                </svg>
+              </div>
+              <div>+7</div>
+              <ion-input [maskito]="phoneMask" [maskitoElement]="maskPredicate"  type="tel" inputmode="tel" #phone formControlName="phone" [autofocus]="true" (keyup.enter)="pwdSetFocus()"></ion-input>
+            </div>
+          </div>
+
+
+          <div class="login input-field">
+            <app-button title="Выслать пароль" height="48" [disabled]="!ionicForm!.valid" (action)="submitForm()"></app-button>
+
+          </div>
+          
+        </form>
+      </div>
+
+    </div>
+
+    <div class="bottom_butotns">
+
+      <div class="icon ion-activatable">
+        <img src="../../assets/tg_icon.png">  
+        
+        <ion-ripple-effect type="bounded"></ion-ripple-effect>
+      </div>
+
+      <div class="text">Связаться</div>
+
+      <div class="icon ion-activatable">
+        <img src="../../assets/wa_icon.png">        
+        <ion-ripple-effect type="bounded"></ion-ripple-effect>
+      </div>
+
+
+      
+    </div>
+
+
+  </div>  
+</ion-content>

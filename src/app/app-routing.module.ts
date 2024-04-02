@@ -23,6 +23,18 @@ const routes: Routes = [
     path: 'store-item',
     loadChildren: () => import('./tabs/stores/store-item/store-item.module').then( m => m.StoreItemPageModule)
   },
+  {
+    path: 'login',
+    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'registration',
+    loadChildren: () => import('./registration/registration.module').then( m => m.RegistrationPageModule)
+  },
+  {
+    path: 'restore',
+    loadChildren: () => import('./restore/restore.module').then( m => m.RestorePageModule)
+  },
  
 ];
 

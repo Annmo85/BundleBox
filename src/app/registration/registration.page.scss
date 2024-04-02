@@ -1,0 +1,83 @@
+ion-content {
+
+    div.container {
+        padding-top: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        flex-direction: column;
+        div.logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;            
+        }
+    }
+
+    div.bottom_butotns {
+        display: flex;
+        justify-content:center;
+        align-items: center;
+        padding-bottom: 25px;
+        gap:15px;
+        div.icon {
+            position: relative;
+            border-radius:50px;
+            overflow: hidden;
+        }
+
+        div.text {
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 20px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+
+        }
+    }
+}
+
+div.text {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 0.001em;
+    color: #2D2D2D;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+}
+
+ion-header {
+    --background: transparent;
+    ion-toolbar {
+        --background: transparent;
+        ion-title {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 24px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+            text-align: center;
+        }
+    }
+}
+
+code-input {
+    --item-spacing: 10px;
+    --item-height: 3em;
+    --item-background: #fff;
+    --item-border-bottom: 2px solid var(--ion-color-accent);;
+    --item-border-has-value: 2px solid var(--ion-color-accent);;
+    --item-border-bottom-has-value: 2px solid var(--ion-color-accent);;
+    --item-border-focused: 2px solid var(--ion-color-accent);;
+    --item-border-bottom-focused: 2px solid var(--ion-color-accent);;
+    --item-shadow-focused: none;
+    --item-border-radius: 5px;
+    --color: #2D2D2D;
+    --item-border: 2px solid var(--ion-color-accent);;
+}

@@ -1,0 +1,30 @@
+ion-content {
+
+    div.container {
+        padding-top: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        flex-direction: column;
+        div.logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;            
+        }
+    }
+
+    div.bottom_butotns {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 12px;
+        padding-right: 12px;
+        padding-bottom: 25px;
+        div.icon {
+            position: relative;
+            border-radius:50px;
+            overflow: hidden;
+        }
+    }
+}

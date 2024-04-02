@@ -1,4 +1,4 @@
-<div class="button ion-activatable" (click)="action.emit()">
+<div class="button ion-activatable" (click)="action.emit()"  [style.height.px]="height" [ngClass]="{'disabled':disabled}">
   <span>{{title}}</span>
   <ion-ripple-effect></ion-ripple-effect>
 </div>

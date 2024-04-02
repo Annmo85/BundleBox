@@ -213,6 +213,24 @@ ion-content {
 	--ion-color-tint: var(--ion-color-black-tint);
 }
 
+:root {
+	--ion-color-blue: #207cd9;
+	--ion-color-blue-rgb: 32,124,217;
+	--ion-color-blue-contrast: #000000;
+	--ion-color-blue-contrast-rgb: 0,0,0;
+	--ion-color-blue-shade: #1c6dbf;
+	--ion-color-blue-tint: #3689dd;
+}
+
+.ion-color-blue {
+	--ion-color-base: var(--ion-color-blue);
+	--ion-color-base-rgb: var(--ion-color-blue-rgb);
+	--ion-color-contrast: var(--ion-color-blue-contrast);
+	--ion-color-contrast-rgb: var(--ion-color-blue-contrast-rgb);
+	--ion-color-shade: var(--ion-color-blue-shade);
+	--ion-color-tint: var(--ion-color-blue-tint);
+}
+
 div.page-wrapper {
     padding-left: 8px;
     padding-right: 8px;
@@ -340,6 +358,85 @@ div.calc_form {
 }
 
 
+//Формы
+div.form {
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    div.input-field {
+        padding-top: 15px;
+        display: flex;
+        flex-direction: column;
+        gap:10px;
+        max-width: 300px;
+        div.label {
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 15px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+        }
+        div.input {
+            padding: 10px 14px;
+            height: 44px;
+            background: #FFFFFF;
+            border-radius: 8px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 20px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center ;
+            gap:15px;
+
+            div.icon {
+                position: relative;
+                margin-top: 4px;
+            }
+        }
+
+        div.input.error {
+            border: 2px solid red;
+        }
+
+        ion-button {
+            text-transform: none;
+            --padding-start:5px;
+            --padding-end:5px;
+            font-size: 16px;
+            position: relative;
+            margin-left: -5px;            
+        }        
+
+        ion-checkbox {
+            --checkbox-background: #EFEFEF;
+        }
+
+        ion-checkbox::part(label) {
+            text-overflow:unset;
+            white-space:unset;
+            overflow:visible;
+            font-size: 14px;
+        }
+
+        ion-checkbox.error::part(container) {
+            border: 2px solid red;
+        }
+
+    }
+
+}
+
+
 div.usl {
     margin-top: 30px;
     padding-bottom: 30px;
@@ -392,4 +489,70 @@ div.usl {
         }
     }
 
+}
+
+div.login_page {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content:space-between;
+    flex-direction: column;
+    background-image: url("./assets/bg.png");
+    background-repeat: no-repeat;
+    background-position-x: right;
+    background-position-y: bottom;
+}
+
+div.login_page2 {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content:space-between;
+    flex-direction: column;
+}
+
+ion-modal.city_modal {
+    ion-header {
+        ion-toolbar {
+
+            --background:#fff !important;
+
+            ion-title {
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 20px;
+                letter-spacing: 0.001em;
+                color: rgba(45, 45, 45, 0.4);
+
+                display: flex;
+                justify-content: space-between;
+
+
+
+            }
+            ion-searchbar {
+
+            }
+        }
+    }
+    ion-content {
+        --background: #fff !important;
+
+        ion-list {
+            background-color: transparent;
+            ion-item {
+                --background: tranparent !important;
+                ion-label {
+                    font-weight: 400;
+                    font-size: 16px;
+                    line-height: 20px;
+                    letter-spacing: 0.001em;
+                    color: #2D2D2D;
+                }
+                ion-checkbox {
+                    --checkbox-background: #EFEFEF;
+                }
+            }
+        }
+    }
 }
