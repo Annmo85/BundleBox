@@ -80,11 +80,17 @@ export class LoginPage implements OnInit {
       });
       loading.present();
 
-      this.userService.login(phone,password).then(response=>{
+      this.userService.login(phone,password).then(async response=>{
 
         loading.dismiss();        
         if (response.error) {
           this.error_response = response.message;
+          const toast = await this.toastController.create({
+            message: this.error_response,
+            duration: 2000,
+            color: "alert"
+          });
+          toast.present();
         } else {
           this.nav.navigateRoot(['/tabs/main']);
         }

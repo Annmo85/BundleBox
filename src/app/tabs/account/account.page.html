@@ -1,9 +1,97 @@
 <app-header title="Аккаунт"></app-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Account</ion-title>
-    </ion-toolbar>
-  </ion-header>
+
+  <div class="page-wrapper">
+
+    <div class="tabs">
+      <div class="tab" [ngClass]="{'active':current_tab=='account'}" (click)="current_tab='account'; delete_request=false;">Личный кабинет</div>
+      <div class="tab" [ngClass]="{'active':current_tab=='orders'}" (click)="current_tab='orders'; delete_request=false;">Заказы <div class="badge">3</div></div>
+    </div>
+
+
+    <div *ngIf="current_tab=='account'" class="section">
+      <div class="text">
+        Вы можете изменить свои учётные данные, сменить пароль, а также выбрать подходящий ПВЗ для получения заказа
+      </div>
+
+      <div class="card">
+
+        <div class="profile">
+
+          <div class="line">
+            <div class="title">Мои данные</div>
+            <div>
+              <app-button title="Изменить" height="30"></app-button>
+            </div>
+          </div>
+
+          <div class="line">
+            <div class="field">
+              <div class="label">Имя, фамиилия</div>
+              <div class="value">{{profile.LAST_NAME?profile.LAST_NAME+' ':''}}{{profile.NAME?profile.NAME+' ':''}}{{profile.SECOND_NAME?profile.SECOND_NAME+' ':''}}</div>
+            </div>
+            <div class="field" *ngIf="profile.PHONE!=''">
+              <div class="label">Телефон</div>
+              <div class="value">{{profile.PHONE}}</div>
+            </div>
+          </div>
+          <div class="line">
+            <div class="field" *ngIf="profile.EMAIL!=''">
+              <div class="label">Почта</div>
+              <div class="value">{{profile.EMAIL}}</div>
+            </div>
+            <div class="field" >
+              <div class="label">Пароль</div>
+              <div class="value">****************</div>
+            </div>
+          </div>
+          <div class="line" style="border-bottom: 1px solid #E6E6E6;">
+            <div class="field">
+              <div class="label">Город, Регион, Адрес</div>
+              <div class="value">{{profile.ADDRESS_VALUE!=''?profile.ADDRESS_VALUE:'-'}}</div>
+            </div>
+          </div>
+
+          <div class="line">
+            <div class="field" >
+              <div class="label">Выбранный ПВЗ</div>
+              <div class="value" *ngIf="profile.PVZ.TITLE">{{profile.PVZ.TITLE}}</div>
+              <div class="value" *ngIf="!profile.PVZ.TITLE">Не выбрано</div>
+            </div>
+            <div class="field" >
+              <app-button title="Изменить" height="30"></app-button>
+            </div>            
+          </div>
+
+          <div class="line">
+            <div class="field" >
+              <div class="value" *ngIf="profile.PVZ.DESCRIPTION.length>0">
+                <p *ngFor="let d of profile.PVZ.DESCRIPTION">{{d}}</p>
+              </div>
+            </div>            
+          </div>
+
+          <div class="line">
+            <div class="field" >
+              <div class="label">
+
+              </div>
+            </div>
+          
+          </div>
+
+
+        </div>
+        <div class="pvz"></div>
+        <div class="remove_account">
+          <ion-button fill="clear" expand="block" shape="round" color="alert" *ngIf="!delete_request" (click)="delete_request=true">Удалить аккаунт <ion-icon slot="start" name="close-outline"></ion-icon></ion-button>
+          <ion-button fill="clear" expand="block" shape="round" color="alert"  *ngIf="delete_request" (click)="deleteRequest()">Я подтверждаю удаление<ion-icon slot="start" name="close-outline"></ion-icon></ion-button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
 </ion-content>

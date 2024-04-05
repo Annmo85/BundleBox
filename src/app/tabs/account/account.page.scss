@@ -1,0 +1,112 @@
+ion-content {
+    div.page-wrapper {
+        
+        div.tabs{
+
+            display: flex;
+            gap:10px;
+            div.tab {
+                flex: 0 0 50%;
+                border-bottom: 2px solid #9c9c9c;
+                height: 30px;
+                text-align: center;
+                line-height: 30px;
+                font-weight: 600;
+                font-size: 18px;
+                text-align: center;
+                letter-spacing: 0.001em;
+                color: #9c9c9c;
+                flex-grow: 1;
+
+                div.badge {
+                    display: inline-block;
+                    text-align: center;
+                    font-weight: 500;
+                    font-size: 12px;
+                    text-align: center;
+                    letter-spacing: 0.001em;
+                    background-color: #FF0000;
+                    position: absolute;
+                    height: 16px;
+                    width: 16px;
+                    border-radius: 30px;
+                    color: #fff;
+                    line-height: 15px;                   
+                }
+            }
+
+            div.tab.active {
+                border-bottom: 2px solid #EE6F03;
+                color: #EE6F03;
+            }
+
+        }
+
+        div.section {
+            padding-top: 15px;
+            padding-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            
+            div.text {
+                font-weight: 400;
+                font-size: 16px;
+                line-height: 20px;
+                letter-spacing: 0.001em;
+                color: #2D2D2D;
+            }
+
+            div.card {
+                padding-top: 15px;
+                background: #FFFFFF;
+                border-radius: 16px;
+                padding-bottom: 15px;
+                padding-left: 15px;;
+                padding-right: 15px;
+                display: flex;
+                flex-direction: column;
+                gap:10px;
+                                
+            }
+        }
+
+        div.profile {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        div.line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            div.title {
+                font-weight: 600;
+                font-size: 20px;
+                line-height: 24px;
+                text-align: center;
+                letter-spacing: 0.001em;
+                color: #2D2D2D;
+            }
+
+            div.field {
+                div.label {
+                    font-weight: 400;
+                    font-size: 12px;
+                    line-height: 15px;
+                    letter-spacing: 0.001em;
+                    color: rgba(45, 45, 45, 0.4);
+                }
+                div.value {
+                    font-weight: 600;
+                    font-size: 16px;
+                    line-height: 30px;
+                    letter-spacing: 0.001em;
+                    color: #2D2D2D;
+                }
+            }
+        }
+    }
+}

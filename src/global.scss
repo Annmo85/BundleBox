@@ -231,6 +231,24 @@ ion-content {
 	--ion-color-tint: var(--ion-color-blue-tint);
 }
 
+:root {
+	--ion-color-alert: #EB2A00;
+	--ion-color-alert-rgb: 235,42,0;
+	--ion-color-alert-contrast: #000000;
+	--ion-color-alert-contrast-rgb: 0,0,0;
+	--ion-color-alert-shade: #cf2500;
+	--ion-color-alert-tint: #ed3f1a;
+}
+
+.ion-color-alert {
+	--ion-color-base: var(--ion-color-alert);
+	--ion-color-base-rgb: var(--ion-color-alert-rgb);
+	--ion-color-contrast: var(--ion-color-alert-contrast);
+	--ion-color-contrast-rgb: var(--ion-color-alert-contrast-rgb);
+	--ion-color-shade: var(--ion-color-alert-shade);
+	--ion-color-tint: var(--ion-color-alert-tint);
+}
+
 div.page-wrapper {
     padding-left: 8px;
     padding-right: 8px;
