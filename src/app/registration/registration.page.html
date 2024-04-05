@@ -34,7 +34,7 @@
         <div class="login input-field">
           Не пришло смс?
           <span *ngIf="timer>0">Отправить смс повторно через {{timer}} сек.</span> 
-          <span *ngIf="timer<=0"> <ion-button (click)="doResend()"  fill="clear" >Отправить смс повторно</ion-button></span>
+          <span *ngIf="timer<=0"> <ion-button (click)="doResend()"  fill="clear" color="accent">Отправить смс повторно</ion-button></span>
         </div> 
 
         <div class="login input-field">
@@ -167,8 +167,9 @@
         <ion-toolbar>
           <ion-title>Город/регион</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="city_modal.dismiss()"> <ion-icon slot="icon-only" name="close"></ion-icon></ion-button>
-          </ion-buttons>
+            <ion-button (click)="city_modal.dismiss()" color="black" size="small"> <ion-icon slot="icon-only" name="close"></ion-icon></ion-button>
+          </ion-buttons>          
+
         </ion-toolbar>
         <ion-toolbar>
           <ion-searchbar mode="ios" placeholder="Поиск" show-clear-button="always" (ionChange)="onSearchChange($event)" [(ngModel)]="city" inputmode="text" [debounce]="300"></ion-searchbar>
