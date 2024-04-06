@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-header2',
@@ -12,9 +13,11 @@ export class Header2Component  implements OnInit {
   @Input() has_filter: boolean = false;
   @Output() filterClick = new EventEmitter();
 
-  constructor() { }
+  constructor(private nav:NavController) { }
 
   ngOnInit() {}
 
-
+  back() {
+    this.nav.back();
+  }
 }

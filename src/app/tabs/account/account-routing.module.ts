@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: AccountPage
+  },
+  {
+    path: 'select-pvz',
+    loadChildren: () => import('./select-pvz/select-pvz.module').then( m => m.SelectPVZPageModule)
   }
 ];
 

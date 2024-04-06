@@ -15,7 +15,7 @@
         Вы можете изменить свои учётные данные, сменить пароль, а также выбрать подходящий ПВЗ для получения заказа
       </div>
 
-      <div class="card">
+      <div class="card" *ngIf="is_loaded">
 
         <div class="profile">
 
@@ -56,11 +56,11 @@
           <div class="line">
             <div class="field" >
               <div class="label">Выбранный ПВЗ</div>
-              <div class="value" *ngIf="profile.PVZ.TITLE">{{profile.PVZ.TITLE}}</div>
-              <div class="value" *ngIf="!profile.PVZ.TITLE">Не выбрано</div>
+              <div class="value" *ngIf="profile.PVZ?.TITLE">{{profile.PVZ.TITLE}}</div>
+              <div class="value" *ngIf="!profile.PVZ?.TITLE">Не выбрано</div>
             </div>
             <div class="field" >
-              <app-button title="Изменить" height="30"></app-button>
+              <app-button title="Изменить" height="30" (action)="openPvzList()"></app-button>
             </div>            
           </div>
 
@@ -83,7 +83,15 @@
 
 
         </div>
-        <div class="pvz"></div>
+        <div class="line">
+          <div class="field" >
+            <div class="label2">
+              <p>Вы можете удалить свой аккаунт. В этом случае будет удалена вся ваша персональная информация, связанная с аккаунтом.</p>
+              <p>Для удаления своего аккаунта и всех персональных данных нажмите кнопку ниже:</p>
+            </div>
+          </div>
+        
+        </div>
         <div class="remove_account">
           <ion-button fill="clear" expand="block" shape="round" color="alert" *ngIf="!delete_request" (click)="delete_request=true">Удалить аккаунт <ion-icon slot="start" name="close-outline"></ion-icon></ion-button>
           <ion-button fill="clear" expand="block" shape="round" color="alert"  *ngIf="delete_request" (click)="deleteRequest()">Я подтверждаю удаление<ion-icon slot="start" name="close-outline"></ion-icon></ion-button>

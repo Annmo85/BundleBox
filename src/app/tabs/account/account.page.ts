@@ -10,12 +10,17 @@ export class AccountPage implements OnInit {
 
   current_tab:string = "account";
   delete_request: boolean = false;
+  is_loaded: boolean = false;
   public profile:any = {};
   public pvz_list:any = [];  
 
   constructor(private modalCtrl: ModalController, private toastController:ToastController,private userService:UserService, private nav:NavController,) { }
 
   ngOnInit() {
+    
+  }
+
+  ionViewWillEnter() {
     this.loadProfile();
   }
 
@@ -23,6 +28,7 @@ export class AccountPage implements OnInit {
     this.userService.getProfile().then( res=>{
       this.profile = res.user;
       this.pvz_list = res.pvz_list;
+      this.is_loaded = true;
     })
   }
 
@@ -39,6 +45,10 @@ export class AccountPage implements OnInit {
       toast.present();
       this.nav.navigateRoot(['start'],{animationDirection:"forward"});
     })
+  }
+
+  openPvzList() {
+    this.nav.navigateForward(['/tabs/account/select-pvz']);
   }
 
 }

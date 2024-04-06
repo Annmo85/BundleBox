@@ -47,6 +47,17 @@ ion-header {
                 overflow: hidden;
                 border-radius: 50px;
             }
+
+            div.button-back {
+                display: flex;
+                justify-content: center;
+                align-items: center;                
+                position: relative;
+                overflow: hidden;
+                border-radius: 50px;
+                width: 36px;
+                height: 36px;
+            }
         }
     }
 }

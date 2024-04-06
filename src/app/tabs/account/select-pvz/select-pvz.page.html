@@ -1,0 +1,28 @@
+<app-header2 title="Выберите ПВЗ" [has_back]="true"></app-header2>
+<ion-content [fullscreen]="true">
+
+  <div class="page-wrapper">
+
+    <ion-searchbar mode="ios" placeholder="Поиск" show-clear-button="always" [debounce]="300"
+      (ionInput)="handleSearchInput($event)" [(ngModel)]="search"></ion-searchbar>
+
+    <div class="card ion-activatable" *ngFor="let pvz of stores_list_filtered" (click)="selectPVZ(pvz)">
+      <div class="title">
+        <div>{{pvz.TITLE}}</div>
+        <div class="arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 20 20">
+            <path stroke="#2D2D2D" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m7.5 4.167 5 5.833-5 5.833"/>
+          </svg>
+        </div>
+      </div>
+      <div class="description">
+        <div *ngFor="let line of pvz.DESCRIPTION">{{line}}</div>
+      </div>
+
+      <ion-ripple-effect></ion-ripple-effect>
+    </div>
+  </div>
+
+
+
+</ion-content>
