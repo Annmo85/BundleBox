@@ -51,4 +51,8 @@ export class AccountPage implements OnInit {
     this.nav.navigateForward(['/tabs/account/select-pvz']);
   }
 
+  openProfile() {
+    this.nav.navigateForward(['/tabs/account/profile']);
+  }
+
 }

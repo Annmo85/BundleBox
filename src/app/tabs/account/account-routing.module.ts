@@ -11,6 +11,10 @@ const routes: Routes = [
   {
     path: 'select-pvz',
     loadChildren: () => import('./select-pvz/select-pvz.module').then( m => m.SelectPVZPageModule)
+  },
+  {
+    path: 'profile',
+    loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule)
   }
 ];
 

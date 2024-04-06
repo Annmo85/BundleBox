@@ -1,0 +1,175 @@
+<app-header2 title="Мои данные" [has_back]="true"></app-header2>
+
+<ion-content >
+
+  <div class="login_page2">
+    <div class="form"  *ngIf="is_load">
+      <form [formGroup]="ionicForm!" (ngSubmit)="submitForm()" novalidate>
+
+        <!-- <div class="login input-field">
+          <div class="label">Номер телефона <span class="required"></span></div>
+          <div class="input" style="gap:5px" [ngClass]="{'error':ionicForm?.touched && ionicForm?.get('phone')?.invalid}">
+            <div class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
+                <path stroke="#2D2D2D" stroke-width="1.2" d="M3 7.5c0-2.828 0-4.243.879-5.121C4.757 1.5 6.172 1.5 9 1.5c2.828 0 4.243 0 5.121.879C15 3.257 15 4.672 15 7.5v3c0 2.828 0 4.243-.879 5.121-.878.879-2.293.879-5.121.879-2.828 0-4.243 0-5.121-.879C3 14.743 3 13.328 3 10.5v-3Z"/>
+                <path stroke="#2D2D2D" stroke-linecap="round" stroke-width="1.2" d="M11.25 14.25h-4.5m5.811-12.467-.063.095c-.567.85-.85 1.276-1.265 1.533a2.25 2.25 0 0 1-.256.137c-.444.202-.955.202-1.977.202-1.022 0-1.533 0-1.977-.202a2.25 2.25 0 0 1-.256-.137c-.415-.257-.698-.683-1.265-1.533l-.063-.095"/>
+              </svg>
+            </div>
+            <div>+7</div>
+            <ion-input [maskito]="phoneMask" [maskitoElement]="maskPredicate"  type="tel" inputmode="tel" #phone formControlName="phone" [autofocus]="true" (keyup.enter)="setFocus(name)"></ion-input>
+          </div>
+        </div> -->
+
+        <div class="login input-field">
+          <div class="label">Имя <span class="required"></span></div>
+          <div class="input" [ngClass]="{'error':ionicForm?.touched && ionicForm?.get('name')?.invalid}">
+            <div class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
+                <circle cx="9" cy="4.5" r="3" stroke="#2D2D2D" stroke-width="1.2"/>
+                <ellipse cx="9" cy="12.75" stroke="#2D2D2D" stroke-width="1.2" rx="5.25" ry="3"/>
+              </svg>
+            </div>
+            <ion-input type="text" inputmode="text" formControlName="name" #name (keyup.enter)="setFocus(last_name)" placeholder="Введите имя"></ion-input>
+          </div>
+        </div>
+
+
+        <div class="login input-field">
+          <div class="label">Фамииля <span class="required"></span></div>
+          <div class="input" [ngClass]="{'error':ionicForm?.touched && ionicForm?.get('last_name')?.invalid}">
+            <div class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
+                <circle cx="9" cy="4.5" r="3" stroke="#2D2D2D" stroke-width="1.2"/>
+                <ellipse cx="9" cy="12.75" stroke="#2D2D2D" stroke-width="1.2" rx="5.25" ry="3"/>
+              </svg>
+            </div>
+            <ion-input type="text" inputmode="text" formControlName="last_name" #last_name (keyup.enter)="setFocus(email)"  placeholder="Введите фамиилию"></ion-input>
+          </div>
+        </div>
+
+        <div class="login input-field">
+          <div class="label">Email <span class="required"></span></div>
+          <div class="input" [ngClass]="{'error':ionicForm?.touched && ionicForm?.get('Email')?.invalid}">
+            <div class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
+                <path stroke="#2D2D2D" stroke-width="1.2" d="M1.5 9c0-2.828 0-4.243.879-5.121C3.257 3 4.672 3 7.5 3h3c2.828 0 4.243 0 5.121.879.879.878.879 2.293.879 5.121 0 2.828 0 4.243-.879 5.121C14.743 15 13.328 15 10.5 15h-3c-2.828 0-4.243 0-5.121-.879C1.5 13.243 1.5 11.828 1.5 9Z"/>
+                <path stroke="#2D2D2D" stroke-linecap="round" stroke-width="1.2" d="m4.5 6 1.62 1.35C7.496 8.496 8.184 9.07 9 9.07s1.503-.574 2.88-1.722L13.5 6"/>
+              </svg>
+            </div>
+            <ion-input type="text" inputmode="email" formControlName="email" #email (keyup.enter)="setFocus(city)"  placeholder="Введите Email"></ion-input>
+          </div>
+        </div>
+
+
+
+        <div class="login input-field">
+          <div class="label">Индекс <span class="required"></span></div>
+          <div class="input">
+            <div class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
+                <path stroke="#2D2D2D" stroke-width="1.2" d="M3 7.607C3 4.234 5.686 1.5 9 1.5s6 2.734 6 6.107c0 3.347-1.915 7.252-4.903 8.649a2.587 2.587 0 0 1-2.194 0C4.915 14.859 3 10.954 3 7.607Z"/>
+                <circle cx="9" cy="7.5" r="2.25" stroke="#2D2D2D" stroke-width="1.2"/>
+              </svg>
+            </div>
+            <ion-input type="text" inputmode="text" formControlName="index" #index (keyup.enter)="setFocus(city)"  placeholder="Укажите индекс"></ion-input>
+          </div>
+        </div>
+
+        <div class="login input-field">
+          <div class="label">Город/регион <span class="required"></span></div>
+          <div class="input" [ngClass]="{'error':ionicForm?.touched && ionicForm?.get('Email')?.invalid}">
+            <div class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
+                <path stroke="#2D2D2D" stroke-width="1.2" d="M3 7.607C3 4.234 5.686 1.5 9 1.5s6 2.734 6 6.107c0 3.347-1.915 7.252-4.903 8.649a2.587 2.587 0 0 1-2.194 0C4.915 14.859 3 10.954 3 7.607Z"/>
+                <circle cx="9" cy="7.5" r="2.25" stroke="#2D2D2D" stroke-width="1.2"/>
+              </svg>
+            </div>
+            <ion-input (ionFocus)="isCityModalOpen  =true"  type="text" inputmode="text" formControlName="city" #city (keyup.enter)="setFocus(street)" readonly  placeholder="Укажите город/регион"></ion-input>
+          </div>
+        </div>
+
+
+        <div class="login input-field">
+          <div class="label">Населенный пункт/адрес <span class="required"></span></div>
+          <div class="input">
+            <div class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
+                <path stroke="#2D2D2D" stroke-width="1.2" d="M3 7.607C3 4.234 5.686 1.5 9 1.5s6 2.734 6 6.107c0 3.347-1.915 7.252-4.903 8.649a2.587 2.587 0 0 1-2.194 0C4.915 14.859 3 10.954 3 7.607Z"/>
+                <circle cx="9" cy="7.5" r="2.25" stroke="#2D2D2D" stroke-width="1.2"/>
+              </svg>
+            </div>
+            <ion-input type="text" inputmode="text" formControlName="street" #street (keyup.enter)="setFocus(dom)"  placeholder="Укажите ваш адрес"></ion-input>
+          </div>
+        </div>
+
+        <div class="login input-field">
+          <div class="label">Дом</div>
+          <div class="input">
+            <div class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
+                <path stroke="#2D2D2D" stroke-width="1.2" d="M3 7.607C3 4.234 5.686 1.5 9 1.5s6 2.734 6 6.107c0 3.347-1.915 7.252-4.903 8.649a2.587 2.587 0 0 1-2.194 0C4.915 14.859 3 10.954 3 7.607Z"/>
+                <circle cx="9" cy="7.5" r="2.25" stroke="#2D2D2D" stroke-width="1.2"/>
+              </svg>
+            </div>
+            <ion-input type="text" inputmode="text" formControlName="dom" #dom (keyup.enter)="setFocus(kv)"  placeholder="Укажите ваш дом"></ion-input>
+          </div>
+        </div>
+
+        <div class="login input-field">
+          <div class="label">Квартира</div>
+          <div class="input">
+            <div class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
+                <path stroke="#2D2D2D" stroke-width="1.2" d="M3 7.607C3 4.234 5.686 1.5 9 1.5s6 2.734 6 6.107c0 3.347-1.915 7.252-4.903 8.649a2.587 2.587 0 0 1-2.194 0C4.915 14.859 3 10.954 3 7.607Z"/>
+                <circle cx="9" cy="7.5" r="2.25" stroke="#2D2D2D" stroke-width="1.2"/>
+              </svg>
+            </div>
+            <ion-input type="text" inputmode="text" formControlName="kv" #kv (keyup.enter)="submitForm()"  placeholder="Номер квартиры"></ion-input>
+          </div>
+        </div>
+
+
+        <div class="login input-field">
+          <app-button title="Сохранить" height="48" [disabled]="!ionicForm!.valid" (action)="submitForm()"></app-button>
+        </div>
+        <br>
+        <br>
+        <br>
+      </form>
+    </div>
+  </div>
+
+  <ion-modal [isOpen]="isCityModalOpen" (willDismiss)="isCityModalOpen = false" class="city_modal" mode="ios" #city_modal>
+    <ng-template>
+      <ion-header class="ion-no-border">
+        <ion-toolbar>
+          <ion-title>Город/регион</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="city_modal.dismiss()" color="black" size="small"> <ion-icon slot="icon-only" name="close"></ion-icon></ion-button>
+          </ion-buttons>          
+
+        </ion-toolbar>
+        <ion-toolbar>
+          <ion-searchbar mode="ios" placeholder="Поиск" show-clear-button="always" (ionChange)="onSearchChange($event)" [(ngModel)]="city" inputmode="text" [debounce]="300"></ion-searchbar>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <div clas="stores-list">
+    
+          <ion-list lines="full">
+            <ion-item *ngFor="let item of filteredItems |  slice: 0:10" detail button (click)="setCity(item)">
+              <ion-label class="ion-text-wrap">{{item.label}}</ion-label>
+            </ion-item>
+            <ion-item class="not-found" *ngIf="filteredItems.length==0">
+              <ion-label class="ion-text-wrap">По вашему запросу ничего не найдено</ion-label>
+            </ion-item>            
+          </ion-list>
+    
+        </div>
+    
+    
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

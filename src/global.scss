@@ -150,6 +150,9 @@ ion-content {
 
 
 :root {
+
+    --highlight-color-valid: transparent !important;
+
     --ion-background-color: #DCF2FF;
     --ion-background-color-rgb: 220, 242, 255;
 
@@ -573,4 +576,8 @@ ion-modal.city_modal {
             }
         }
     }
+}
+
+.input-highlight.sc-ion-input-md {
+    height: 0px !important;
 }
