@@ -16,6 +16,7 @@ import { environment } from 'src/environments/environment';
 export class ProfilePage implements OnInit {
 
   ionicForm!: FormGroup;
+  ionicForm2!: FormGroup;
   @ViewChild('phone') phone! : IonInput ;
   @ViewChild('password') password! : IonInput;
   @ViewChild('confirm') confirm! : IonInput;
@@ -72,7 +73,13 @@ export class ProfilePage implements OnInit {
       dom: [this.profile.DOM_VALUE],
       kv: [this.profile.KV_VALUE],
       index: [this.profile.INDEX_VALUE],
-    })    
+    });
+
+    this.ionicForm2 = this.formBuilder.group({
+      confirm: ['', [Validators.required]],
+      password: ['', [Validators.required]],
+    })   
+
   }
 
 
@@ -82,6 +89,66 @@ export class ProfilePage implements OnInit {
 
   setFocus(control:IonInput) {
     control.setFocus();
+  }
+
+
+  async submitForm2() {
+    this.pwd_error = "";
+    this.confirm_error = "";
+    this.error_response ="";
+    console.log(this.ionicForm2.value);
+    let confirm = this.ionicForm2.value.confirm;
+    let password = this.ionicForm2.value.password;
+
+    if (confirm=='' || confirm!=password) {
+      this.confirm_error = "Пароли не совпадают либо пустые!";
+      return;
+    }
+    if (password=='') {
+      this.pwd_error = "Пароль не может быть пустым!";
+      return;
+    }
+
+    if (confirm!='' && password !='') {
+
+      const loading = await this.loadingCtrl.create({
+        message: 'Подождите...',
+        mode: "ios"
+      });
+      loading.present();
+
+
+      this.userService.updatePwd(password).then(async response=>{
+
+        loading.dismiss();        
+        if (response.error) {
+          this.error_response = response.message;
+          const toast = await this.toastController.create({
+            message: this.error_response,
+            duration: 2000,
+            color: "alert"
+          });
+          loading.dismiss();
+          toast.present();            
+        } else {
+          loading.dismiss();
+          const toast = await this.toastController.create({
+            message: "Данные успешно обновлены",
+            duration: 2000,
+            color: "accent"
+          });
+          toast.present(); 
+          this.nav.back();
+        }
+
+
+      }).catch(err=>{
+        console.log("change-password.ts this.userService.updatePwd error:");
+        console.log(err);
+        loading.dismiss();
+      });
+    }
+
   }
 
 
