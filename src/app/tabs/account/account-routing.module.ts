@@ -15,6 +15,10 @@ const routes: Routes = [
   {
     path: 'profile',
     loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule)
+  },
+  {
+    path: 'order/:order_id',
+    loadChildren: () => import('./order/order.module').then( m => m.OrderPageModule)
   }
 ];
 

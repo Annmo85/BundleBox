@@ -13,8 +13,12 @@ export class UserService {
   private openOrder = new BehaviorSubject<any>(null);
   private payments_info = new BehaviorSubject<any>(null);
   public leadChange = new Subject<any>();
+  
 
   public dashboardData = new BehaviorSubject<any>(null);
+
+  public actionBadge = new BehaviorSubject<number>(0);
+
   getDashboardInfo() {
     return this.dashboardData.asObservable();
   }
@@ -24,7 +28,7 @@ export class UserService {
     let stores:any[] = [];
     let currencies:any[] = [];
     let usl_text:any[] = [];
-    let calls = [this.loadLastOrders(),this.loadNews()];
+    let calls = [this.loadLastOrders(),this.loadNews(),this.loadLeads()];
     
     return new Promise( (resolve,reject)=>{
       Promise.all(calls).then((response:any)=>{
@@ -43,6 +47,7 @@ export class UserService {
           currencies:currencies,
           usl_text:usl_text,
         };
+        this.actionBadge.next(response[2].deals_for_payement.length);
         this.dashboardData.next(data);
         resolve (data);
       })

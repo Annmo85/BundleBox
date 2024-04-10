@@ -279,6 +279,27 @@ div.slider-button {
     color: #2D2D2D;
     width: 150px;
 
+    div {
+        display: flex;
+        justify-content: center;
+    }
+
+    span.badge {
+        display: inline-block;
+        background-color: #FF0000;
+        width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color:#fff;
+        font-size: 12px;
+        line-height: 12px;
+        border-radius: 50px;
+        margin-left: 5px;
+        margin-top: -8px;
+    }
+
 }
 
 

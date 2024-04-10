@@ -6,10 +6,96 @@
 
     <div class="tabs">
       <div class="tab" [ngClass]="{'active':current_tab=='account'}" (click)="current_tab='account'; delete_request=false;">Личный кабинет</div>
-      <div class="tab" [ngClass]="{'active':current_tab=='orders'}" (click)="current_tab='orders'; delete_request=false;">Заказы <div class="badge">3</div></div>
+      <div class="tab" [ngClass]="{'active':current_tab=='orders'}" (click)="current_tab='orders'; delete_request=false;">Заказы <div class="badge" *ngIf="badge_count>0">{{badge_count}}</div></div>
+    </div>
+
+    <!-- вкладка заказов-->
+    <div *ngIf="current_tab=='orders'" class="section">
+      <div class="buttons-slider">
+        <swiper-container [spaceBetween]="15" [slidesPerView]="'auto'" [freeMode]="true">
+
+          <swiper-slide>
+            <div class="slider-button ion-activatable" (click)="order_tab_selected='myorders'; loadMyOrders();"
+              [ngClass]="{'active': order_tab_selected==='myorders'}">Мои заказы<ion-ripple-effect
+                type="bounded"></ion-ripple-effect></div>
+          </swiper-slide>
+
+          <swiper-slide>
+            <div class="slider-button ion-activatable" style="width: 225px;" (click)="order_tab_selected='needactions'; loadMyOrders();"
+              [ngClass]="{'active': order_tab_selected==='needactions'}"><div>Требуют действий <span class="badge" *ngIf="badge_count>0">{{badge_count}}</span></div><ion-ripple-effect
+                type="bounded"></ion-ripple-effect></div>
+          </swiper-slide>
+
+          <swiper-slide>
+            <div class="slider-button ion-activatable" (click)="order_tab_selected='closed'; loadClosedOrders();"
+              [ngClass]="{'active': order_tab_selected==='closed'}">Завершенные<ion-ripple-effect
+                type="bounded"></ion-ripple-effect></div>
+          </swiper-slide>
+
+        </swiper-container>
+      </div>
+
+      <!-- требуют действия-->
+      <div *ngIf="!wait_for_payment_orders_loaded && order_tab_selected==='needactions'" class="my_orders" >
+        <div *ngFor="let i of [1,2,3,4]"><ion-skeleton-text animated style="width: 100%; height: 180px;"></ion-skeleton-text></div>
+      </div>
+
+      <div *ngIf="wait_for_payment_orders_loaded && order_tab_selected==='needactions'" class="my_orders" >
+
+        <ion-refresher slot="fixed" (ionRefresh)="doRefreshMyOrders($event)">
+          <ion-refresher-content
+            pullingIcon="chevron-down-circle-outline"
+            pullingText="Потяните для обновления"
+            refreshingSpinner="circles"
+            refreshingText="Загрузка...">
+          </ion-refresher-content>
+        </ion-refresher>
+
+        <app-order-card [order]="order" *ngFor="let order of wait_for_payment_orders"></app-order-card>
+      </div>
+
+      <!-- Мои заказы-->
+      <div *ngIf="!my_orders_loaded && order_tab_selected==='myorders'" class="my_orders" >
+        <div *ngFor="let i of [1,2,3,4]"><ion-skeleton-text animated style="width: 100%; height: 180px;"></ion-skeleton-text></div>
+      </div>
+
+      <div *ngIf="my_orders_loaded && order_tab_selected==='myorders'" class="my_orders" >
+
+        <ion-refresher slot="fixed" (ionRefresh)="doRefreshMyOrders($event)">
+          <ion-refresher-content
+            pullingIcon="chevron-down-circle-outline"
+            pullingText="Потяните для обновления"
+            refreshingSpinner="circles"
+            refreshingText="Загрузка...">
+          </ion-refresher-content>
+        </ion-refresher>
+
+        <app-order-card [order]="order" *ngFor="let order of my_orders"></app-order-card>
+      </div>
+
+      <!-- Завершенные-->
+      <div *ngIf="!closed_orders_loaded && order_tab_selected==='closed'" class="closed_orders" >
+        <div *ngFor="let i of [1,2,3,4]"><ion-skeleton-text animated style="width: 100%; height: 180px;"></ion-skeleton-text></div>
+      </div>
+
+      <div *ngIf="closed_orders_loaded && order_tab_selected==='closed'" class="closed_orders" >
+
+        <ion-refresher slot="fixed" (ionRefresh)="doRefreshClosed($event)">
+          <ion-refresher-content
+            pullingIcon="chevron-down-circle-outline"
+            pullingText="Потяните для обновления"
+            refreshingSpinner="circles"
+            refreshingText="Загрузка...">
+          </ion-refresher-content>
+        </ion-refresher>
+
+        <app-order-card [order]="order" *ngFor="let order of closed_orders"></app-order-card>
+      </div>
+
     </div>
 
 
+    <!-- вкладка профиля-->
     <div *ngIf="current_tab=='account'" class="section">
       <div class="text">
         Вы можете изменить свои учётные данные, сменить пароль, а также выбрать подходящий ПВЗ для получения заказа

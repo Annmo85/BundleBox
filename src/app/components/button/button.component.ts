@@ -11,6 +11,7 @@ export class ButtonComponent  implements OnInit {
   @Input() title:string  = "";
   @Input() height:string  = "40";
   @Input() disabled:boolean  = false;
+  @Input() outline:boolean  = false;
 
   constructor() { }
 

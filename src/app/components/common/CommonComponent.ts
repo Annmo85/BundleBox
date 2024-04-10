@@ -17,6 +17,8 @@ import {CalcDeliveryComponent} from '../calc-delivery/calc-delivery.component';
 import {CalcOrderComponent} from '../calc-order/calc-order.component';
 import {UslPageComponent} from '../usl-page/usl-page.component';
 import {OfertaComponent} from '../oferta/oferta.component';
+import {OrderCardComponent} from '../order-card/order-card.component';
+import {HelperPopoverComponent} from '../helper-popover/helper-popover.component';
 
 import {ImageZoomPageModule} from '../../image-zoom/image-zoom.module'
 import { CommonModule } from '@angular/common';
@@ -47,7 +49,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CalcDeliveryComponent,
     CalcOrderComponent,
     UslPageComponent,
+    OrderCardComponent,
     OfertaComponent,
+    HelperPopoverComponent,
   ],
   exports: [
     CommonModule,
@@ -66,6 +70,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CalcDeliveryComponent,
     CalcOrderComponent,    
     UslPageComponent,    
+    OrderCardComponent,    
+    HelperPopoverComponent,    
     OfertaComponent,    
   ],
   providers: []

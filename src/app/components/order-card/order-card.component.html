@@ -1,0 +1,109 @@
+<div class="order-wrapper">
+  <div class="date">
+    <div>
+      <svg xmlns="http://www.w3.org/2000/svg" width="17" height="15" fill="none" viewBox="0 0 17 15">
+        <path stroke="#2D2D2D" d="M1.833 7.5c0-2.357 0-3.536.782-4.268.78-.732 2.038-.732 4.552-.732h2.667c2.514 0 3.77 0 4.552.732.78.732.78 1.911.78 4.268v1.25c0 2.357 0 3.536-.78 4.268-.781.732-2.038.732-4.552.732H7.167c-2.514 0-3.771 0-4.552-.732-.782-.732-.782-1.911-.782-4.268V7.5Z"/>
+        <path stroke="#2D2D2D" stroke-linecap="round" d="M5.167 2.5v-.938m6.667.938v-.938M2.167 5.625h12.666"/>
+      </svg>
+    </div>
+    <div><img class="country" [src]="_order.FLAG" *ngIf="_order.FLAG!=''"></div>
+    <div>{{_order.DATE}}</div>
+  </div>
+  <div class="card">
+    <div class="line1">
+      <div class="logo" [style.background-image]="'url(' + _order.IMAGE + ')'"></div>
+      <div class="info">
+
+        <div class="pos">
+          <div class="label">Магазин</div>
+          <div class="dotted"></div>
+          <div class="value">{{_order.STORE}}</div>
+        </div>
+        <div class="pos">
+          <div class="label">Номер заказа</div>
+          <div class="dotted"></div>
+          <div class="value">{{_order.NUM}}</div>
+        </div>
+        <div class="pos">
+          <div class="label">Стоимость</div>
+          <div class="dotted"></div>
+          <div class="sum">{{_order.SUM}}</div>
+        </div>
+
+      </div>
+
+    </div>
+    <div class="line2">
+
+      <div class="pos">
+        <div class="label">Статус заказа</div>
+        <div class="dotted"></div>
+        <div class="value2" (click)="openHelpPopover(_order.STAGE_HELPER, $event)">{{_order.STAGE}}
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 14 14">
+            <g clip-path="url(#a)">
+              <circle cx="7" cy="7" r="5.833" stroke="#EF7004" stroke-width="1.1"/>
+              <path stroke="#EF7004" stroke-linecap="round" stroke-width="1.1" d="M5.906 5.177a1.094 1.094 0 1 1 1.65.942C7.28 6.283 7 6.532 7 6.854v.73"/>
+              <circle cx="7" cy="9.333" r=".583" fill="#EF7004"/>
+            </g>
+            <defs>
+              <clipPath id="a">
+                <path fill="#fff" d="M0 0h14v14H0z"/>
+              </clipPath>
+            </defs>
+          </svg>
+          
+        
+        </div>
+      </div>
+
+      <div class="pos" *ngIf="_order.DELIVERY_COST && _order.DELIVERY_COST!=''">
+        <div class="label">Стоимость доставки</div>
+        <div class="dotted"></div>
+        <div class="sum">{{_order.DELIVERY_COST}}</div>
+      </div>
+
+      <div class="pos" *ngIf="_order.WEIGHT && _order.WEIGHT!=''">
+        <div class="label">Вес</div>
+        <div class="dotted"></div>
+        <div class="sum">{{_order.WEIGHT}} кг.</div>
+      </div>
+
+      <div class="pos" *ngIf="_order.BARCODE">
+        <div class="label">Штрих-код для получения</div>
+        <div class="dotted"></div>
+        <div class="sum">{{_order.BARCODE}}</div>
+      </div>
+
+      <div class="pos" *ngIf="_order.REVIEW">
+        <div class="label">Ваша оценка</div>
+        <div class="dotted"></div>
+        <div class="sum">
+
+          <span *ngFor="let i of [1,2,3,4,5]">
+            <ion-icon *ngIf="_order.REVIEW.like>=i" name="star" size="small" color="accent"></ion-icon>
+            <ion-icon *ngIf="_order.REVIEW.like<i" name="star-outline" size="small" color="accent"></ion-icon>
+          </span> 
+
+        </div>
+      </div>
+
+    </div>
+    <div class="line3">
+
+      <div class="button">
+        <app-button height="44" title="Подробнее" [outline]="true" (action)="openItem()"></app-button>
+      </div>
+
+      <div class="button" *ngIf="_order.STAGE=='Оплатите доставку'">
+        <app-button height="44" title="Оплатить"></app-button>
+      </div>
+
+      <div class="button" *ngIf="_order.STAGE=='Оплатите заказ' || _order.STAGE=='Отправлен счёт'">
+        <app-button height="44" title="Оплатить"></app-button>
+      </div>
+
+
+    </div>
+  </div>
+</div>
