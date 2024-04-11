@@ -13,6 +13,7 @@ export class UserService {
   private openOrder = new BehaviorSubject<any>(null);
   private payments_info = new BehaviorSubject<any>(null);
   public leadChange = new Subject<any>();
+  public reloadLeads$ = new Subject<any>();
   
 
   public dashboardData = new BehaviorSubject<any>(null);

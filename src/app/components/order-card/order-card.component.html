@@ -96,11 +96,11 @@
       </div>
 
       <div class="button" *ngIf="_order.STAGE=='Оплатите доставку'">
-        <app-button height="44" title="Оплатить"></app-button>
+        <app-button height="44" title="Оплатить"  (action)="openDeliveryPayment()"></app-button>
       </div>
 
       <div class="button" *ngIf="_order.STAGE=='Оплатите заказ' || _order.STAGE=='Отправлен счёт'">
-        <app-button height="44" title="Оплатить"></app-button>
+        <app-button height="44" title="Оплатить"   (action)="openPayment()"></app-button>
       </div>
 
 

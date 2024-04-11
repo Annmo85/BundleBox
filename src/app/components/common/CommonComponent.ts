@@ -19,11 +19,14 @@ import {UslPageComponent} from '../usl-page/usl-page.component';
 import {OfertaComponent} from '../oferta/oferta.component';
 import {OrderCardComponent} from '../order-card/order-card.component';
 import {HelperPopoverComponent} from '../helper-popover/helper-popover.component';
+import {PaymentInstructionComponent} from '../payment-instruction/payment-instruction.component';
+import {PaymenDeliveryInstructionComponent} from '../paymen-delivery-instruction/paymen-delivery-instruction.component';
 
 import {ImageZoomPageModule} from '../../image-zoom/image-zoom.module'
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
@@ -31,6 +34,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     IonicModule,
+    HttpClientModule,
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
@@ -52,11 +56,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     OrderCardComponent,
     OfertaComponent,
     HelperPopoverComponent,
+    PaymentInstructionComponent,
+    PaymenDeliveryInstructionComponent,
   ],
   exports: [
     CommonModule,
     IonicModule,
     RouterModule,
+    HttpClientModule,
     ReactiveFormsModule,
     ButtonComponent,
     StoreCardComponent,
@@ -73,6 +80,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     OrderCardComponent,    
     HelperPopoverComponent,    
     OfertaComponent,    
+    PaymentInstructionComponent,    
+    PaymenDeliveryInstructionComponent,    
   ],
   providers: []
 })

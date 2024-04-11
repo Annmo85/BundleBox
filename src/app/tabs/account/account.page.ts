@@ -38,6 +38,17 @@ export class AccountPage implements OnInit {
       this.badge_count = badge_count;
     })
 
+    this.userService.reloadLeads$.asObservable().subscribe(()=>{
+      this.userService.loadLeads().then(response =>{
+        this.my_orders = [];
+        this.wait_for_payment_orders = [];
+        response.deals_for_payement.forEach((lead:any) => {
+          this.wait_for_payment_orders.push(lead);
+        });
+  
+      });
+    })
+
   }
 
   ngOnInit() {
