@@ -1,0 +1,19 @@
+<div class="wrapper-out">
+  <div class="wrapper">
+    <div class="left">
+      <div class="image"  [style.background-image]="'url('+_order.IMAGE+')'"></div>
+      <div class="store">{{_order.STORE}}</div>
+    </div>
+    <div class="right">
+      <div class="status" style="background:{{bgcolor}}">{{_order.STAGE}}</div> 
+    </div>
+  </div>
+
+  <div class="bottom ion-activatable">
+    <div class="text">Показать историю </div>
+    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="none" viewBox="0 0 19 19">
+      <path stroke="#2D2D2D" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.041 7.125 9.5 11.875l-5.542-4.75"/>
+    </svg>
+    <ion-ripple-effect></ion-ripple-effect>
+  </div>
+</div>
