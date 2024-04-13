@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { OrderPageRoutingModule } from './order-routing.module';
-
+import {CommonComponent} from '../../../components/common/CommonComponent'
 import { OrderPage } from './order.page';
 
 @NgModule({
@@ -13,6 +13,8 @@ import { OrderPage } from './order.page';
     CommonModule,
     FormsModule,
     IonicModule,
+    IonicModule,
+    CommonComponent,
     OrderPageRoutingModule
   ],
   declarations: [OrderPage]

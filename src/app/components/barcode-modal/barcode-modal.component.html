@@ -1,0 +1,23 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Штрихкод</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()" color="black" size="small"> <ion-icon slot="icon-only" name="close"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="page-wrapper">
+    <div class="block">
+      <p>
+        Покажите этот штрихкод при получении вашего заказа в пункте выдачи заказов.
+      </p>
+      <div class="barcode">
+        <img id="barcode">
+      </div>
+      <div class="text" *ngIf="order.PARCEL"><b>{{order.PARCEL}}</b></div>
+      <div class="text" *ngIf="order.CUSTOMER"><b>{{order.CUSTOMER}}</b></div>
+      <div class="text" *ngIf="order.PRICE">К оплате<b>{{order.PRICE}}</b></div>
+    </div>
+  </div>
+</ion-content>

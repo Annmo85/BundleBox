@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController, NavController } from '@ionic/angular';
 import { PopoverController } from '@ionic/angular';
+import { MakeOrderModalComponent } from 'src/app/components/make-order-modal/make-order-modal.component';
 
 @Component({
   selector: 'app-action-item',
@@ -62,4 +63,15 @@ export class ActionItemComponent  implements OnInit {
       this.nav.navigateForward([this._link]);
     }
   }
+
+  async openMakeOrderModal() {
+    const modal = await this.modalCtrl.create({
+      component: MakeOrderModalComponent,
+      initialBreakpoint: 0.3,
+      breakpoints: [0,0,3],
+      cssClass: "makeOrderModal",
+      mode: 'ios'
+    });
+    modal.present();
+  }  
 }

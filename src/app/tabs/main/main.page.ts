@@ -83,4 +83,11 @@ export class MainPage implements OnInit {
     });
     modal.present();
   }  
+
+
+
+  
+  openUrl(url:string) {
+    window.open(url,"_blank");
+  }
 }

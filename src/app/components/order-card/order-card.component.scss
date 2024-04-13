@@ -123,3 +123,17 @@ div.order-wrapper {
 
     }
 }
+
+div.status {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 4px;
+    border-radius: 100px;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+    color: #262626;
+    gap:10px;
+}

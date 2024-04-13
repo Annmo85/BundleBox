@@ -22,6 +22,7 @@ export class ReviewItemComponent  implements OnInit {
   constructor(private nav: NavController, private modalCtrl: ModalController, private loadingCtrl:LoadingController,) { }
 
   ngOnInit() {
+    
     this.url = environment.api_url;
   }
 
@@ -38,5 +39,9 @@ export class ReviewItemComponent  implements OnInit {
      });
     loading.dismiss();
     modal.present();
+  }
+
+  openStore() {
+    window.open(this.review.store.site_link,"_blank");
   }
 }

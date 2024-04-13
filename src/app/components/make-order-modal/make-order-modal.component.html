@@ -5,10 +5,10 @@
 </ion-header>
 <ion-content class="ion-padding">
   <div class="block">
-    <p>Выберете 1 из доступных месснджеров для оформленения заказа в нём</p>
+    <p>Выберете один из доступных мессенджеров для оформленения заказа в нём</p>
     <div class="icons">
 
-      <div class="icon ion-activatable">
+      <div class="icon ion-activatable" (click)="openVb()">
         <svg xmlns="http://www.w3.org/2000/svg" width="98" height="48" fill="none" viewBox="0 0 98 48">
           <g clip-path="url(#a)">
             <rect width="97.333" height="48" fill="url(#b)" rx="24"/>
@@ -28,7 +28,7 @@
         <ion-ripple-effect type="bounded"></ion-ripple-effect>
       </div>
 
-      <div class="icon ion-activatable">
+      <div class="icon ion-activatable" (click)="openTg()">
         <svg xmlns="http://www.w3.org/2000/svg" width="98" height="48" fill="none" viewBox="0 0 98 48">
           <g clip-path="url(#a)">
             <rect width="97.333" height="48" x=".333" fill="url(#b)" rx="24" />
@@ -49,7 +49,7 @@
         <ion-ripple-effect type="bounded"></ion-ripple-effect>
       </div>
 
-      <div class="icon ion-activatable">
+      <div class="icon ion-activatable" (click)="openWa()">
         <svg xmlns="http://www.w3.org/2000/svg" width="98" height="48" fill="none" viewBox="0 0 98 48">
           <g clip-path="url(#a)">
             <rect width="97.333" height="48" x=".667" fill="url(#b)" rx="24" />

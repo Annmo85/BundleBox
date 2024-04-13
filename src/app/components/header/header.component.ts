@@ -14,4 +14,12 @@ export class HeaderComponent  implements OnInit {
 
   ngOnInit() {}
 
+  openTg() {
+    window.open("https://t.me/annabbox","_blank");
+  }
+
+  openWa() {
+    window.open("https://wa.me/79025665111","_blank");
+  }
+
 }

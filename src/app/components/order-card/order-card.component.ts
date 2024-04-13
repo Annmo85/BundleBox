@@ -5,6 +5,7 @@ import {PaymenDeliveryInstructionComponent} from '../../components/paymen-delive
 import {PaymentInstructionComponent} from '../../components/payment-instruction/payment-instruction.component';
 import { ModalController, ToastController } from '@ionic/angular';
 import { UserService } from '../../services/user.service';
+import {OrderPage} from '../../tabs/account/order/order.page';
 
 @Component({
   selector: 'app-order-card',
@@ -12,6 +13,8 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./order-card.component.scss'],
 })
 export class OrderCardComponent  implements OnInit {
+
+  bgcolor:string = "";
 
   public _order:any = null;
 
@@ -26,11 +29,35 @@ export class OrderCardComponent  implements OnInit {
 
   constructor(private userService:UserService, private modalCtrl: ModalController, private toastController:ToastController,private nav:NavController,private popoverController: PopoverController) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+
+    if (this._order.STAGE === "Отправлено магазином") this.bgcolor = "#FCF2CF;";
+    else if (this._order.STAGE === "Ожидает выкупа") this.bgcolor = "#FADBEB;";
+    else if (this._order.STAGE === "Оплатите заказ") this.bgcolor = "#FFA39B;";
+    else if (this._order.STAGE === "Оплачено") this.bgcolor = "#DAE1F1;";
+    else if (this._order.STAGE === "Получено на складе") this.bgcolor = "#F8DA78;";
+    else if (this._order.STAGE === "Посылка отправлена") this.bgcolor = "#CBE0B9;";
+    else if (this._order.STAGE === "Оплатите доставку") this.bgcolor = "#FFA39B;";
+    else if (this._order.STAGE === "Доставка оплачена") this.bgcolor = "#DAE1F1;";
+    else if (this._order.STAGE === "Получите заказ") this.bgcolor = "#FFA39B;";
+    else if (this._order.STAGE === "Заказ завершён") this.bgcolor = "#ADB9C7;";
+    else if (this._order.STAGE === "Заказ завершен") this.bgcolor = "#ADB9C7;";
+
+  }
 
 
   async openItem() {
-    this.nav.navigateForward(["/tabs/account/order",this._order.ID])
+    const modal = await this.modalCtrl.create({
+      component: OrderPage,
+      componentProps: {order_id: this._order.ID, store_id: this._order.STORE_ID}
+    });
+    modal.present();
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirm') {
+      console.log(data);
+      this._order.REVIEW = data;
+    }
   }  
 
   async openHelpPopover(help:string, e:Event) {

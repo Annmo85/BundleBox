@@ -1,7 +1,7 @@
 <div class="review_card">
 
   <div class="top-line">
-    <div class="store_logo" [style.backgroundImage]="'url('+review.store_image+')'"></div>
+    <div class="store_logo" [style.backgroundImage]="'url('+review.store_image+')'" (click)="openStore()"></div>
     <div class="titles">
       <div class="store_name">{{review.store.name}}</div>
       <div class="customer">{{review.bitrix_user_name}}</div>

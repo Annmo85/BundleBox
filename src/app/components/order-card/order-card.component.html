@@ -38,13 +38,17 @@
       <div class="pos">
         <div class="label">Статус заказа</div>
         <div class="dotted"></div>
-        <div class="value2" (click)="openHelpPopover(_order.STAGE_HELPER, $event)">{{_order.STAGE}}
+        <div class="value2" (click)="openHelpPopover(_order.STAGE_HELPER, $event)">
+          
+          <div class="status" style="background:{{bgcolor}}">{{_order.STAGE}}
+          
+
         
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 14 14">
             <g clip-path="url(#a)">
-              <circle cx="7" cy="7" r="5.833" stroke="#EF7004" stroke-width="1.1"/>
-              <path stroke="#EF7004" stroke-linecap="round" stroke-width="1.1" d="M5.906 5.177a1.094 1.094 0 1 1 1.65.942C7.28 6.283 7 6.532 7 6.854v.73"/>
-              <circle cx="7" cy="9.333" r=".583" fill="#EF7004"/>
+              <circle cx="7" cy="7" r="5.833" stroke="#262626" stroke-width="1.1"/>
+              <path stroke="#262626" stroke-linecap="round" stroke-width="1.1" d="M5.906 5.177a1.094 1.094 0 1 1 1.65.942C7.28 6.283 7 6.532 7 6.854v.73"/>
+              <circle cx="7" cy="9.333" r=".583" fill="#262626"/>
             </g>
             <defs>
               <clipPath id="a">
@@ -53,6 +57,7 @@
             </defs>
           </svg>
           
+        </div> 
         
         </div>
       </div>
