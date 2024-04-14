@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-        <string>BundleBox</string>
+	<string>BundleBox</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -45,5 +45,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>To capture confirmation screenshots</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>To add confirmation images</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To store confirmation screenshots</string>	
 </dict>
 </plist>
