@@ -36,9 +36,12 @@ export class MainPage implements OnInit {
     this.userService.dashboardData.asObservable().subscribe((data:any)=>{
       console.log("this.userService.dashboardData.asObservable().subscribe",data);
       if (data==null) {
-        this.userService.loadDashboardData();
+        this.userService.loadDashboardData().then(()=>{
+          this.getValutes();
+        });
       } else {
         this.dashboardData = data;
+        this.getValutes();
         this.is_load = true;
       }
 
@@ -48,18 +51,22 @@ export class MainPage implements OnInit {
 
   ngOnInit() {
 
+    
+  }
+
+
+  getValutes() {
     // валюты
-    let usd = JSON.parse(localStorage.getItem(environment.prefix+"_USD") || "");
-    let eur = JSON.parse(localStorage.getItem(environment.prefix+"_EUR") || "");
-    let gbp = JSON.parse(localStorage.getItem(environment.prefix+"_GBP") || "");
-    let cny = JSON.parse(localStorage.getItem(environment.prefix+"_CNY") || "");
+    let usd = JSON.parse(localStorage.getItem(environment.prefix+"_USD") || "0");
+    let eur = JSON.parse(localStorage.getItem(environment.prefix+"_EUR") || "0");
+    let gbp = JSON.parse(localStorage.getItem(environment.prefix+"_GBP") || "0");
+    let cny = JSON.parse(localStorage.getItem(environment.prefix+"_CNY") || "0");
     this.usd = parseInt(usd.value); 
     this.gbp = parseInt(gbp.value); 
     this.eur = parseInt(eur.value); 
     this.cny = parseInt(cny.value); 
 
   }
-
 
   async openOferta(event:any) {
     console.log(event);
