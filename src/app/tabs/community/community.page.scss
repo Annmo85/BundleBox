@@ -31,13 +31,12 @@ ion-content {
             div.news_card {
                 background: #FFFFFF;
                 border-radius: 16px;
-                aspect-ratio: 336 / 165;
+                aspect-ratio: 336 / 130;
                 display: flex;
 
                 div.image {
-                    flex: 0 0 auto;
-                    aspect-ratio: 139 / 153;
-                    background-size: cover;
+                    flex: 0 0 38%;
+                     background-size: cover;
                     background-position: 50% 50%;
                     margin: 5px;
                     border-radius: 16px;
@@ -51,7 +50,7 @@ ion-content {
                     flex-direction: column;
                     justify-content: flex-start;
                     margin: 10px;
-
+                    flex: 1;
                     div.line {
                         display: flex;
                         align-items: center;
@@ -143,4 +142,9 @@ ion-menu {
             }
         }
     }
+}
+
+div.buttons-slider {
+    padding-top: 18px;
+    padding-left: 18px;
 }
