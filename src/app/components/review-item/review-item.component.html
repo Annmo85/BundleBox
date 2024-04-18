@@ -1,3 +1,37 @@
+<div class="review_card2">
+
+  <div class="top-line">
+    <div class="info-block">
+      <!-- <div class="store_logo" [style.backgroundImage]="'url('+review.store_image+')'" (click)="openStore()"></div> -->
+      <div class="info">
+        <div class="store_name">{{review.store.name}}</div>
+        <div class="customer">{{review.bitrix_user_name}}</div>
+        <div class="date">{{review.created_at.date | date:"dd.MM.yyyy"}}</div>
+        <div class="rate">
+
+          <span *ngFor="let i of [1,2,3,4,5]">
+  
+            <svg *ngIf="review.like>=i" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16">
+              <path fill="#FFD748" d="M5.865 3.056C6.815 1.352 7.29.5 8 .5c.71 0 1.185.852 2.135 2.556l.246.441c.27.484.405.727.615.886.21.16.473.22.997.338l.477.108c1.845.417 2.768.626 2.987 1.332.22.705-.41 1.44-1.667 2.911l-.325.38c-.358.419-.537.628-.617.886-.08.259-.053.538 0 1.095l.05.508c.19 1.962.285 2.943-.29 3.38-.574.435-1.438.038-3.165-.758l-.447-.205c-.49-.226-.736-.34-.996-.34s-.506.114-.996.34l-.447.205c-1.727.796-2.591 1.193-3.166.757-.574-.436-.48-1.417-.289-3.38l.05-.507c.053-.557.08-.836 0-1.095-.08-.258-.26-.467-.617-.885l-.325-.38C.952 7.601.324 6.865.543 6.16c.22-.706 1.142-.915 2.987-1.332l.477-.108c.524-.119.786-.178.997-.338.21-.16.345-.402.615-.886l.246-.44Z"/>
+            </svg>
+            
+            <svg *ngIf="review.like<i"xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16">
+              <path fill="#E1E1E1" d="M5.865 3.056C6.815 1.352 7.29.5 8 .5c.71 0 1.185.852 2.135 2.556l.246.441c.27.484.405.727.615.886.21.16.473.22.997.338l.477.108c1.845.417 2.768.626 2.987 1.332.22.705-.41 1.44-1.667 2.911l-.325.38c-.358.419-.537.628-.617.886-.08.259-.053.538 0 1.095l.05.508c.19 1.962.285 2.943-.29 3.38-.574.435-1.438.038-3.165-.758l-.447-.205c-.49-.226-.736-.34-.996-.34s-.506.114-.996.34l-.447.205c-1.727.796-2.591 1.193-3.166.757-.574-.436-.48-1.417-.289-3.38l.05-.507c.053-.557.08-.836 0-1.095-.08-.258-.26-.467-.617-.885l-.325-.38C.952 7.601.324 6.865.543 6.16c.22-.706 1.142-.915 2.987-1.332l.477-.108c.524-.119.786-.178.997-.338.21-.16.345-.402.615-.886l.246-.44Z"/>
+            </svg>
+            
+  
+          </span>
+  
+        </div>    
+        <div class="description" [innerHtml]="review.text"></div>    
+      </div>
+    </div>
+    <div class="image" *ngIf="review.image!=''" (click)="openPreview(); $event.stopPropagation()" [style.backgroundImage]="'url('+url+review.image+')'"></div>
+  </div>
+</div>
+
+<!-- 
+
 <div class="review_card">
 
   <div class="top-line">
@@ -30,4 +64,4 @@
   <div class="description" [innerHtml]="review.text"></div>
 
   <div class="image" *ngIf="review.image!=''" (click)="openPreview(); $event.stopPropagation()" [style.backgroundImage]="'url('+url+review.image+')'"></div>
-</div>
+</div> -->
