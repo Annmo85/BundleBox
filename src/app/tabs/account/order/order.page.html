@@ -115,7 +115,7 @@
 
     <div class="card">
 
-      <div class="pay-line">
+      <div class="pay-line" *ngIf="order_info.deal.STAGE!='Ожидает выкупа'">
         <div class="icon ion-activatable">
           <img src="../../../../assets/wallet.png">
           <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -319,7 +319,7 @@
         </div>  
         <div class="line3">
           <div class="button">
-            <app-button height="44" title="Отправить отзыв"  (action)="sendReview()"></app-button>
+            <app-button height="44" title="Отправить отзыв"  (action)="sendReview()" [disabled]="review_text=='' || review_name==''"></app-button>
           </div>
         </div>        
       </div>

@@ -66,8 +66,30 @@
                 type="bounded"></ion-ripple-effect></div>
           </swiper-slide>
 
+          <swiper-slide>
+            <div class="slider-button ion-activatable" (click)="tab_selected='catalog'"
+              [ngClass]="{'active': tab_selected==='catalog'}">Каталог<ion-ripple-effect
+                type="bounded"></ion-ripple-effect></div>
+          </swiper-slide>
+
         </swiper-container>
       </div>
+
+    <!-- Кататлог-->
+    <div class="page-wrapper" *ngIf="tab_selected==='catalog' && stores_is_load">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6" *ngFor="let store of stores1"><app-store-card [store]="store" ></app-store-card></ion-col>
+        </ion-row>
+      </ion-grid>
+  
+      <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMoreStoresData($event)">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="Загрузка...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+    </div>
 
     <!-- акции-->
     <div class="page-wrapper" *ngIf="tab_selected==='actions' && actions_is_load">

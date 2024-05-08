@@ -175,6 +175,7 @@ export class OrderPage implements OnInit {
   }
 
   async openPaymentCheck() {
+    if (this.order_info.deal.STAGE!='Оплатите заказ') return;
     const modal = await this.modalCtrl.create({
       component: ImageZoomPage,
       componentProps: {img: this.order_info.deal.PAYEMENT_ORDER_IMAGE},

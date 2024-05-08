@@ -3,6 +3,37 @@
 
     <!-- butons-->
     <div class="page-wrapper">
+
+
+    <!-- валюты -->
+    <div class="currencies-block">
+      <div class="text">Сегодня заказы выкупаются по курсу:</div>
+      <div class="rates">
+
+        <div class="rate">
+          <div class="name">USD</div>
+          <div class="value">{{usd}} ₽</div>
+        </div>
+
+        <div class="rate">
+          <div class="name">EUR</div>
+          <div class="value">{{eur}} ₽</div>
+        </div>
+
+        <div class="rate">
+          <div class="name">GBP</div>
+          <div class="value">{{gbp}} ₽</div>
+        </div>
+
+        <div class="rate">
+          <div class="name">CNY</div>
+          <div class="value">{{cny}} ₽</div>
+        </div>
+
+      </div>
+      <div class="text">В курс включена комиссия сервиса.</div>
+    </div>
+
       <div class="buttons-slider">
         <swiper-container [spaceBetween]="15" [slidesPerView]="'auto'" [freeMode]="true">
 

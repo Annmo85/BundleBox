@@ -4,6 +4,58 @@ swiper-slide {
 
 ion-content {
     div.page-wrapper {
+
+
+
+
+        div.currencies-block {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(90deg, #F6D28B 0%, #FFE4AF 100%);
+            border-radius: 16px;
+            padding: 16px;;
+            margin-bottom: 24px;
+            margin-top: 6px;
+            div.text {
+                /* Сегодня заказы выкупаются по курсу: */
+                font-weight: 600;
+                font-size: 14px;
+                line-height: 17px;
+                letter-spacing: 0.001em;
+                color: #2D2D2D;
+            }
+    
+            div.rates {
+                padding-top: 15px;
+                padding-bottom: 15px;
+                display: flex;
+                justify-content: space-between;
+    
+                div.rate {
+                    width: 65px;
+                    div.name{
+                        font-weight: 300;
+                        font-size: 20px;
+                        line-height: 24px;
+                        letter-spacing: 0.001em;
+                        color: #2D2D2D;
+                        text-align: center;
+                    }
+                    div.value {
+                        text-align: center;
+                        font-weight: 700;
+                        font-size: 20px;
+                        line-height: 24px;
+                        letter-spacing: 0.001em;
+                        color: #2D2D2D;
+    
+    
+                    }
+                }
+            }
+        }
+    
+
         h3 {
             font-weight: 600;
             font-size: 18px;

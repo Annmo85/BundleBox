@@ -44,6 +44,13 @@ export class CommunityPage implements OnInit {
 
   search:string = "";
   
+  private limit:number = 20;
+  private page:number = 0;
+  public stores1: any = [];  
+  public stores_is_load : boolean = false;
+  public stores_is_reload : boolean = false;
+  private stores_limit:number = 20;
+  private stores_page:number = 0;
   
   constructor(private userService:UserService, public sanitizer:DomSanitizer,private modalCtrl: ModalController,public menuCtrl: MenuController) {}
 
@@ -51,16 +58,47 @@ export class CommunityPage implements OnInit {
     this.loadNews();
     this.loadActions();
     this.loadReviews();
+    this.loadStores();
   }
 
+  loadStores() {
+    this.stores = [];
+
+    this.userService.loadStoresList(this.stores_page,this.stores_limit).then( (response:any) => {
+      console.log("this.userService.loadNewsList:");
+      console.log(response);
+      this.stores1 = response.stores;
+      this.stores_is_load = true;    
+      this.stores_page++;  
+    })
+  } 
+
   doRefresh(event:any) {
-    this.news_page = 0;
-    this.reviews_page = 0;
-    this.loadNews();
-    this.loadActions();
-    this.loadReviews();
-    setTimeout(()=>event.target.complete(),2000);
-    
+    this.stores = [];
+    this.stores_is_reload = true;
+    this.page = 0;
+    this.userService.loadStoresList().then( (response:any) => {
+      console.log("this.userService.loadStoresList:");
+      console.log(response);
+      this.stores1 = response.stores;
+      this.stores_is_load = true;
+      this.stores_is_reload = false;    
+      event.target.complete(); 
+    })
+  }
+
+  loadMoreStoresData(event:any) {
+    this.userService.loadStoresList(this.stores_page, this.stores_limit).then( (response:any) => {
+      console.log("loadMoreStoresData this.userService.loadStoresList:");
+      console.log(response);
+      response.stores.forEach((element:any) => {
+        this.stores1.push(element);
+      });
+      this.stores_page++;
+      setTimeout(() => {
+        event.target.complete();
+      },100);
+    })    
   }
 
   loadReviews() {
