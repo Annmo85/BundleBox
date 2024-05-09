@@ -24,6 +24,16 @@ export class UserService {
     return this.dashboardData.asObservable();
   }
 
+  reloadBadges():Promise<any> {
+    return new Promise((resolve,reject)=>{
+      Promise.all([this.loadLeads()]).then(response=>{
+        this.actionBadge.next(response[0].deals_for_payement.length);
+        console.log("Update badges",response[0].deals_for_payement.length)
+        resolve (response);
+      })
+    })
+  }
+
   loadDashboardData():Promise<any> {
     let lastOrders:any[] = [];
     let stores:any[] = [];
