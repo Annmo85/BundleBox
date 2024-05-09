@@ -17,6 +17,15 @@ export class TabsPage implements OnInit {
   }
 
   ngOnInit() {
+    this.reloadBadeges();
+  }
+
+  reloadBadeges() {
+    this.userService.reloadBadges().then(res=>{
+      setTimeout(() => {
+        this.reloadBadeges();
+      }, 5000);
+    })
   }
 
 }
