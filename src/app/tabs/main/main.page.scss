@@ -31,7 +31,7 @@ ion-content {
         }          
     }
 
-    
+
     div.actions_list {
         display: flex;
         flex-direction: column;
@@ -367,7 +367,7 @@ ion-content {
                 justify-content: center;
                 align-items: center;
                 flex: 0 0 calc(33% - 10px);
-                img {
+                img.flag1 {
                     position: absolute;
                     left: 5px;
                     bottom: 5px;
