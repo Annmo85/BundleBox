@@ -4,10 +4,10 @@
 
   <div class="page-wrapper">
 
-    <div class="tabs">
+    <!-- <div class="tabs">
       <div class="tab" [ngClass]="{'active':current_tab=='account'}" (click)="current_tab='account'; delete_request=false;">Личный кабинет</div>
       <div class="tab" [ngClass]="{'active':current_tab=='orders'}" (click)="current_tab='orders'; delete_request=false;">Заказы <div class="badge" *ngIf="badge_count>0">{{badge_count}}</div></div>
-    </div>
+    </div> -->
 
     <!-- вкладка заказов-->
     <div *ngIf="current_tab=='orders'" class="section">
