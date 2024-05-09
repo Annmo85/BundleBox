@@ -36,6 +36,7 @@ export class OrdersPage implements OnInit {
 
     this.userService.actionBadge.asObservable().subscribe((badge_count:number) =>{
       this.badge_count = badge_count;
+      this.badge_count = 10;
     })
 
     this.userService.reloadLeads$.asObservable().subscribe(()=>{

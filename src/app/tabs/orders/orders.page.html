@@ -6,6 +6,29 @@
 
     <!-- вкладка заказов-->
     <div *ngIf="current_tab=='orders'" class="section">
+
+      <div class="round-buttons">
+
+        <div class="button" (click)="order_tab_selected='myorders'; loadMyOrders();">
+          <img src="../../../assets/all_orders.png" *ngIf="order_tab_selected!=='myorders'">
+          <img src="../../../assets/all_orders_selected.png" *ngIf="order_tab_selected==='myorders'">
+          <div class="title">Текущие заказы</div>
+        </div>
+
+        <div class="button" (click)="order_tab_selected='needactions'; loadMyOrders();" *ngIf="badge_count>0">
+          <div class="badge" *ngIf="badge_count>0">{{badge_count}}</div>
+          <img src="../../../assets/all_orders.png" *ngIf="order_tab_selected!=='needactions'">
+          <img src="../../../assets/all_orders_selected.png" *ngIf="order_tab_selected==='needactions'">
+          <div class="title">Требуют действий</div>
+        </div>
+        <div class="button" (click)="order_tab_selected='closed'; loadClosedOrders();">
+          <img src="../../../assets/old_orders.png" *ngIf="order_tab_selected!=='closed'">
+          <img src="../../../assets/old_orders_selected.png" *ngIf="order_tab_selected==='closed'">
+          <div class="title">Завершенные</div>
+        </div>
+
+      </div>
+<!-- 
       <div class="buttons-slider">
         <swiper-container [spaceBetween]="15" [slidesPerView]="'auto'" [freeMode]="true">
 
@@ -31,16 +54,17 @@
           </swiper-slide>
 
         </swiper-container>
-      </div>
+      </div> -->
 
       <!-- требуют действия-->
       <div *ngIf="!wait_for_payment_orders_loaded && order_tab_selected==='needactions'" class="my_orders">
+        <div class="title">Требуют действий</div>
         <div *ngFor="let i of [1,2,3,4]"><ion-skeleton-text animated
             style="width: 100%; height: 180px;"></ion-skeleton-text></div>
       </div>
 
       <div *ngIf="wait_for_payment_orders_loaded && order_tab_selected==='needactions'" class="my_orders">
-
+        <div class="title">Требуют действий</div>
         <ion-refresher slot="fixed" (ionRefresh)="doRefreshMyOrders($event)">
           <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Потяните для обновления"
             refreshingSpinner="circles" refreshingText="Загрузка...">
@@ -52,12 +76,13 @@
 
       <!-- Мои заказы-->
       <div *ngIf="!my_orders_loaded && order_tab_selected==='myorders'" class="my_orders">
+        <div class="title">Текущие заказы</div>
         <div *ngFor="let i of [1,2,3,4]"><ion-skeleton-text animated
             style="width: 100%; height: 180px;"></ion-skeleton-text></div>
       </div>
 
       <div *ngIf="my_orders_loaded && order_tab_selected==='myorders'" class="my_orders">
-
+        <div class="title">Текущие заказы</div>
         <ion-refresher slot="fixed" (ionRefresh)="doRefreshMyOrders($event)">
           <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Потяните для обновления"
             refreshingSpinner="circles" refreshingText="Загрузка...">
@@ -74,12 +99,13 @@
 
       <!-- Завершенные-->
       <div *ngIf="!closed_orders_loaded && order_tab_selected==='closed'" class="closed_orders">
+        <div class="title">Завершенные заказы</div>
         <div *ngFor="let i of [1,2,3,4]"><ion-skeleton-text animated
             style="width: 100%; height: 180px;"></ion-skeleton-text></div>
       </div>
 
       <div *ngIf="closed_orders_loaded && order_tab_selected==='closed'" class="closed_orders">
-
+        <div class="title">Завершенные заказы</div>
         <ion-refresher slot="fixed" (ionRefresh)="doRefreshClosed($event)">
           <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Потяните для обновления"
             refreshingSpinner="circles" refreshingText="Загрузка...">

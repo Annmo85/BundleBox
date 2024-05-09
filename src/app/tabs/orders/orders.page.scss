@@ -1,5 +1,57 @@
 div.page-wrapper {
 
+    div.title {
+        font-style: normal;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 24px;
+        letter-spacing: 0.001em;
+        color: #2D2D2D;        
+    }
+
+    div.round-buttons {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap:15px;
+        div.button {
+            display: flex;
+            flex-direction: column;
+            gap:5px;
+            align-items: center;
+            img {
+                width: 50px;
+                height: 50px;
+            }
+            div.title {
+                font-weight: 400;
+                font-size: 12px;
+                line-height: 15px;
+                letter-spacing: 0.001em;
+                color: #2D2D2D;
+                max-width: 70px;
+                text-align: center;
+            }
+
+            div.badge {
+                display: inline-block;
+                text-align: center;
+                font-weight: 500;
+                font-size: 12px;
+                text-align: center;
+                letter-spacing: 0.001em;
+                background-color: #FF0000;
+                position: absolute;
+                height: 16px;
+                width: 16px;
+                border-radius: 30px;
+                color: #fff;
+                line-height: 15px;   
+                margin-left: 30px;               
+            }
+        }
+    }
+
     div.tabs{
 
         display: flex;
