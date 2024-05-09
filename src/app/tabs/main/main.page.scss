@@ -1,5 +1,176 @@
 ion-content {
 
+    div.reviews_list {
+        display: flex;
+        flex-direction: column;
+        gap:15px;
+        margin-top: 40px;
+        div.text {
+            font-style: normal;
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 24px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            div.button {
+                position: relative;
+                display: flex;
+                align-items: center;
+                gap:5px;
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 20px;
+                letter-spacing: 0.001em;
+                color: #FF7500;
+            }
+
+        }          
+    }
+
+    
+    div.actions_list {
+        display: flex;
+        flex-direction: column;
+        gap:15px;
+        margin-top: 40px;
+        div.text {
+            font-style: normal;
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 24px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            div.button {
+                position: relative;
+                display: flex;
+                align-items: center;
+                gap:5px;
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 20px;
+                letter-spacing: 0.001em;
+                color: #FF7500;
+            }
+
+        }          
+    }
+
+
+    div.news_list {
+        display: flex;
+        flex-direction: column;
+        gap:15px;
+        margin-top: 40px;
+        div.text {
+            font-style: normal;
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 24px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            div.button {
+                position: relative;
+                display: flex;
+                align-items: center;
+                gap:5px;
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 20px;
+                letter-spacing: 0.001em;
+                color: #FF7500;
+            }
+
+        }    
+        div.text2 {
+            padding-top: 5px;
+            padding-bottom: 15px;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 20px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+        }
+
+        div.news_card {
+            background: #FFFFFF;
+            border-radius: 16px;
+            aspect-ratio: 336 / 130;
+            display: flex;
+
+            div.image {
+                flex: 0 0 38%;
+                 background-size: cover;
+                background-position: 50% 50%;
+                margin: 5px;
+                border-radius: 16px;
+                img {
+                    border-radius: 16px;
+                }
+            }
+
+            div.info {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                margin: 10px;
+                flex: 1;
+                div.line {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+
+                div.title {
+                    font-weight: 600;
+                    font-size: 16px;
+                    line-height: 20px;
+                    letter-spacing: 0.001em;
+                    color: #2D2D2D;
+                }
+                div.desc {
+                    font-weight: 400;
+                    font-size: 14px;
+                    line-height: 17px;
+                    letter-spacing: 0.001em;
+                    color: rgba(45, 45, 45, 0.4);
+                }
+                div.bottom-line {
+                    display: flex;
+                    align-items: flex-end;
+                    justify-content: space-between;
+
+                    div.price {
+                        span {
+                            font-weight: 400;
+                            font-size: 12px;
+                            line-height: 14px;
+                            letter-spacing: 0.001em;
+                            color: rgba(45, 45, 45, 0.4);
+                            display: block;
+                        }
+                        font-weight: 600;
+                        font-size: 16px;
+                        line-height: 20px;
+                        letter-spacing: 0.001em;
+                        color: #2D2D2D;
+                    }
+                }
+            }
+        }
+    }
+
     div.last_order {
         margin-top: 30px;
         width: 100%;

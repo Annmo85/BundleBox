@@ -8,6 +8,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ModalController } from '@ionic/angular';
 import { MakeOrderModalComponent } from 'src/app/components/make-order-modal/make-order-modal.component';
 import {OfertaComponent} from '../../components/oferta/oferta.component';
+import {NewsModalComponent} from '../../components/news-modal/news-modal.component';
+
 
 @Component({
   selector: 'app-main',
@@ -31,7 +33,7 @@ export class MainPage implements OnInit {
 
   make_order_modal: boolean = false;
 
-  constructor(private userService:UserService, public sanitizer:DomSanitizer,private modalCtrl: ModalController) {
+  constructor(private nav:NavController, private userService:UserService, public sanitizer:DomSanitizer,private modalCtrl: ModalController) {
 
     this.userService.dashboardData.asObservable().subscribe((data:any)=>{
       console.log("this.userService.dashboardData.asObservable().subscribe",data);
@@ -96,5 +98,20 @@ export class MainPage implements OnInit {
   
   openUrl(url:string) {
     window.open(url,"_blank");
+  }
+
+
+  
+  async openNewsItem(news_item: any) {
+    const modal = await this.modalCtrl.create({
+      component: NewsModalComponent,
+      componentProps: { news_item: news_item }
+    });
+    modal.present();
+  }    
+
+
+  navigate(url:any,queryParams:any) {
+    this.nav.navigateForward(url, {queryParams:queryParams});
   }
 }

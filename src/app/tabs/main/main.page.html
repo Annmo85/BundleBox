@@ -116,12 +116,73 @@
       </swiper-container>
     </div>
 
+    <!-- Новости -->
+    <div class="news_list">
+      <div class="text">Новости
+
+        <div class="button"  (click)="navigate(['/tabs/community'],{tab: 'news'})">
+          Все
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
+            <path stroke="#FF7500" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.75 3.75 11.25 9l-4.5 5.25"/>
+          </svg>
+        </div>
+
+      </div>
+      <div class="news_card" *ngFor="let news_item of dashboardData.news" (click)="openNewsItem(news_item)">
+
+        <div class="image" style='background-image: url("{{news_item.image}}")'></div>
+        <div class="info">
+          <div class="line">
+            <div class="desc" [innerHtml]="news_item.public_date"></div>
+            <div class="title" [innerHtml]="news_item.category_name"></div>
+          </div>
+          <div class="desc" [innerHtml]="news_item.title"></div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+    <!-- Отзывы -->
+    <div class="reviews_list">
+      <div class="text">Отзывы
+
+        <div class="button"  (click)="navigate(['/tabs/community'],{tab: 'reviews'})">
+          Все
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
+            <path stroke="#FF7500" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.75 3.75 11.25 9l-4.5 5.25"/>
+          </svg>
+        </div>
+
+      </div>
+      <app-review-item [review]="review" *ngFor="let review of dashboardData.reviews"></app-review-item>
+
+
+    </div>
+
+    <!-- Акциии -->
+    <div class="actions_list">
+      <div class="text">Акции
+
+        <div class="button"  (click)="navigate(['/tabs/community'],{tab: 'actions'})">
+          Все
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
+            <path stroke="#FF7500" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.75 3.75 11.25 9l-4.5 5.25"/>
+          </svg>
+        </div>
+
+      </div>
+      <app-action-item [order]="action" *ngFor="let action of dashboardData.actions"></app-action-item>
+
+
+    </div>
 
     <!-- магаизины-->
     <div class="stores">
       <div class="text">
         Каталог магазинов
-        <div class="button">
+        <div class="button"   (click)="navigate(['/tabs/community'],{tab: 'catalog'})">
           Все
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
             <path stroke="#FF7500" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.75 3.75 11.25 9l-4.5 5.25"/>

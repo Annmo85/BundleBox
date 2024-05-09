@@ -27,9 +27,12 @@ export class UserService {
   loadDashboardData():Promise<any> {
     let lastOrders:any[] = [];
     let stores:any[] = [];
+    let news:any[] = [];
+    let actions:any[] = [];
+    let reviews:any[] = [];
     let currencies:any[] = [];
     let usl_text:any[] = [];
-    let calls = [this.loadLastOrders(),this.loadNews(),this.loadLeads()];
+    let calls = [this.loadLastOrders(),this.loadNews(),this.loadLeads(),this.loadReviewsList(1,3),];
     
     return new Promise( (resolve,reject)=>{
       Promise.all(calls).then((response:any)=>{
@@ -37,14 +40,20 @@ export class UserService {
         // console.log(response);
         lastOrders = response[0].last_orders;
         stores = response[1].stores;
+        news = response[1].news;
         currencies = response[1].currencies;
         usl_text = response[1].usl_text;
+        reviews = response[3].reviews;
+        actions = response[2].actions;
         currencies.forEach((currency:any) => {
           localStorage.setItem(environment.prefix+"_"+currency.name,JSON.stringify(currency));
         });
         let data = {
           lastOrders:lastOrders,
           stores:stores,
+          news:news,
+          reviews:reviews,
+          actions:actions,
           currencies:currencies,
           usl_text:usl_text,
         };

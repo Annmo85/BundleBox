@@ -7,6 +7,7 @@ import { InfiniteScrollCustomEvent, IonicSlides, MenuController, NavController }
 import { DomSanitizer } from '@angular/platform-browser';
 import { ModalController } from '@ionic/angular';
 import {NewsModalComponent} from '../../components/news-modal/news-modal.component';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-community',
@@ -52,9 +53,17 @@ export class CommunityPage implements OnInit {
   private stores_limit:number = 20;
   private stores_page:number = 0;
   
-  constructor(private userService:UserService, public sanitizer:DomSanitizer,private modalCtrl: ModalController,public menuCtrl: MenuController) {}
+  constructor(private activatedRoute:ActivatedRoute, private userService:UserService, public sanitizer:DomSanitizer,private modalCtrl: ModalController,public menuCtrl: MenuController) {}
 
   ngOnInit() {
+
+    this.activatedRoute.queryParams.subscribe( (params:any)=>{
+      this.tab_selected = params['tab'] || 'actions';
+      console.log("this.tab_selected",this.tab_selected);
+    })
+
+
+
     this.loadNews();
     this.loadActions();
     this.loadReviews();
