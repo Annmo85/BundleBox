@@ -1,6 +1,13 @@
 <app-header2 [has_close]="true" title="Заказ"></app-header2>
 
 <ion-content [fullscreen]="true">
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefreshLead($event)">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Потяните для обновления"
+      refreshingSpinner="circles" refreshingText="Загрузка...">
+    </ion-refresher-content>
+  </ion-refresher>
+
   <div class="page-wrapper" *ngIf="is_load">
     
     <div class="card">

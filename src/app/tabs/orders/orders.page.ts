@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { IonInput, ModalController, NavController, PopoverController, ToastController,IonicSlides } from '@ionic/angular';
 import {UserService} from '../../services/user.service';
 import Swiper from 'swiper';
@@ -32,7 +32,7 @@ export class OrdersPage implements OnInit {
 
   badge_count: number = 0;
 
-  constructor(private modalCtrl: ModalController, private toastController:ToastController,private userService:UserService, private nav:NavController,) { 
+  constructor(private modalCtrl: ModalController, private toastController:ToastController,private userService:UserService, private nav:NavController, private ref: ChangeDetectorRef) { 
 
     this.userService.actionBadge.asObservable().subscribe((badge_count:number) =>{
       this.badge_count = badge_count;
@@ -45,7 +45,7 @@ export class OrdersPage implements OnInit {
         response.deals_for_payement.forEach((lead:any) => {
           this.wait_for_payment_orders.push(lead);
         });
-  
+        this.ref.detectChanges();
       });
     })
 
@@ -68,6 +68,7 @@ export class OrdersPage implements OnInit {
           this.closed_orders.push(lead);
         });
         this.closed_orders_loaded = true;
+        this.ref.detectChanges();
       })      
     }
   }
@@ -88,6 +89,7 @@ export class OrdersPage implements OnInit {
         });
         this.my_orders_loaded = true;
         this.wait_for_payment_orders_loaded = true;
+        this.ref.detectChanges();
       })      
     }
   }
@@ -102,6 +104,7 @@ export class OrdersPage implements OnInit {
       response.deals.forEach((lead:any) => {
         this.closed_orders.push(lead);
         event.target.complete();
+        this.ref.detectChanges();
       });
     });
   }
@@ -123,6 +126,7 @@ export class OrdersPage implements OnInit {
       response.deals.forEach((lead:any) => {
         this.my_orders.push(lead);
         event.target.complete();
+        this.ref.detectChanges();
       });
 
     });
