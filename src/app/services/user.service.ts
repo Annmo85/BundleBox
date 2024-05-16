@@ -344,9 +344,9 @@ export class UserService {
     return response;
   }
 
-  public async loadLead(order_id: any) {
+  public async loadLead(order_id: any, force:boolean = false) {
     let user_id = localStorage.getItem(environment.prefix + 'user_id');
-    let response = await this.makeRequest("lead.php",{order_id:order_id,user_id:user_id});
+    let response = await this.makeRequest("lead.php",{order_id:order_id,user_id:user_id, force:force});
     return response;
   }
 

@@ -40,6 +40,41 @@ export class OrderPage implements OnInit {
   constructor(private alertController:AlertController, private sanitizer: DomSanitizer, private loadingCtrl:LoadingController, private http:HttpClient,private userService:UserService, private modalCtrl: ModalController, private toastController:ToastController,private nav:NavController,private popoverController: PopoverController) { }
 
 
+  doRefreshLead(event:any) {
+    console.log(this.order_id);
+    console.log(this.store_id);
+    this.userService.loadLead(this.order_id, true).then( response =>{
+      this.order_info = response;
+      console.log("this.order_info",this.order_info);
+      if (this.order_info.deal.CUSTOMER == null) this.order_info.deal.CUSTOMER = "Покупатель";
+      this.review_name = this.order_info.deal.CUSTOMER;
+      //if (this.order_info.deal.CUSTOMER.trim().indexOf(" ")>0) this.review_name = this.order_info.deal.CUSTOMER.substr(0, this.order_info.deal.CUSTOMER.trim().indexOf(" "));
+      this.review_store_id = this.store_id;
+
+      this.userService.loadOferta().then((response:any)=>{
+        let othet:string = response.otchet_komissionera;
+        othet = othet.replace("[LEAD_SUMM]",this.order_info.deal.SUM);
+        let percent = ((this.order_info.deal_detail.OPPORTUNITY as number) * 5 / 100).toFixed(0)+" руб";
+        othet = othet.replace("[LEAD_PERCENT_SUMM]",percent);
+        this.otchet_komissionera = this.sanitizer.bypassSecurityTrustHtml(othet);
+      })
+
+      if (this.order_info.deal.STAGE === "Отправлено магазином") this.bgcolor = "#FCF2CF;";
+      else if (this.order_info.deal.STAGE === "Ожидает выкупа") this.bgcolor = "#FADBEB;";
+      else if (this.order_info.deal.STAGE === "Оплатите заказ") this.bgcolor = "#FFA39B;";
+      else if (this.order_info.deal.STAGE === "Оплачено") this.bgcolor = "#DAE1F1;";
+      else if (this.order_info.deal.STAGE === "Получено на складе") this.bgcolor = "#F8DA78;";
+      else if (this.order_info.deal.STAGE === "Посылка отправлена") this.bgcolor = "#CBE0B9;";
+      else if (this.order_info.deal.STAGE === "Оплатите доставку") this.bgcolor = "#FFA39B;";
+      else if (this.order_info.deal.STAGE === "Доставка оплачена") this.bgcolor = "#DAE1F1;";
+      else if (this.order_info.deal.STAGE === "Получите заказ") this.bgcolor = "#FFA39B;";
+      else if (this.order_info.deal.STAGE === "Заказ завершён") this.bgcolor = "#ADB9C7;";    
+      else if (this.order_info.deal.STAGE === "Заказ завершен") this.bgcolor = "#ADB9C7;";    
+      event.target.complete();
+      this.is_load = true;
+    })    
+  }
+
   ngOnInit() {
 
     console.log(this.order_id);
@@ -175,7 +210,7 @@ export class OrderPage implements OnInit {
   }
 
   async openPaymentCheck() {
-    if (this.order_info.deal.STAGE!='Оплатите заказ') return;
+    
     const modal = await this.modalCtrl.create({
       component: ImageZoomPage,
       componentProps: {img: this.order_info.deal.PAYEMENT_ORDER_IMAGE},
