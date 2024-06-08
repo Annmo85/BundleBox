@@ -10,6 +10,8 @@ import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { LoadingController, ModalController, ToastController } from '@ionic/angular';
 import {OfertaComponent} from '../../components/oferta/oferta.component';
+import { Browser } from '@capacitor/browser';
+
 
 @Component({
   selector: 'app-payment-instruction',
@@ -26,6 +28,7 @@ export class PaymentInstructionComponent implements OnInit {
   instruction_text2: any = "";
   instruction_text3: any = "";
   instruction_text4: any = "";
+  instruction_online_text: any = "";
   lines: any = [];
 
   constructor(private modalController: ModalController, private http: HttpClient, private plt: Platform, private loadingCtrl: LoadingController, private toastController: ToastController, private userService: UserService, private modalCtrl: ModalController) {
@@ -41,6 +44,7 @@ export class PaymentInstructionComponent implements OnInit {
         this.instruction_text2 = res.order_payment_information.instruction_text2;
         this.instruction_text3 = res.order_payment_information.instruction_text3;
         this.instruction_text4 = res.order_payment_information.instruction_text4;
+        this.instruction_online_text = res.order_payment_information.instruction_online_text;
         this.lines = res.order_payment_information.cards;
 
       }
@@ -208,4 +212,12 @@ export class PaymentInstructionComponent implements OnInit {
       modal.present();
     }
   }
+
+  
+  async gotoOnlinePayment() {
+    let user_id = localStorage.getItem(environment.prefix + 'user_id');
+    await Browser.open({ url: 'https://bundlebox.ru/mobile/widget/payment.php?id='+user_id});
+    this.close();
+  }
+
 }
