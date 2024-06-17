@@ -100,7 +100,7 @@ export class OrderCardComponent  implements OnInit {
       mode: "ios",
       breakpoints: [0.60,0.70,0.99],
       initialBreakpoint: 0.70, 
-      componentProps: {order_id: this._order.ID}
+      componentProps: {order_id: this._order.ID, order_info:this._order}
     });
     modal.present();     
     const { role, data } = await modal.onWillDismiss();  

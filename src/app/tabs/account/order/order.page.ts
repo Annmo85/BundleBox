@@ -154,7 +154,7 @@ export class OrderPage implements OnInit {
       mode: "ios",
       breakpoints: [0.60,0.70,0.99],
       initialBreakpoint: 0.70, 
-      componentProps: {order_id: this.order_info.deal.ID}
+      componentProps: {order_id: this.order_info.deal.ID, order_info:this.order_info}
     });
     modal.present();     
     const { role, data } = await modal.onWillDismiss();  
@@ -319,7 +319,7 @@ export class OrderPage implements OnInit {
         mode: "ios",
         breakpoints: [0.60,0.70,0.99],
         initialBreakpoint: 0.70, 
-        componentProps: {order_id: this.order_info.deal.ID}
+        componentProps: {order_id: this.order_info.deal.ID, order_info:this.order_info}
       });
       modal.present();     
       const { role, data } = await modal.onWillDismiss();  

@@ -1,4 +1,32 @@
+ion-radio.md::part(label) {
+    white-space: wrap !important; 
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 15px;
+    letter-spacing: 0.001em;
+    color: #2D2D2D;    
+  }
+
 div.page-wrapper {
+
+    div.payment_block {
+        padding-bottom: 30px;
+        div.title {
+            padding-bottom: 0px;
+            padding-top: 0px;
+        }
+        ion-list {
+            background-color: transparent;
+            --background: transparent;
+            ion-item {
+                --background: transparent !important;
+
+                .label-text-wrapper {
+                    white-space: wrap !important; 
+                }                
+            }
+        }
+    }
 
     div.title {
         font-style: normal;

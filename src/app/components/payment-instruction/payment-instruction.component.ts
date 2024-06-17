@@ -22,6 +22,7 @@ export class PaymentInstructionComponent implements OnInit {
 
   public order_id: any;
   deal: any;
+  order_info: any;
 
   intro_text: any = "";
   instruction_text: any = "";
@@ -52,7 +53,9 @@ export class PaymentInstructionComponent implements OnInit {
     })
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    console.log("order_info",this.order_info);
+  }
 
   close() {
     this.modalCtrl.dismiss();
@@ -216,7 +219,7 @@ export class PaymentInstructionComponent implements OnInit {
   
   async gotoOnlinePayment() {
     let user_id = localStorage.getItem(environment.prefix + 'user_id');
-    await Browser.open({ url: 'https://bundlebox.ru/mobile/widget/payment.php?id='+user_id});
+    await Browser.open({ url: 'https://bundlebox.ru/mobile/widget/payment.php?id='+user_id+"&deal_id="+this.order_id});
     this.close();
   }
 
