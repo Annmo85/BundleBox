@@ -64,12 +64,32 @@
       </div>
 
       <div *ngIf="wait_for_payment_orders_loaded && order_tab_selected==='needactions'" class="my_orders">
+
+
+
+        <div class="payment_block" *ngIf="all_payments_qty>0 || all_delivery_qty">
+          <div class="title">Сейчас к оплате</div>
+          <ion-list lines="none">
+            <ion-radio-group (ionChange)="handleChange($event)">
+              <ion-item *ngIf="all_payments_qty>0">
+                <ion-radio justify="start" labelPlacement="end" value="payment" color="accent" mode="md" size="small">Заказов: <b>{{all_payments_qty}}</b>. Общая сумма <b>{{all_payments_summ_p}}</b></ion-radio>
+              </ion-item>
+              <ion-item  *ngIf="all_delivery_qty>0">
+                <ion-radio justify="start" labelPlacement="end" value="delivery"  color="accent" mode="md"  size="small">Доставка заказов: <b>{{all_payments_qty}}</b>. Общая сумма <b>{{all_payments_summ_p}}</b></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          </ion-list>
+          <app-button [disabled]="selected_radio!='payment' && selected_radio!='delivery'" height="44" title="Перейти к оплате" (action)="gotoOnlinePayment()"></app-button>
+        </div>
+
+
         <div class="title">Требуют действий</div>
         <ion-refresher slot="fixed" (ionRefresh)="doRefreshMyOrders($event)">
           <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Потяните для обновления"
             refreshingSpinner="circles" refreshingText="Загрузка...">
           </ion-refresher-content>
         </ion-refresher>
+
 
         <app-order-card [order]="order" *ngFor="let order of wait_for_payment_orders"></app-order-card>
       </div>

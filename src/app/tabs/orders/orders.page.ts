@@ -3,6 +3,8 @@ import { IonInput, ModalController, NavController, PopoverController, ToastContr
 import {UserService} from '../../services/user.service';
 import Swiper from 'swiper';
 import { Autoplay } from 'swiper/modules';
+import { Browser } from '@capacitor/browser';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-orders',
@@ -30,6 +32,14 @@ export class OrdersPage implements OnInit {
   wait_for_payment_orders:any[] = [];
   wait_for_payment_orders_loaded:boolean = false;
 
+  all_delivery_summ_p:string = "";
+  all_payments_summ_p:string = "";
+  all_payments_qty: number = 0;
+  all_delivery_qty: number = 0;
+  all_delivery_summ: number = 0;
+  all_payments_summ: number = 0;
+  selected_radio:string = "";
+
   badge_count: number = 0;
 
   constructor(private modalCtrl: ModalController, private toastController:ToastController,private userService:UserService, private nav:NavController, private ref: ChangeDetectorRef) { 
@@ -45,6 +55,14 @@ export class OrdersPage implements OnInit {
         response.deals_for_payement.forEach((lead:any) => {
           this.wait_for_payment_orders.push(lead);
         });
+
+        this.all_delivery_summ_p = response.all_delivery_summ_p;
+        this.all_payments_summ_p = response.all_payments_summ_p;
+        this.all_payments_qty = response.all_payments_qty;
+        this.all_delivery_qty = response.all_delivery_qty;
+        this.all_delivery_summ = response.all_delivery_summ;
+        this.all_payments_summ  = response.all_payments_summ;        
+
         this.ref.detectChanges();
       });
     })
@@ -84,9 +102,19 @@ export class OrdersPage implements OnInit {
         response.deals.forEach((lead:any) => {
           this.my_orders.push(lead);
         });
+
+
         response.deals_for_payement.forEach((lead:any) => {
           this.wait_for_payment_orders.push(lead);
         });
+
+        this.all_delivery_summ_p = response.all_delivery_summ_p;
+        this.all_payments_summ_p = response.all_payments_summ_p;
+        this.all_payments_qty = response.all_payments_qty;
+        this.all_delivery_qty = response.all_delivery_qty;
+        this.all_delivery_summ = response.all_delivery_summ;
+        this.all_payments_summ  = response.all_payments_summ;        
+
         this.my_orders_loaded = true;
         this.wait_for_payment_orders_loaded = true;
         this.ref.detectChanges();
@@ -123,6 +151,14 @@ export class OrdersPage implements OnInit {
         this.wait_for_payment_orders.push(lead);
       });
 
+
+      this.all_delivery_summ_p = response.all_delivery_summ_p;
+      this.all_payments_summ_p = response.all_payments_summ_p;
+      this.all_payments_qty = response.all_payments_qty;
+      this.all_delivery_qty = response.all_delivery_qty;
+      this.all_delivery_summ = response.all_delivery_summ;
+      this.all_payments_summ  = response.all_payments_summ;
+      this.ref.detectChanges();
       response.deals.forEach((lead:any) => {
         this.my_orders.push(lead);
         event.target.complete();
@@ -130,6 +166,23 @@ export class OrdersPage implements OnInit {
       });
 
     });
+  }
+
+  handleChange(ev:any) {
+    console.log(ev)
+    this.selected_radio = ev.detail.value;
+  }
+
+  async gotoOnlinePayment() {
+
+    if (this.selected_radio === 'payment') {
+      let user_id = localStorage.getItem(environment.prefix + 'user_id');
+      await Browser.open({ url: 'https://bundlebox.ru/mobile/widget/payment.php?id='+user_id});
+    } else {
+      let user_id = localStorage.getItem(environment.prefix + 'user_id');
+      await Browser.open({ url: 'https://bundlebox.ru/mobile/widget/delivery.php?id='+user_id});
+    }
+
   }
 
 }
