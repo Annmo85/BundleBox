@@ -85,8 +85,8 @@ export class MainPage implements OnInit {
   async openMakeOrderModal() {
     const modal = await this.modalCtrl.create({
       component: MakeOrderModalComponent,
-      initialBreakpoint: 0.3,
-      breakpoints: [0,0,3],
+      initialBreakpoint: 0.5,
+      breakpoints: [0,0,5],
       cssClass: "makeOrderModal",
       mode: 'ios'
     });

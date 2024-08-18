@@ -5,7 +5,7 @@
 </ion-header>
 <ion-content class="ion-padding">
   <div class="block">
-    <p>Выберете один из доступных мессенджеров для оформленения заказа в нём</p>
+    <p>Выберете один из доступных мессенджеров для оформленения заказа в чате или заполните форму самостоятельно</p>
     <div class="icons">
 
       <div class="icon ion-activatable" (click)="openVb()">
@@ -73,6 +73,10 @@
       </div>
 
 
+    </div>
+
+    <div class="button">
+      <app-button title="Заполнить форму" (click)="openMakeOrderFormModal()"></app-button>
     </div>
   </div>
 </ion-content>
