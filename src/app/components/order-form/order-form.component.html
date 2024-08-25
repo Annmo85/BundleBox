@@ -89,8 +89,8 @@
 
           <div class="input-field">
             <div class="label">Ссылка на товар <span class="required"></span></div>
-            <div class="input" [ngClass]="{'error':true}">
-              <ion-input type="url" inputmode="url" placeholder="Введите URL"></ion-input>
+            <div class="input" [ngClass]="{'error':card.url==''}">
+              <ion-input type="url" inputmode="url" placeholder="Введите URL"  [(ngModel)]="card.url"></ion-input>
             </div>
           </div>
 
@@ -102,7 +102,7 @@
                 <ion-ripple-effect type="bounded"></ion-ripple-effect>                
               </div>
 
-              <div class="foto-button add ion-activatable" *ngIf="card.images.length<=3" (click)="addImage(card)">
+              <div class="foto-button add ion-activatable" (click)="addImage(card)">
                 <ion-icon name="add-outline"></ion-icon>
                 <ion-ripple-effect type="bounded"></ion-ripple-effect>
               </div>
@@ -112,15 +112,22 @@
 
           <div class="input-field">
             <div class="label">Характеристики</div>
-            <div class="input" [ngClass]="{'error':false}">
-              <ion-input type="text" inputmode="text" placeholder="Характеристики товара"></ion-input>
+            <div class="input" [ngClass]="{'error':card.attrubutes==''}">
+              <ion-input type="text" inputmode="text" placeholder="Характеристики товара" [(ngModel)]="card.attrubutes"></ion-input>
             </div>
           </div>
 
           <div class="input-field">
             <div class="label">Количество</div>
-            <div class="input" [ngClass]="{'error':false}">
-              <ion-input type="number" inputmode="numeric" placeholder="Количество"></ion-input>
+            <div class="input" [ngClass]="{'error':card.qty<=0}">
+              <ion-input type="number" inputmode="numeric" placeholder="Количество" [(ngModel)]="card.qty"></ion-input>
+            </div>
+          </div>
+
+          <div class="input-field">
+            <div class="label">Стоимость</div>
+            <div class="input" [ngClass]="{'error':card.price==''}">
+              <ion-input type="text" inputmode="text" placeholder="Стоимость" [(ngModel)]="card.price"></ion-input>
             </div>
           </div>
 
@@ -128,14 +135,14 @@
           <div class="input-field">
             <div class="label">Дополнительные сведения</div>
             <div class="input" [ngClass]="{'error':false}">
-              <ion-input type="text" inputmode="text" placeholder="Не обязательно"></ion-input>
+              <ion-input type="text" inputmode="text" placeholder="Не обязательно"  [(ngModel)]="card.additional"></ion-input>
             </div>
           </div>          
 
         </div>
       </div>
 
-      <ion-button (click)="add()" color="accent" size="small"><ion-icon slot="icon-only" name="add"></ion-icon>Добавить еще товар</ion-button>
+      <ion-button (click)="add()" color="accent" size="small" shape="round"><ion-icon slot="icon-only" name="add"></ion-icon>Добавить еще товар</ion-button>
 
 
 
@@ -151,6 +158,6 @@
 
 <ion-footer class="ion-no-border">
   <ion-toolbar>
-    <app-button title="Отправить"></app-button>
+    <app-button title="Отправить" (click)="send()" [disabled]="!valid()"></app-button>
   </ion-toolbar>
 </ion-footer>

@@ -149,6 +149,9 @@ ion-content {
                     div.input {
                         border: 2px solid #b9b9b9;
                     }
+                    div.input.error {
+                        border: 2px solid red;
+                    }
 
                     div.foto-line {
                         display: flex;
