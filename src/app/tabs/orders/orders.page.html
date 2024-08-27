@@ -66,7 +66,7 @@
       <div *ngIf="wait_for_payment_orders_loaded && order_tab_selected==='needactions'" class="my_orders">
 
 
-
+<!--
         <div class="payment_block" *ngIf="all_payments_qty>0 || all_delivery_qty">
           <div class="title">Сейчас к оплате</div>
           <ion-list lines="none">
@@ -81,7 +81,7 @@
           </ion-list>
           <app-button [disabled]="selected_radio!='payment' && selected_radio!='delivery'" height="44" title="Перейти к оплате" (action)="gotoOnlinePayment()"></app-button>
         </div>
-
+      -->
 
         <div class="title">Требуют действий</div>
         <ion-refresher slot="fixed" (ionRefresh)="doRefreshMyOrders($event)">

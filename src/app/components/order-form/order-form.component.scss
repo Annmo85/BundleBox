@@ -1,0 +1,178 @@
+ion-header {
+    ion-toolbar {
+        --background: #ffffff;
+        box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+        div.header {
+            padding-left: 10px;
+            padding-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            div.center-block {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-style: normal;
+                font-weight: 700;
+                font-size: 20px;
+                line-height: 24px;
+                text-align: center;
+                letter-spacing: 0.001em;
+                color: #2D2D2D;
+            }
+
+            div.right-block {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap:5px;
+                width: 85px;
+            }
+
+            div.left-block {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap:5px;
+                width: 85px;
+            }
+
+            div.button {
+                display: flex;
+                justify-content: center;
+                align-items: center;                
+                padding:2px;
+                position: relative;
+                overflow: hidden;
+                border-radius: 50px;
+            }
+        }
+    }
+}
+ion-content {
+    div.page-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap:10px;
+
+        h2 {
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 24px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+            padding: 0px;
+            margin: 0px;
+        }
+
+        h3{
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 22px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+            padding: 0px;
+            margin: 0px;
+
+        }
+
+        h4{
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 20px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+            padding: 0px;
+            margin: 0px;
+        }
+
+        p {
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 20px;
+            letter-spacing: 0.001em;
+            color: #2D2D2D;
+        }
+
+        div.section {
+            padding-top: 15px;
+            padding-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            
+            div.text {
+                font-weight: 400;
+                font-size: 16px;
+                line-height: 20px;
+                letter-spacing: 0.001em;
+                color: #2D2D2D;
+            }
+
+            div.card {
+                padding-top: 15px;
+                background: #FFFFFF;
+                border-radius: 16px;
+                padding-bottom: 15px;
+                padding-left: 15px;;
+                padding-right: 15px;
+                display: flex;
+                flex-direction: column;
+                gap:10px;
+                                
+            }
+
+            div.header-card {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                div.remove-card {
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                }
+            }
+
+            div.form {
+                padding-left: 0px;
+                padding-right: 0px;
+
+                div.input-field {
+                    max-width: 500px;
+                    width: 100%;
+                    div.input {
+                        border: 2px solid #b9b9b9;
+                    }
+                    div.input.error {
+                        border: 2px solid red;
+                    }
+
+                    div.foto-line {
+                        display: flex;
+                        justify-content: start;
+                        gap:10px;
+
+                        div.foto-button {
+                            width: 50px;
+                            height: 50px;
+                            border-radius: 5px;
+                            border: 2px solid #b9b9b9;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            position: relative;
+                            background-size: cover;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}
