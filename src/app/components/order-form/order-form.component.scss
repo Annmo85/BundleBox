@@ -143,6 +143,16 @@ ion-content {
                 padding-left: 0px;
                 padding-right: 0px;
 
+                div.note {
+                    font-weight: 400;
+                    font-size: 12px;
+                    line-height: 15px;
+                    letter-spacing: 0.001em;
+                    color: #2D2D2D;
+                    position: relative;
+                    margin-top: -5px;                    
+                }
+
                 div.input-field {
                     max-width: 500px;
                     width: 100%;
