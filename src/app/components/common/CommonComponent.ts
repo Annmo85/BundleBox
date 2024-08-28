@@ -24,6 +24,7 @@ import {PaymenDeliveryInstructionComponent} from '../paymen-delivery-instruction
 import {CollapsedOrderComponent} from '../collapsed-order/collapsed-order.component';
 import {BarcodeModalComponent} from '../barcode-modal/barcode-modal.component';
 import {OrderFormComponent} from '../order-form/order-form.component';
+import {RequestItemComponent} from '../request-item/request-item.component';
 
 import {ImageZoomPageModule} from '../../image-zoom/image-zoom.module'
 import { CommonModule } from '@angular/common';
@@ -49,6 +50,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ButtonComponent,
     Header2Component,
     OrderFormComponent,
+    RequestItemComponent,
     ActionItemComponent,
     MakeOrderModalComponent,
     ReviewItemComponent,
@@ -74,6 +76,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ButtonComponent,
     StoreCardComponent,
     OrderFormComponent,
+    RequestItemComponent,
     ActionItemComponent,
     Header2Component,
     MakeOrderModalComponent,

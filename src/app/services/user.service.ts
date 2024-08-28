@@ -337,6 +337,12 @@ export class UserService {
     return response;
   }
 
+  public async loadRequests() {
+    let user_id = localStorage.getItem(environment.prefix + 'user_id');
+    let response = await this.makeRequest("requests.php",{id:user_id});
+    return response;
+  }
+
   public async loadClosedLeads() {
     let user_id = localStorage.getItem(environment.prefix + 'user_id');
     let response = await this.makeRequest("closed_leads.php",{id:user_id});
