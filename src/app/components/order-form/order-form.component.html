@@ -92,6 +92,8 @@
             <div class="input" [ngClass]="{'error':card.url==''}">
               <ion-input type="url" inputmode="url" placeholder="Введите URL"  [(ngModel)]="card.url"></ion-input>
             </div>
+            <div class="note">Ссылка на товар на сайте магазина или на пост в Телеграм канале</div>
+
           </div>
 
           <div class="input-field ">
@@ -115,6 +117,7 @@
             <div class="input" [ngClass]="{'error':card.attrubutes==''}">
               <ion-input type="text" inputmode="text" placeholder="Характеристики товара" [(ngModel)]="card.attrubutes"></ion-input>
             </div>
+            <div class="note">Характеристики (размер, цвет, все, что считате важным для покупки)</div>
           </div>
 
           <div class="input-field">
@@ -129,6 +132,7 @@
             <div class="input" [ngClass]="{'error':card.price==''}">
               <ion-input type="text" inputmode="text" placeholder="Стоимость" [(ngModel)]="card.price"></ion-input>
             </div>
+            <div class="note">Стоимость (введите цену вещи в валюте магазина)</div>
           </div>
 
 
@@ -137,6 +141,7 @@
             <div class="input" [ngClass]="{'error':false}">
               <ion-input type="text" inputmode="text" placeholder="Не обязательно"  [(ngModel)]="card.additional"></ion-input>
             </div>
+            <div class="note">Дополнительные сведения (укажите дополнительную информацию, если она есть, например код на скидку или другие важные условия покупки)</div>
           </div>          
 
         </div>
