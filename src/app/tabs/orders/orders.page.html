@@ -9,10 +9,15 @@
 
       <div class="round-buttons">
 
+        <div class="button" (click)="order_tab_selected='myrequests'; loadMyRequests();">
+          <img src="../../../assets/all_orders.png" *ngIf="order_tab_selected!=='myrequests'">
+          <img src="../../../assets/all_orders_selected.png" *ngIf="order_tab_selected==='myrequests'">
+          <div class="title">Мои заявки</div>
+        </div>
         <div class="button" (click)="order_tab_selected='myorders'; loadMyOrders();">
           <img src="../../../assets/all_orders.png" *ngIf="order_tab_selected!=='myorders'">
           <img src="../../../assets/all_orders_selected.png" *ngIf="order_tab_selected==='myorders'">
-          <div class="title">Текущие заказы</div>
+          <div class="title">Заказы в работе</div>
         </div>
 
         <div class="button" (click)="order_tab_selected='needactions'; loadMyOrders();" *ngIf="badge_count>0">
@@ -55,6 +60,24 @@
 
         </swiper-container>
       </div> -->
+
+      <!-- Заказы-->
+      <div *ngIf="!my_requests_loaded && order_tab_selected==='myrequests'" class="my_orders">
+        <div class="title">Мои заявки</div>
+        <div *ngFor="let i of [1,2,3,4]"><ion-skeleton-text animated
+            style="width: 100%; height: 180px;"></ion-skeleton-text></div>
+      </div>
+
+      <div *ngIf="my_requests_loaded && order_tab_selected==='myrequests'" class="my_orders">
+        <div class="title">Мои заявки</div>
+        <ion-refresher slot="fixed" (ionRefresh)="doRefreshMyRequests($event)">
+          <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Потяните для обновления"
+            refreshingSpinner="circles" refreshingText="Загрузка...">
+          </ion-refresher-content>
+        </ion-refresher>        
+        <app-request-item [request]="request" *ngFor="let request of my_requests"></app-request-item>
+      </div>
+
 
       <!-- требуют действия-->
       <div *ngIf="!wait_for_payment_orders_loaded && order_tab_selected==='needactions'" class="my_orders">

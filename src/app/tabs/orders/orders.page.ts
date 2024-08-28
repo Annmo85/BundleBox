@@ -26,8 +26,10 @@ export class OrdersPage implements OnInit {
   closed_orders:any[] = [];  
   closed_orders_loaded: boolean = false;  
 
+  my_requests:any[] = [];  
   my_orders:any[] = [];  
   my_orders_loaded: boolean = false;
+  my_requests_loaded: boolean = false;
 
   wait_for_payment_orders:any[] = [];
   wait_for_payment_orders_loaded:boolean = false;
@@ -91,6 +93,50 @@ export class OrdersPage implements OnInit {
     }
   }
 
+
+  loadMyRequests() {
+    if (!this.my_requests_loaded) {
+      this.userService.loadRequests().then(response =>{
+        console.log("this.userService.loadRequests:");
+        console.log(response);
+        // this.badge_count = response.badge_count;
+        // this.userService.actionBadge.next(this.badge_count);
+        response.leads.forEach((lead:any) => {
+           this.my_requests.push(lead);
+        });
+
+
+        // response.deals_for_payement.forEach((lead:any) => {
+        //   this.wait_for_payment_orders.push(lead);
+        // });
+        this.my_requests_loaded = true;
+
+        this.ref.detectChanges();
+      })      
+    }
+  }
+
+
+  doRefreshMyRequests(event:any) {
+    // this.my_requests_loaded = false;
+      this.userService.loadRequests().then(response =>{
+        console.log("this.userService.loadRequests:");
+        console.log(response);
+        this.my_requests = [];
+        response.leads.forEach((lead:any) => {
+           this.my_requests.push(lead);
+          //  event.target.complete();
+          //  this.ref.detectChanges();
+        });
+        setTimeout(()=>{
+          this.my_requests_loaded = true;
+          event.target.complete();
+          this.ref.detectChanges();
+        },1000)
+        // this.my_requests_loaded = true;
+        // this.ref.detectChanges();
+      })      
+  }
 
   loadMyOrders() {
     if (!this.my_orders_loaded) {

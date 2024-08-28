@@ -1,0 +1,57 @@
+<div class="order-wrapper">
+  <div class="date">
+    <div>
+      <svg xmlns="http://www.w3.org/2000/svg" width="17" height="15" fill="none" viewBox="0 0 17 15">
+        <path stroke="#2D2D2D"
+          d="M1.833 7.5c0-2.357 0-3.536.782-4.268.78-.732 2.038-.732 4.552-.732h2.667c2.514 0 3.77 0 4.552.732.78.732.78 1.911.78 4.268v1.25c0 2.357 0 3.536-.78 4.268-.781.732-2.038.732-4.552.732H7.167c-2.514 0-3.771 0-4.552-.732-.782-.732-.782-1.911-.782-4.268V7.5Z" />
+        <path stroke="#2D2D2D" stroke-linecap="round" d="M5.167 2.5v-.938m6.667.938v-.938M2.167 5.625h12.666" />
+      </svg>
+    </div>
+    <div>{{request.DATE}}</div>
+  </div>
+  <div class="card">
+    <div class="line2">
+
+      <div class="pos">
+        <div class="label">Ссылка на товар</div>
+        <div class="dotted"></div>
+        <div class="sum" (click)="openUrl()">{{request.URL}}</div>
+      </div>
+
+      <div class="pos">
+        <div class="label">Характеристики</div>
+        <div class="dotted"></div>
+        <div class="sum">{{request.ATTRUBUTES}}</div>
+      </div>
+
+      <div class="pos">
+        <div class="label">Фото</div>
+        <div class="dotted"></div>
+        <div class="foto-line">
+          <div class="foto-button ion-activatable" *ngFor="let img of request.IMAGES; let i = index" [style.backgroundImage]="'url('+img+')'" (click)="openImage(img)">
+            <ion-ripple-effect type="bounded"></ion-ripple-effect>                
+          </div>
+        </div>
+      </div>
+
+      <div class="pos">
+        <div class="label">Количество</div>
+        <div class="dotted"></div>
+        <div class="sum">{{request.QTY}}</div>
+      </div>
+
+      <div class="pos">
+        <div class="label">Цена</div>
+        <div class="dotted"></div>
+        <div class="sum">{{request.PRICE}}</div>
+      </div>
+
+      <div class="pos" *ngIf="request.ADDITIONAL && request.ADDITIONAL!=''">
+        <div class="label">Дополнительно</div>
+        <div class="dotted"></div>
+        <div class="sum">{{request.ADDITIONAL}}</div>
+      </div>
+      
+    </div>
+  </div>
+</div>
