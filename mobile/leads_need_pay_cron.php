@@ -43,17 +43,32 @@
     $response['leads'] = $leads;
     $response['contact_ids'] = array_values($contacts);
 	
-	$user_result = CRest::call('crm.contact.list',[ 
-		'order'=>["DATE_CREATE"=>"ASC"],
-		'filter'=>["ID"=>array_values($contacts)],
-		'select'=> [ "ID", 'UF_*','*']
-	]);
+	$load_all = false;
+    $start = 0;
 	$users = [];
-	foreach ($user_result['result'] as $user) $users[$user['ID']] = $user;
+	while (!$load_all) {
+		$user_result = CRest::call('crm.contact.list',[ 
+			'order'=>["DATE_CREATE"=>"ASC"],
+			'filter'=>["ID"=>array_values($contacts)],
+			'select'=> [ "ID", 'UF_*','*'],
+			'start'=>$start
+		]);		
+        if (isset($user_result['next'])) {
+            $start = $user_result['next'];
+        } else $load_all=true;		
+		foreach ($user_result['result'] as $user) $users[$user['ID']] = $user;
+		sleep(2);
+	}
+
 	
+	foreach ($user_result['result'] as $user) $users[$user['ID']] = $user;	
 	$response['users'] = $users;
+	$response['user_result'] = $user_result;
 	
 	foreach($leads as $lead) {
+		
+		if (!$users[$lead['CONTACT_ID']]) print_r($lead);
+		
 		$contact = $users[$lead['CONTACT_ID']];
 		if (isset($contact[$push_field]) && $contact[$push_field]!="") {
 		
@@ -83,7 +98,7 @@
 			$arrNotification["type"] = 1;				
 			$data['route'] = "open_action_order/".$lead['ID'];				
 			$push_result = $fcm_android->send_notification($push_id, $arrNotification,"Android",$data);			
-		
+			$response['push_result'][$lead['CONTACT_ID']] = $push_result;
 		}
 		//break;
 	}
