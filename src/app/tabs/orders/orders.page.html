@@ -10,25 +10,25 @@
       <div class="round-buttons">
 
         <div class="button" (click)="order_tab_selected='myrequests'; loadMyRequests();">
-          <img src="../../../assets/all_orders.png" *ngIf="order_tab_selected!=='myrequests'">
-          <img src="../../../assets/all_orders_selected.png" *ngIf="order_tab_selected==='myrequests'">
+          <img src="../../../assets/orders/myorders_inactive.png" *ngIf="order_tab_selected!=='myrequests'">
+          <img src="../../../assets/orders/myorders_active.png" *ngIf="order_tab_selected==='myrequests'">
           <div class="title">Мои заявки</div>
         </div>
         <div class="button" (click)="order_tab_selected='myorders'; loadMyOrders();">
-          <img src="../../../assets/all_orders.png" *ngIf="order_tab_selected!=='myorders'">
-          <img src="../../../assets/all_orders_selected.png" *ngIf="order_tab_selected==='myorders'">
+          <img src="../../../assets/orders/work_inactive.png" *ngIf="order_tab_selected!=='myorders'">
+          <img src="../../../assets/orders/work_active.png" *ngIf="order_tab_selected==='myorders'">
           <div class="title">Заказы в работе</div>
         </div>
 
         <div class="button" (click)="order_tab_selected='needactions'; loadMyOrders();" *ngIf="badge_count>0">
           <div class="badge" *ngIf="badge_count>0">{{badge_count}}</div>
-          <img src="../../../assets/all_orders.png" *ngIf="order_tab_selected!=='needactions'">
-          <img src="../../../assets/all_orders_selected.png" *ngIf="order_tab_selected==='needactions'">
+          <img src="../../../assets/orders/action_inactive.png" *ngIf="order_tab_selected!=='needactions'">
+          <img src="../../../assets/orders/action_active.png" *ngIf="order_tab_selected==='needactions'">
           <div class="title">Требуют действий</div>
         </div>
         <div class="button" (click)="order_tab_selected='closed'; loadClosedOrders();">
-          <img src="../../../assets/old_orders.png" *ngIf="order_tab_selected!=='closed'">
-          <img src="../../../assets/old_orders_selected.png" *ngIf="order_tab_selected==='closed'">
+          <img src="../../../assets/orders/closed_inactive.png" *ngIf="order_tab_selected!=='closed'">
+          <img src="../../../assets/orders/closed_active.png" *ngIf="order_tab_selected==='closed'">
           <div class="title">Завершенные</div>
         </div>
 
