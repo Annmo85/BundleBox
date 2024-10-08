@@ -14,6 +14,9 @@ ion-tabs {
         }
         div.inactive {
             display: block;
+            img {
+                opacity: 0.6;
+            }                
         }
 
         div.badge {
@@ -31,15 +34,25 @@ ion-tabs {
             width: 20px;
             height: 20px;
         }
+
+        img {
+            width: 30px;
+        }
     }
 
 
     ion-tab-button.tab-selected {
         div.inactive {
             display: none;
+
+        
+
         }
         div.active {
             display: block;
+            img {
+                opacity: 1;
+            }                
         }
     }
 
