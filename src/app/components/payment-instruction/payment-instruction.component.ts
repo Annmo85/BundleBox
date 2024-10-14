@@ -30,7 +30,11 @@ export class PaymentInstructionComponent implements OnInit {
   instruction_text3: any = "";
   instruction_text4: any = "";
   instruction_online_text: any = "";
+  instruction_insurance: any = "";
   lines: any = [];
+
+
+  insurance: boolean = false;
 
   constructor(private modalController: ModalController, private http: HttpClient, private plt: Platform, private loadingCtrl: LoadingController, private toastController: ToastController, private userService: UserService, private modalCtrl: ModalController) {
     this.userService.getPaymentsInfoEvents().subscribe(async res => {
@@ -46,6 +50,7 @@ export class PaymentInstructionComponent implements OnInit {
         this.instruction_text3 = res.order_payment_information.instruction_text3;
         this.instruction_text4 = res.order_payment_information.instruction_text4;
         this.instruction_online_text = res.order_payment_information.instruction_online_text;
+        this.instruction_insurance = res.order_payment_information.instruction_insurance;
         this.lines = res.order_payment_information.cards;
 
       }
@@ -219,7 +224,8 @@ export class PaymentInstructionComponent implements OnInit {
   
   async gotoOnlinePayment() {
     let user_id = localStorage.getItem(environment.prefix + 'user_id');
-    await Browser.open({ url: 'https://bundlebox.ru/mobile/widget/payment.php?id='+user_id+"&deal_id="+this.order_id});
+    let insurance = this.insurance?1:0;
+    await Browser.open({ url: 'https://bundlebox.ru/mobile/widget/payment.php?id='+user_id+"&deal_id="+this.order_id+"&insurance="+insurance+"&t="+(new Date()).getTime()});
     this.close();
   }
 

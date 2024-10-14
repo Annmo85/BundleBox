@@ -15,6 +15,11 @@
 
       <app-button height="44" title="Перейти к оплате" (action)="gotoOnlinePayment()"></app-button>
       
+      <div class="insurance">
+        <ion-checkbox [(ngModel)]="insurance" color="accent" mode="md"></ion-checkbox>
+        <div class="text-small" [innerHtml]="instruction_insurance" (click)="insurance=!insurance"></div>
+      </div>
+
       <!--
       <p [innerHtml]="instruction_text"></p>
 
