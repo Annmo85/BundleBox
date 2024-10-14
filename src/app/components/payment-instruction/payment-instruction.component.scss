@@ -36,6 +36,15 @@ ion-content {
     }
   }
 
+  div.insurance {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
   div.text {
     font-size: 13px;
     padding-top: 4px;

@@ -103,6 +103,22 @@
       </div>
     </div>
 
+    <div style="width: 100%; text-align: center; margin-bottom: 10px;display: flex; justify-content: center;" *ngIf="order_info.deal.ADDITIONAL_INFO!=''">
+      <div class="date">
+        <div>Характеристики</div>
+      </div>
+  
+    </div>    
+
+    <div class="card" *ngIf="order_info.deal.ADDITIONAL_INFO!=''">
+      <div class="line1">
+        <div class="info">
+            <div class="value">{{order_info.deal.ADDITIONAL_INFO}}</div>
+        </div>
+      </div>
+    </div> 
+
+
     <div style="width: 100%; text-align: center; margin-bottom: 10px;display: flex; justify-content: center;">
       <div class="date">
         <div>
