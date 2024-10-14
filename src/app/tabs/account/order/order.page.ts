@@ -69,7 +69,7 @@ export class OrderPage implements OnInit {
       else if (this.order_info.deal.STAGE === "Доставка оплачена") this.bgcolor = "#DAE1F1;";
       else if (this.order_info.deal.STAGE === "Получите заказ") this.bgcolor = "#FFA39B;";
       else if (this.order_info.deal.STAGE === "Заказ завершён") this.bgcolor = "#ADB9C7;";    
-      else if (this.order_info.deal.STAGE === "Заказ завершен") this.bgcolor = "#ADB9C7;";    
+      else if (this.order_info.deal.STAGE === "Ждем компанию") this.bgcolor = "#ADB9C7;";    
       event.target.complete();
       this.is_load = true;
     })    

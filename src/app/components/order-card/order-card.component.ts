@@ -41,7 +41,7 @@ export class OrderCardComponent  implements OnInit {
     else if (this._order.STAGE === "Доставка оплачена") this.bgcolor = "#DAE1F1;";
     else if (this._order.STAGE === "Получите заказ") this.bgcolor = "#FFA39B;";
     else if (this._order.STAGE === "Заказ завершён") this.bgcolor = "#ADB9C7;";
-    else if (this._order.STAGE === "Заказ завершен") this.bgcolor = "#ADB9C7;";
+    else if (this._order.STAGE === "Ждем компанию") this.bgcolor = "#DAE1F1;";
 
   }
 
