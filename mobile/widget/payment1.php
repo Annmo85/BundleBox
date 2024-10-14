@@ -1,5 +1,10 @@
 <?php
 
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);
+	error_reporting(E_ALL);
+	// error_reporting(0);
+
 	// Access-Control headers are received during OPTIONS requests
 	if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
@@ -10,16 +15,16 @@
 			header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
 		exit;
 	}
-	ini_set('display_errors', 1);
-	ini_set('display_startup_errors', 1);
-	error_reporting(E_ALL);
-	// error_reporting(0);
+
 	
 	require_once (__DIR__.'/../crest.php');
 	
 	$contact_id = (int)$_GET['id'];
 
 	if (!$contact_id) exit;
+	
+	//UF_CRM_1728909809878 - идентификатор операции
+	//UF_CRM_1728909836389 - ссылка на оплату в точка банке
 	
 	
 	//Выбеерем сделки на оплату
@@ -52,9 +57,9 @@
 	}
 	
 	
-	$title = "Оплата заказов ".implode(" ,",$ids1);
+	$title = "Оплата заказов ".implode(" ,",$ids1) . "[" . implode(".",$ids) . "]";
 	if (isset($_GET['deal_id'])) {
-		$title = "Оплата заказа ".implode(" ,",$ids1);
+		$title = "Оплата заказа ".implode(" ,",$ids1) . "[" . implode(".",$ids) . "]";
 	}
 	
 
@@ -67,9 +72,10 @@
 			"failRedirectUrl" => "https://bundlebox.ru/mobile/widget/delivery_fail.php",
 			"paymentMode" => ["sbp", "card"],
 			"saveCard" => false,
-			"consumerId" => $contact_id,
+			// "consumerId" => $contact_id,
+			"consumerId" => implode(".",$ids),
 			"taxSystemCode" => "usn_income",
-			"merchantId" => "200000000014531",	//!!!!!!!!!!!!
+			"merchantId" => "200000000014733",	//!!!!!!!!!!!!
 			"Client" => [
 				"email" => $email,
 				"phone" => str_replace("+","",$phone),
@@ -93,8 +99,8 @@
 	$curl = curl_init();
 
 	curl_setopt_array($curl, array(
-	  // CURLOPT_URL => 'https://enter.tochka.com/uapi/acquiring/v1.0/payments_with_receipt',
-	  CURLOPT_URL => 'https://enter.tochka.com/sandbox/v2/acquiring/v1.0/payments_with_receipt',
+	  CURLOPT_URL => 'https://enter.tochka.com/uapi/acquiring/v1.0/payments_with_receipt',
+	  // CURLOPT_URL => 'https://enter.tochka.com/sandbox/v2/acquiring/v1.0/payments_with_receipt',
 	  CURLOPT_RETURNTRANSFER => true,
 	  CURLOPT_ENCODING => '',
 	  CURLOPT_MAXREDIRS => 10,
@@ -106,10 +112,10 @@
 	  CURLOPT_HTTPHEADER => array(
 		
 		// Рабочий
-		// 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJaUUtKYU1RNkNvVERGZTJaVDZxY1ZWdUo0TjNOWk1jeiJ9.mEInKJLu5GL746bQ_N_HPrgKs8h16QVJDQIBNVhL8jfNSQra__RDyMexqVKLAL5eLMT9gJZ6a0PlDyytfyuErSaeaYaWdbjDukv9JyuB_Fwea2MZdHbupTuu9WH_0OxuQ01QOgmbckrn4P8R0vLS6dNpeW1pq5pdK91DvpwCcskBNe5P0PBKdrsDVaDZCOEZU2zDDUJWcD3y0VZGbrF370luOdYPzpajl6hTnPYBDJBE03jVY6dLGQhL8BKKTm5s6hQDvuvdzK1lnsGSYqid3NMP_yXU7T6F6GD48SlO2QMjvPtJ78EgZ81F1KiqTfN9Ms5-DibQn1ZKLRlXaB9dVEjwjmWmJgpIqo5kOht5k6nhQUt9SojFn8hNsCLH7xXmGQ3Jk6oKiflDAFf4utsDKh403d_kUrnjImg9clOyPplME_sLppgTjAqLk6ErOTbsqXJOLeEEZMiBLGulTCURHcuUVp91D--vKrZdTZOy4CNEJi-C1D4GdWUPLa3DR8Ur',
+		'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiIwQnBodXdwd28zRjljYVhab1BwR2FVYUpUV1dNSHFMayJ9.pBeJe8Wpv5XCYFGJ5NtZxPc28pz59E2QBLE7O8ziJW5Me-7OPiQZZEbDUG0GF8hsuwkiwngkesLF84ojZY1hQYWMViEQecNkEfQj0CrvOjYeg3p9cEXzVchDbZ52ymGviKozS8WEJH-XO8wwtHqT4i49iNWRu0fPsQnRwDTv7RgBQBebkA1cpkmEJ7DhnnNQMECB9MB6ud-K2ZdTdGIlHGIGUodIrQRDyLjVYAxTf4TEUegKcu4ZLwidqg-G4HptTL0HtWDbUHoU7SIyzBmsi2Lo3lSrso4OgA3vpzzHglvib5jkWwUKUDiIGRwnzBOlojC6TWZzJlS65YaVXZihXit1owPKMmeE6VOlzFnskWCfW0RydwPZluqsy55SGlBleB3uBRQCJBH6-zCeKyMzIo7FYIFtzp_jgS2XgYVfm1ccUemnm2tjDfNHOcOw96lrHViDmOmBqj4sSfgrTNCg2qCLgD8xXVK9dlvOOqAxiF2j7QRv7uayha2vGg8NK1od',
 		
 		//Песочница
-		'Authorization: Bearer working_token',
+		// 'Authorization: Bearer working_token',
 		'Content-Type: application/json'
 	  ),
 	));
@@ -117,19 +123,40 @@
 	$response = json_decode(curl_exec($curl), true);
 
 	curl_close($curl);
-	print_r($response);	
 	
-	//client_id ZQKJaMQ6CoTDFe2ZT6qcVVuJ4N3NZMcz
-	//key eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJaUUtKYU1RNkNvVERGZTJaVDZxY1ZWdUo0TjNOWk1jeiJ9.mEInKJLu5GL746bQ_N_HPrgKs8h16QVJDQIBNVhL8jfNSQra__RDyMexqVKLAL5eLMT9gJZ6a0PlDyytfyuErSaeaYaWdbjDukv9JyuB_Fwea2MZdHbupTuu9WH_0OxuQ01QOgmbckrn4P8R0vLS6dNpeW1pq5pdK91DvpwCcskBNe5P0PBKdrsDVaDZCOEZU2zDDUJWcD3y0VZGbrF370luOdYPzpajl6hTnPYBDJBE03jVY6dLGQhL8BKKTm5s6hQDvuvdzK1lnsGSYqid3NMP_yXU7T6F6GD48SlO2QMjvPtJ78EgZ81F1KiqTfN9Ms5-DibQn1ZKLRlXaB9dVEjwjmWmJgpIqo5kOht5k6nhQUt9SojFn8hNsCLH7xXmGQ3Jk6oKiflDAFf4utsDKh403d_kUrnjImg9clOyPplME_sLppgTjAqLk6ErOTbsqXJOLeEEZMiBLGulTCURHcuUVp91D--vKrZdTZOy4CNEJi-C1D4GdWUPLa3DR8Ur
+	if (isset($response['Data']['paymentLink'])) {
+		// header('Location: '.$response['Data']['paymentLink']);
+		
+		//Теперь проставим ссылки на операцию у сделки
+		$fields = ['UF_CRM_1728909809878'=>$response['Data']['operationId'],'UF_CRM_1728909836389'=>$response['Data']['paymentLink']];
+		foreach ($result['result'] as $lead) {
+			CRest::call('crm.deal.update',['id'=>$lead['ID'],"fields"=> $fields, 'params'=> ["REGISTER_SONET_EVENT"=>"Y"]]);	
+			
+		};
+		file_put_contents(__DIR__.'/1114.log',print_r($response,true),FILE_APPEND);
+		header('Location: '.$response['Data']['paymentLink']);			
+		
+	} else {
+		header('Location: '.$pay_data['Data']['failRedirectUrl']);
+		
+	}
+	
+	// print_r($response);	
+	
+	//https://bundlebox.ru/mobile/widget/payment1.php?id=2415&deal_id=40203
+	
+	//client_id 0Bphuwpwo3F9caXZoPpGaUaJTWWMHqLk
+	
+	//key eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiIwQnBodXdwd28zRjljYVhab1BwR2FVYUpUV1dNSHFMayJ9.pBeJe8Wpv5XCYFGJ5NtZxPc28pz59E2QBLE7O8ziJW5Me-7OPiQZZEbDUG0GF8hsuwkiwngkesLF84ojZY1hQYWMViEQecNkEfQj0CrvOjYeg3p9cEXzVchDbZ52ymGviKozS8WEJH-XO8wwtHqT4i49iNWRu0fPsQnRwDTv7RgBQBebkA1cpkmEJ7DhnnNQMECB9MB6ud-K2ZdTdGIlHGIGUodIrQRDyLjVYAxTf4TEUegKcu4ZLwidqg-G4HptTL0HtWDbUHoU7SIyzBmsi2Lo3lSrso4OgA3vpzzHglvib5jkWwUKUDiIGRwnzBOlojC6TWZzJlS65YaVXZihXit1owPKMmeE6VOlzFnskWCfW0RydwPZluqsy55SGlBleB3uBRQCJBH6-zCeKyMzIo7FYIFtzp_jgS2XgYVfm1ccUemnm2tjDfNHOcOw96lrHViDmOmBqj4sSfgrTNCg2qCLgD8xXVK9dlvOOqAxiF2j7QRv7uayha2vGg8NK1od
 	
 	//Получение ключей
-	//curl --location --globoff 'https://enter.tochka.com/uapi/open-banking/v1.0/customers'  --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJaUUtKYU1RNkNvVERGZTJaVDZxY1ZWdUo0TjNOWk1jeiJ9.mEInKJLu5GL746bQ_N_HPrgKs8h16QVJDQIBNVhL8jfNSQra__RDyMexqVKLAL5eLMT9gJZ6a0PlDyytfyuErSaeaYaWdbjDukv9JyuB_Fwea2MZdHbupTuu9WH_0OxuQ01QOgmbckrn4P8R0vLS6dNpeW1pq5pdK91DvpwCcskBNe5P0PBKdrsDVaDZCOEZU2zDDUJWcD3y0VZGbrF370luOdYPzpajl6hTnPYBDJBE03jVY6dLGQhL8BKKTm5s6hQDvuvdzK1lnsGSYqid3NMP_yXU7T6F6GD48SlO2QMjvPtJ78EgZ81F1KiqTfN9Ms5-DibQn1ZKLRlXaB9dVEjwjmWmJgpIqo5kOht5k6nhQUt9SojFn8hNsCLH7xXmGQ3Jk6oKiflDAFf4utsDKh403d_kUrnjImg9clOyPplME_sLppgTjAqLk6ErOTbsqXJOLeEEZMiBLGulTCURHcuUVp91D--vKrZdTZOy4CNEJi-C1D4GdWUPLa3DR8Ur'
-	//Получение мерчанта из кастомера
-	//curl --location --globoff 'https://enter.tochka.com/uapi/acquiring/v1.0/retailers?customerCode=304563846'  --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJaUUtKYU1RNkNvVERGZTJaVDZxY1ZWdUo0TjNOWk1jeiJ9.mEInKJLu5GL746bQ_N_HPrgKs8h16QVJDQIBNVhL8jfNSQra__RDyMexqVKLAL5eLMT9gJZ6a0PlDyytfyuErSaeaYaWdbjDukv9JyuB_Fwea2MZdHbupTuu9WH_0OxuQ01QOgmbckrn4P8R0vLS6dNpeW1pq5pdK91DvpwCcskBNe5P0PBKdrsDVaDZCOEZU2zDDUJWcD3y0VZGbrF370luOdYPzpajl6hTnPYBDJBE03jVY6dLGQhL8BKKTm5s6hQDvuvdzK1lnsGSYqid3NMP_yXU7T6F6GD48SlO2QMjvPtJ78EgZ81F1KiqTfN9Ms5-DibQn1ZKLRlXaB9dVEjwjmWmJgpIqo5kOht5k6nhQUt9SojFn8hNsCLH7xXmGQ3Jk6oKiflDAFf4utsDKh403d_kUrnjImg9clOyPplME_sLppgTjAqLk6ErOTbsqXJOLeEEZMiBLGulTCURHcuUVp91D--vKrZdTZOy4CNEJi-C1D4GdWUPLa3DR8Ur'
+	// curl --location --globoff 'https://enter.tochka.com/uapi/open-banking/v1.0/customers'  --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiIwQnBodXdwd28zRjljYVhab1BwR2FVYUpUV1dNSHFMayJ9.pBeJe8Wpv5XCYFGJ5NtZxPc28pz59E2QBLE7O8ziJW5Me-7OPiQZZEbDUG0GF8hsuwkiwngkesLF84ojZY1hQYWMViEQecNkEfQj0CrvOjYeg3p9cEXzVchDbZ52ymGviKozS8WEJH-XO8wwtHqT4i49iNWRu0fPsQnRwDTv7RgBQBebkA1cpkmEJ7DhnnNQMECB9MB6ud-K2ZdTdGIlHGIGUodIrQRDyLjVYAxTf4TEUegKcu4ZLwidqg-G4HptTL0HtWDbUHoU7SIyzBmsi2Lo3lSrso4OgA3vpzzHglvib5jkWwUKUDiIGRwnzBOlojC6TWZzJlS65YaVXZihXit1owPKMmeE6VOlzFnskWCfW0RydwPZluqsy55SGlBleB3uBRQCJBH6-zCeKyMzIo7FYIFtzp_jgS2XgYVfm1ccUemnm2tjDfNHOcOw96lrHViDmOmBqj4sSfgrTNCg2qCLgD8xXVK9dlvOOqAxiF2j7QRv7uayha2vGg8NK1od'
+	// Получение мерчанта из кастомера
+	// curl --location --globoff 'https://enter.tochka.com/uapi/acquiring/v1.0/retailers?customerCode=304563846'  --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiIwQnBodXdwd28zRjljYVhab1BwR2FVYUpUV1dNSHFMayJ9.pBeJe8Wpv5XCYFGJ5NtZxPc28pz59E2QBLE7O8ziJW5Me-7OPiQZZEbDUG0GF8hsuwkiwngkesLF84ojZY1hQYWMViEQecNkEfQj0CrvOjYeg3p9cEXzVchDbZ52ymGviKozS8WEJH-XO8wwtHqT4i49iNWRu0fPsQnRwDTv7RgBQBebkA1cpkmEJ7DhnnNQMECB9MB6ud-K2ZdTdGIlHGIGUodIrQRDyLjVYAxTf4TEUegKcu4ZLwidqg-G4HptTL0HtWDbUHoU7SIyzBmsi2Lo3lSrso4OgA3vpzzHglvib5jkWwUKUDiIGRwnzBOlojC6TWZzJlS65YaVXZihXit1owPKMmeE6VOlzFnskWCfW0RydwPZluqsy55SGlBleB3uBRQCJBH6-zCeKyMzIo7FYIFtzp_jgS2XgYVfm1ccUemnm2tjDfNHOcOw96lrHViDmOmBqj4sSfgrTNCg2qCLgD8xXVK9dlvOOqAxiF2j7QRv7uayha2vGg8NK1od'
 	
 	//установка хуков prod, делает один раз
-	// curl -g --request PUT 'https://enter.tochka.com/uapi/webhook/v1.0/ZQKJaMQ6CoTDFe2ZT6qcVVuJ4N3NZMcz' \
-// --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJaUUtKYU1RNkNvVERGZTJaVDZxY1ZWdUo0TjNOWk1jeiJ9.mEInKJLu5GL746bQ_N_HPrgKs8h16QVJDQIBNVhL8jfNSQra__RDyMexqVKLAL5eLMT9gJZ6a0PlDyytfyuErSaeaYaWdbjDukv9JyuB_Fwea2MZdHbupTuu9WH_0OxuQ01QOgmbckrn4P8R0vLS6dNpeW1pq5pdK91DvpwCcskBNe5P0PBKdrsDVaDZCOEZU2zDDUJWcD3y0VZGbrF370luOdYPzpajl6hTnPYBDJBE03jVY6dLGQhL8BKKTm5s6hQDvuvdzK1lnsGSYqid3NMP_yXU7T6F6GD48SlO2QMjvPtJ78EgZ81F1KiqTfN9Ms5-DibQn1ZKLRlXaB9dVEjwjmWmJgpIqo5kOht5k6nhQUt9SojFn8hNsCLH7xXmGQ3Jk6oKiflDAFf4utsDKh403d_kUrnjImg9clOyPplME_sLppgTjAqLk6ErOTbsqXJOLeEEZMiBLGulTCURHcuUVp91D--vKrZdTZOy4CNEJi-C1D4GdWUPLa3DR8Ur' \
+	// curl -g --request PUT 'https://enter.tochka.com/uapi/webhook/v1.0/0Bphuwpwo3F9caXZoPpGaUaJTWWMHqLk' \
+// --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiIwQnBodXdwd28zRjljYVhab1BwR2FVYUpUV1dNSHFMayJ9.pBeJe8Wpv5XCYFGJ5NtZxPc28pz59E2QBLE7O8ziJW5Me-7OPiQZZEbDUG0GF8hsuwkiwngkesLF84ojZY1hQYWMViEQecNkEfQj0CrvOjYeg3p9cEXzVchDbZ52ymGviKozS8WEJH-XO8wwtHqT4i49iNWRu0fPsQnRwDTv7RgBQBebkA1cpkmEJ7DhnnNQMECB9MB6ud-K2ZdTdGIlHGIGUodIrQRDyLjVYAxTf4TEUegKcu4ZLwidqg-G4HptTL0HtWDbUHoU7SIyzBmsi2Lo3lSrso4OgA3vpzzHglvib5jkWwUKUDiIGRwnzBOlojC6TWZzJlS65YaVXZihXit1owPKMmeE6VOlzFnskWCfW0RydwPZluqsy55SGlBleB3uBRQCJBH6-zCeKyMzIo7FYIFtzp_jgS2XgYVfm1ccUemnm2tjDfNHOcOw96lrHViDmOmBqj4sSfgrTNCg2qCLgD8xXVK9dlvOOqAxiF2j7QRv7uayha2vGg8NK1od' \
 // --header 'Content-Type: application/json' \
 // --data-raw '{
         // "webhooksList": ["incomingPayment","incomingSbpPayment","acquiringInternetPayment"],
@@ -138,20 +165,27 @@
 
 
 
+// curl -g --request GET 'https://enter.tochka.com/uapi/webhook/v1.0/0Bphuwpwo3F9caXZoPpGaUaJTWWMHqLk' \
+// --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiIwQnBodXdwd28zRjljYVhab1BwR2FVYUpUV1dNSHFMayJ9.pBeJe8Wpv5XCYFGJ5NtZxPc28pz59E2QBLE7O8ziJW5Me-7OPiQZZEbDUG0GF8hsuwkiwngkesLF84ojZY1hQYWMViEQecNkEfQj0CrvOjYeg3p9cEXzVchDbZ52ymGviKozS8WEJH-XO8wwtHqT4i49iNWRu0fPsQnRwDTv7RgBQBebkA1cpkmEJ7DhnnNQMECB9MB6ud-K2ZdTdGIlHGIGUodIrQRDyLjVYAxTf4TEUegKcu4ZLwidqg-G4HptTL0HtWDbUHoU7SIyzBmsi2Lo3lSrso4OgA3vpzzHglvib5jkWwUKUDiIGRwnzBOlojC6TWZzJlS65YaVXZihXit1owPKMmeE6VOlzFnskWCfW0RydwPZluqsy55SGlBleB3uBRQCJBH6-zCeKyMzIo7FYIFtzp_jgS2XgYVfm1ccUemnm2tjDfNHOcOw96lrHViDmOmBqj4sSfgrTNCg2qCLgD8xXVK9dlvOOqAxiF2j7QRv7uayha2vGg8NK1od' 
+
 	
-	//установка хуков sandbox, делает один раз
-	curl -g --request PUT 'https://enter.tochka.com/uapi/webhook/v1.0/ZQKJaMQ6CoTDFe2ZT6qcVVuJ4N3NZMcz' 
-	--header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJaUUtKYU1RNkNvVERGZTJaVDZxY1ZWdUo0TjNOWk1jeiJ9.mEInKJLu5GL746bQ_N_HPrgKs8h16QVJDQIBNVhL8jfNSQra__RDyMexqVKLAL5eLMT9gJZ6a0PlDyytfyuErSaeaYaWdbjDukv9JyuB_Fwea2MZdHbupTuu9WH_0OxuQ01QOgmbckrn4P8R0vLS6dNpeW1pq5pdK91DvpwCcskBNe5P0PBKdrsDVaDZCOEZU2zDDUJWcD3y0VZGbrF370luOdYPzpajl6hTnPYBDJBE03jVY6dLGQhL8BKKTm5s6hQDvuvdzK1lnsGSYqid3NMP_yXU7T6F6GD48SlO2QMjvPtJ78EgZ81F1KiqTfN9Ms5-DibQn1ZKLRlXaB9dVEjwjmWmJgpIqo5kOht5k6nhQUt9SojFn8hNsCLH7xXmGQ3Jk6oKiflDAFf4utsDKh403d_kUrnjImg9clOyPplME_sLppgTjAqLk6ErOTbsqXJOLeEEZMiBLGulTCURHcuUVp91D--vKrZdTZOy4CNEJi-C1D4GdWUPLa3DR8Ur' 
-	--header 'Content-Type: application/json' 
-	--data-raw '{        "webhooksList": ["incomingPayment","incomingSbpPayment","acquiringInternetPayment"],        "url": "https://bundlebox.ru/mobile/widget/payment_callback_tochka.php"}'
+	// //установка хуков sandbox, делает один раз
+	// curl -g --request PUT 'https://enter.tochka.com/uapi/webhook/v1.0/0Bphuwpwo3F9caXZoPpGaUaJTWWMHqLk' 	--header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiIwQnBodXdwd28zRjljYVhab1BwR2FVYUpUV1dNSHFMayJ9.pBeJe8Wpv5XCYFGJ5NtZxPc28pz59E2QBLE7O8ziJW5Me-7OPiQZZEbDUG0GF8hsuwkiwngkesLF84ojZY1hQYWMViEQecNkEfQj0CrvOjYeg3p9cEXzVchDbZ52ymGviKozS8WEJH-XO8wwtHqT4i49iNWRu0fPsQnRwDTv7RgBQBebkA1cpkmEJ7DhnnNQMECB9MB6ud-K2ZdTdGIlHGIGUodIrQRDyLjVYAxTf4TEUegKcu4ZLwidqg-G4HptTL0HtWDbUHoU7SIyzBmsi2Lo3lSrso4OgA3vpzzHglvib5jkWwUKUDiIGRwnzBOlojC6TWZzJlS65YaVXZihXit1owPKMmeE6VOlzFnskWCfW0RydwPZluqsy55SGlBleB3uBRQCJBH6-zCeKyMzIo7FYIFtzp_jgS2XgYVfm1ccUemnm2tjDfNHOcOw96lrHViDmOmBqj4sSfgrTNCg2qCLgD8xXVK9dlvOOqAxiF2j7QRv7uayha2vGg8NK1od' 	--header 'Content-Type: application/json' 	--data-raw '{        "webhooksList": ["incomingPayment","incomingSbpPayment","acquiringInternetPayment"],        "url": "https://bundlebox.ru/mobile/widget/payment_callback_tochka.php"}'
 
 	//Проверка вебзука
-curl -g --request POST 'https://enter.tochka.com/uapi/webhook/v1.0/ZQKJaMQ6CoTDFe2ZT6qcVVuJ4N3NZMcz/test_send' \
---header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJaUUtKYU1RNkNvVERGZTJaVDZxY1ZWdUo0TjNOWk1jeiJ9.mEInKJLu5GL746bQ_N_HPrgKs8h16QVJDQIBNVhL8jfNSQra__RDyMexqVKLAL5eLMT9gJZ6a0PlDyytfyuErSaeaYaWdbjDukv9JyuB_Fwea2MZdHbupTuu9WH_0OxuQ01QOgmbckrn4P8R0vLS6dNpeW1pq5pdK91DvpwCcskBNe5P0PBKdrsDVaDZCOEZU2zDDUJWcD3y0VZGbrF370luOdYPzpajl6hTnPYBDJBE03jVY6dLGQhL8BKKTm5s6hQDvuvdzK1lnsGSYqid3NMP_yXU7T6F6GD48SlO2QMjvPtJ78EgZ81F1KiqTfN9Ms5-DibQn1ZKLRlXaB9dVEjwjmWmJgpIqo5kOht5k6nhQUt9SojFn8hNsCLH7xXmGQ3Jk6oKiflDAFf4utsDKh403d_kUrnjImg9clOyPplME_sLppgTjAqLk6ErOTbsqXJOLeEEZMiBLGulTCURHcuUVp91D--vKrZdTZOy4CNEJi-C1D4GdWUPLa3DR8Ur' \
---header 'Content-Type: application/json' \
---data-raw '{
-        "webhookType": "incomingPayment"
-}'
+// curl -g --request POST 'https://enter.tochka.com/uapi/webhook/v1.0/0Bphuwpwo3F9caXZoPpGaUaJTWWMHqLk/test_send' \
+// --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiIwQnBodXdwd28zRjljYVhab1BwR2FVYUpUV1dNSHFMayJ9.pBeJe8Wpv5XCYFGJ5NtZxPc28pz59E2QBLE7O8ziJW5Me-7OPiQZZEbDUG0GF8hsuwkiwngkesLF84ojZY1hQYWMViEQecNkEfQj0CrvOjYeg3p9cEXzVchDbZ52ymGviKozS8WEJH-XO8wwtHqT4i49iNWRu0fPsQnRwDTv7RgBQBebkA1cpkmEJ7DhnnNQMECB9MB6ud-K2ZdTdGIlHGIGUodIrQRDyLjVYAxTf4TEUegKcu4ZLwidqg-G4HptTL0HtWDbUHoU7SIyzBmsi2Lo3lSrso4OgA3vpzzHglvib5jkWwUKUDiIGRwnzBOlojC6TWZzJlS65YaVXZihXit1owPKMmeE6VOlzFnskWCfW0RydwPZluqsy55SGlBleB3uBRQCJBH6-zCeKyMzIo7FYIFtzp_jgS2XgYVfm1ccUemnm2tjDfNHOcOw96lrHViDmOmBqj4sSfgrTNCg2qCLgD8xXVK9dlvOOqAxiF2j7QRv7uayha2vGg8NK1od' \
+// --header 'Content-Type: application/json' \
+// --data-raw '{
+        // "webhookType": "incomingPayment"
+// }'
 	
+	
+	// curl --location --globoff 'https://enter.tochka.com/uapi/acquiring/v1.0/payments/4b9b7557-51a0-49d8-8293-760c653b76d7' \
+// --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiIwQnBodXdwd28zRjljYVhab1BwR2FVYUpUV1dNSHFMayJ9.pBeJe8Wpv5XCYFGJ5NtZxPc28pz59E2QBLE7O8ziJW5Me-7OPiQZZEbDUG0GF8hsuwkiwngkesLF84ojZY1hQYWMViEQecNkEfQj0CrvOjYeg3p9cEXzVchDbZ52ymGviKozS8WEJH-XO8wwtHqT4i49iNWRu0fPsQnRwDTv7RgBQBebkA1cpkmEJ7DhnnNQMECB9MB6ud-K2ZdTdGIlHGIGUodIrQRDyLjVYAxTf4TEUegKcu4ZLwidqg-G4HptTL0HtWDbUHoU7SIyzBmsi2Lo3lSrso4OgA3vpzzHglvib5jkWwUKUDiIGRwnzBOlojC6TWZzJlS65YaVXZihXit1owPKMmeE6VOlzFnskWCfW0RydwPZluqsy55SGlBleB3uBRQCJBH6-zCeKyMzIo7FYIFtzp_jgS2XgYVfm1ccUemnm2tjDfNHOcOw96lrHViDmOmBqj4sSfgrTNCg2qCLgD8xXVK9dlvOOqAxiF2j7QRv7uayha2vGg8NK1od'
+
+
+// curl -g --request GET 'https://enter.tochka.com/uapi/sbp/v1.0/qr-codes/AD20005RTK7EU4JI88EPO09KNMMA922U/payment-status' \
+// --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiIwQnBodXdwd28zRjljYVhab1BwR2FVYUpUV1dNSHFMayJ9.pBeJe8Wpv5XCYFGJ5NtZxPc28pz59E2QBLE7O8ziJW5Me-7OPiQZZEbDUG0GF8hsuwkiwngkesLF84ojZY1hQYWMViEQecNkEfQj0CrvOjYeg3p9cEXzVchDbZ52ymGviKozS8WEJH-XO8wwtHqT4i49iNWRu0fPsQnRwDTv7RgBQBebkA1cpkmEJ7DhnnNQMECB9MB6ud-K2ZdTdGIlHGIGUodIrQRDyLjVYAxTf4TEUegKcu4ZLwidqg-G4HptTL0HtWDbUHoU7SIyzBmsi2Lo3lSrso4OgA3vpzzHglvib5jkWwUKUDiIGRwnzBOlojC6TWZzJlS65YaVXZihXit1owPKMmeE6VOlzFnskWCfW0RydwPZluqsy55SGlBleB3uBRQCJBH6-zCeKyMzIo7FYIFtzp_jgS2XgYVfm1ccUemnm2tjDfNHOcOw96lrHViDmOmBqj4sSfgrTNCg2qCLgD8xXVK9dlvOOqAxiF2j7QRv7uayha2vGg8NK1od'
 
 ?>
