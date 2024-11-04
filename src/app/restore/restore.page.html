@@ -19,8 +19,20 @@
 
       
 
+
       <div class="form">
-        <form [formGroup]="ionicForm!" (ngSubmit)="submitForm()" novalidate>
+
+
+        <ion-segment color="accent" value="{{current_segment}}" mode="ios" (ionChange)="changeForm($event)">
+          <ion-segment-button value="phone">
+            <ion-label>По телефону</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="email">
+            <ion-label>По Email</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+
+        <form [formGroup]="ionicForm!" (ngSubmit)="submitForm()" novalidate  *ngIf="current_segment=='phone'">
 
           <div class="login input-field">
             <div class="text">Введите номер телефона и мы отправим на него СМС с новым паролем</div>
@@ -42,6 +54,32 @@
 
           <div class="login input-field">
             <app-button title="Выслать пароль" height="48" [disabled]="!ionicForm!.valid" (action)="submitForm()"></app-button>
+
+          </div>
+          
+        </form>
+
+        <form [formGroup]="ionicForm1!" (ngSubmit)="submitForm1()" novalidate  *ngIf="current_segment=='email'">
+
+          <div class="login input-field">
+            <div class="text">Введите ваш Email и мы отправим на него письмо с новым паролем</div>
+          </div>
+          <div class="login input-field">
+            <div class="label">Email <span class="required"></span></div>
+            <div class="input" [ngClass]="{'error':ionicForm1?.touched && ionicForm1?.get('email')?.invalid}">
+              <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
+                  <path stroke="#2D2D2D" stroke-width="1.2" d="M1.5 9c0-2.828 0-4.243.879-5.121C3.257 3 4.672 3 7.5 3h3c2.828 0 4.243 0 5.121.879.879.878.879 2.293.879 5.121 0 2.828 0 4.243-.879 5.121C14.743 15 13.328 15 10.5 15h-3c-2.828 0-4.243 0-5.121-.879C1.5 13.243 1.5 11.828 1.5 9Z"/>
+                  <path stroke="#2D2D2D" stroke-linecap="round" stroke-width="1.2" d="m4.5 6 1.62 1.35C7.496 8.496 8.184 9.07 9 9.07s1.503-.574 2.88-1.722L13.5 6"/>
+                </svg>
+              </div>
+              <ion-input type="text" inputmode="email" formControlName="email" #email  placeholder="Введите Email"></ion-input>
+            </div>
+          </div>
+
+
+          <div class="login input-field">
+            <app-button title="Выслать пароль" height="48" [disabled]="!ionicForm1!.valid" (action)="submitForm1()"></app-button>
 
           </div>
           

@@ -15,6 +15,7 @@ import { environment } from 'src/environments/environment';
 export class RegistrationPage implements OnInit {
 
   ionicForm!: FormGroup;
+  ionicForm1!: FormGroup;
   @ViewChild('phone') phone! : IonInput ;
   @ViewChild('password') password! : IonInput;
   @ViewChild('confirm') confirm! : IonInput;
@@ -22,7 +23,10 @@ export class RegistrationPage implements OnInit {
   @ViewChild('email') email! : IonInput;
   @ViewChild('last_name') last_name! : IonInput;
   @ViewChild('codeInput') codeInput! : ElementRef;
+  
   phone_model: string = "";
+  
+  current_segment: string = "phone";
 
   phone_error:string = "";
   name_error:string = "";
@@ -69,6 +73,16 @@ export class RegistrationPage implements OnInit {
       password: ['', [Validators.required]],
       city: ['', [Validators.required]],
       usl: [false, [Validators.required]]
+    }) 
+    this.ionicForm1 = this.formBuilder.group({
+      phone: [''],
+      confirm: ['', [Validators.required]],
+      name: ['', [Validators.required]],
+      last_name: ['', [Validators.required]],
+      email: ['', [Validators.required,Validators.email]],
+      password: ['', [Validators.required]],
+      city: ['', [Validators.required]],
+      usl: [false, [Validators.required]]
     })    
   }
 
@@ -76,6 +90,29 @@ export class RegistrationPage implements OnInit {
   doResend() {
     let phone = this.ionicForm.value.phone;
     this.userService.sendSms(phone).then( async res=>{
+
+      if (!res.status) {
+        this.step = 1;
+        const toast = await this.toastController.create({
+          message: res.message,
+          duration: 2000,
+          color: "danger"
+        });
+        toast.present();
+      }
+      
+      this.timer = 30;
+      this.timeout = setInterval(()=>{
+        this.timer--; 
+        if (this.timer<=0) clearInterval(this.timeout);
+        this.ref.detectChanges();
+      },1000);
+    });
+  } 
+
+  doResend1() {
+    let email = this.ionicForm1.value.email;
+    this.userService.sendEmail(email).then( async res=>{
 
       if (!res.status) {
         this.step = 1;
@@ -117,6 +154,7 @@ export class RegistrationPage implements OnInit {
     });
     loading.present();  
 
+    
     let phone = this.ionicForm.value.phone;
     let password = this.ionicForm.value.password;
     let confirm = this.ionicForm.value.confirm;
@@ -124,8 +162,20 @@ export class RegistrationPage implements OnInit {
     let city = this.ionicForm.value.city;
     let email = this.ionicForm.value.email;
     let last_name = this.ionicForm.value.last_name;
+    let mode = "phone";
 
-    this.userService.createUser(name,last_name,email,password,phone,this.sms_code, city).then( async res => {
+    if (this.current_segment=='email') {
+      phone = this.ionicForm1.value.phone;
+      password = this.ionicForm1.value.password;
+      confirm = this.ionicForm1.value.confirm;
+      name = this.ionicForm1.value.name;
+      city = this.ionicForm1.value.city;
+      email = this.ionicForm1.value.email;
+      last_name = this.ionicForm1.value.last_name;    
+      mode = "email";  
+    }
+
+    this.userService.createUser(name,last_name,email,password,phone,this.sms_code, city, mode).then( async res => {
       console.log("createUser:");
       console.log(res);
       if (res.error) {
@@ -164,6 +214,7 @@ export class RegistrationPage implements OnInit {
     let password = this.ionicForm.value.password;
     let confirm = this.ionicForm.value.confirm;
     let name = this.ionicForm.value.name;
+    let email = this.ionicForm.value.email;
     let usl = this.ionicForm.value.usl;
 
     if (phone=='') {
@@ -175,6 +226,9 @@ export class RegistrationPage implements OnInit {
     if (password=='') {
       this.pwd_error = "Пароль не может быть пустым!";
     }
+    if (email=='') {
+      this.confirm_error = "Email не может быть пустым!";
+    }    
     if (city=='') {
       this.city_error = "Вы не указали ваш город или регион!";
     }
@@ -187,7 +241,7 @@ export class RegistrationPage implements OnInit {
     if (!usl) {
       this.usl_error = "Вы не согласились с условиями!";
     }
-    if (phone!='' && name!='' && password !='' && confirm ==password && usl) {
+    if (phone!='' && name!='' && password !='' && email !='' && confirm ==password && usl) {
 
       const loading = await this.loadingCtrl.create({
         message: 'Подождите...',
@@ -219,25 +273,6 @@ export class RegistrationPage implements OnInit {
         this.codeInput.nativeElement.setFocus();
       });
 
-
-
-      
-
-      /*this.userService.login(phone,password).then(response=>{
-
-        loading.dismiss();        
-        if (response.error) {
-          this.error_response = response.message;
-        } else {
-          this.nav.navigateRoot(['orders']);
-        }
-
-
-      }).catch(err=>{
-        console.log("login.ts this.userService.login error:");
-        console.log(err);
-        loading.dismiss();
-      });*/
     }
 
   }
@@ -273,4 +308,87 @@ export class RegistrationPage implements OnInit {
     this.ionicForm.get('city')?.patchValue(this.city);
     this.isCityModalOpen = false;
   }
+
+
+  changeForm(ev:any) {
+    this.current_segment = ev.detail.value;
+  }
+
+
+
+
+  async submitForm1() {
+    this.confirm_error = "";
+    this.phone_error = "";
+    this.pwd_error = "";
+    this.error_response ="";
+    this.usl_error ="";
+    console.log(this.ionicForm1.value);
+    let phone = this.ionicForm1.value.phone;
+    let city = this.ionicForm1.value.city;
+    let password = this.ionicForm1.value.password;
+    let confirm = this.ionicForm1.value.confirm;
+    let name = this.ionicForm1.value.name;
+    let email = this.ionicForm1.value.email;
+    let usl = this.ionicForm1.value.usl;
+
+    if (phone=='') {
+      this.phone_error = "Телефон не может быть пустым!";
+    }
+    if (name=='') {
+      this.name_error = "Имя не может быть пустым!";
+    }
+    if (password=='') {
+      this.pwd_error = "Пароль не может быть пустым!";
+    }
+    if (city=='') {
+      this.city_error = "Вы не указали ваш город или регион!";
+    }
+    if (confirm=='') {
+      this.confirm_error = "Пароль не может быть пустым!";
+    }
+    if (email=='') {
+      this.confirm_error = "Email не может быть пустым!";
+    }
+    if (confirm!='' && password!='' && password!=confirm) {
+      this.confirm_error = "Пароль не совпадает!";
+    }
+    if (!usl) {
+      this.usl_error = "Вы не согласились с условиями!";
+    }
+    if (phone!='' && name!='' && password !='' && email !='' && confirm ==password && usl) {
+
+      const loading = await this.loadingCtrl.create({
+        message: 'Подождите...',
+        mode: 'ios'
+      });
+      loading.present();      
+
+      //Отправим смс
+      this.userService.sendEmail(email).then( async res=>{
+
+        if (!res.status) {
+          this.nav.navigateBack(['/login']);
+          const toast = await this.toastController.create({
+            message: res.message,
+            duration: 2000,
+            color: "danger"
+          });
+          toast.present();
+        }
+
+        loading.dismiss();
+        this.timer = 30;
+        this.timeout = setInterval(()=>{
+          this.timer--; 
+          if (this.timer<=0) clearInterval(this.timeout);
+          this.ref.detectChanges();
+        },1000);
+        this.step=2;
+        this.codeInput.nativeElement.setFocus();
+      });
+
+    }
+
+  }  
 }

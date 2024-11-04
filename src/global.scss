@@ -476,6 +476,15 @@ div.form {
 
     }
 
+    div.input-field.disabled {
+        div.input {
+            color: #b5a0a0;;
+            ion-input {
+                --color:#b5a0a0;;
+            }
+        }
+    }
+
 }
 
 

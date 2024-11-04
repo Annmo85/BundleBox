@@ -15,6 +15,7 @@ export class RestorePage implements OnInit {
 
 
   ionicForm: FormGroup | undefined;
+  ionicForm1: FormGroup | undefined;
   @ViewChild('phone') phone! : IonInput;
   @ViewChild('password') password! : IonInput;
   phone_model: string = "";
@@ -22,6 +23,8 @@ export class RestorePage implements OnInit {
   phone_error:string = "";
   pwd_error:string = "";
   error_response:string = "";
+
+  current_segment: string = "phone";
 
   readonly maskPredicate: MaskitoElementPredicate = async (el) => (el as HTMLIonInputElement).getInputElement();
   readonly phoneMask: MaskitoOptions = {
@@ -40,6 +43,9 @@ export class RestorePage implements OnInit {
   buildForm() {
     this.ionicForm = this.formBuilder.group({
       phone: ['', [Validators.required]],
+    })
+    this.ionicForm1 = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
     })    
   }
 
@@ -92,13 +98,67 @@ export class RestorePage implements OnInit {
 
   }
 
+  async submitForm1() {
+    this.phone_error = "";
+    this.error_response ="";
+    console.log(this.ionicForm1!.value);
+    let email = this.ionicForm1!.value.email;
+
+    if (email=='') {
+      this.phone_error = "Email не может быть пустым!";
+    }
+
+    if (email!='') {
+
+      const loading = await this.loadingCtrl.create({
+        message: 'Подождите...',
+        mode:"ios"
+      });
+      loading.present();
+
+      this.userService.resetPasswordByEmail(email).then(async response=>{
+
+        loading.dismiss();        
+        if (response.status) {
+          this.error_response = response.message;
+          const toast = await this.toastController.create({
+            message: this.error_response,
+            duration: 2000,
+            color: "blue"
+          });
+          toast.present();          
+          this.nav.navigateRoot(['/start']);          
+        } else {
+          const toast = await this.toastController.create({
+            message: response.message,
+            duration: 2000,
+            color: "danger"
+          });
+          toast.present();          
+        }
+
+
+      }).catch(err=>{
+        console.log("login.ts this.userService.login error:");
+        console.log(err);
+        loading.dismiss();
+      });
+    }
+
+  }
+
 
   pwdSetFocus() { 
     this.password.setFocus();
   }
 
   back() {
-
     this.nav.navigateBack(['/login']);
   }
+
+
+  changeForm(ev:any) {
+    this.current_segment = ev.detail.value;
+  }
+
 }

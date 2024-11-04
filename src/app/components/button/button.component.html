@@ -1,8 +1,8 @@
-<div class="button ion-activatable" (click)="action.emit()"  [style.height.px]="height" [ngClass]="{'disabled':disabled}" *ngIf="!outline">
+<div class="button ion-activatable" (click)="click()"  [style.height.px]="height" [ngClass]="{'disabled':disabled}" *ngIf="!outline">
   <span>{{title}}</span>
   <ion-ripple-effect></ion-ripple-effect>
 </div>
-<div class="button-outline ion-activatable" (click)="action.emit()"  [style.height.px]="height" [ngClass]="{'disabled':disabled}" *ngIf="outline">
+<div class="button-outline ion-activatable" (click)="click()"  [style.height.px]="height" [ngClass]="{'disabled':disabled}" *ngIf="outline">
   <span>{{title}}</span>
   <ion-ripple-effect></ion-ripple-effect>
 </div>

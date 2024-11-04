@@ -134,7 +134,7 @@ export class UserService {
   public async login(phone:string, password:string) {
 
     let push_id = localStorage.getItem(environment.prefix + 'push_id');
-    let response = await this.makeRequest("users.php",{phone:phone, password:password,push_id:push_id});
+    let response = await this.makeRequest("users.php",{phone:phone, password:password,push_id:push_id, mode:"phone"});
     if (response!=null) {
       console.log("login response:");
       console.log(response);
@@ -149,6 +149,33 @@ export class UserService {
         localStorage.removeItem(environment.prefix + 'user_id');
         localStorage.removeItem(environment.prefix + 'user_city');
         localStorage.removeItem(environment.prefix + 'user_phone');
+        localStorage.removeItem(environment.prefix + 'user_email');
+        localStorage.removeItem(environment.prefix + 'user_password');
+        localStorage.removeItem(environment.prefix + 'user_name');
+      }      
+      return response;
+    }  else return false; 
+  }
+
+  public async loginByEmail(email:string, password:string) {
+
+    let push_id = localStorage.getItem(environment.prefix + 'push_id');
+    let response = await this.makeRequest("users.php",{email:email, password:password,push_id:push_id, mode:"email"});
+    if (response!=null) {
+      console.log("login response:");
+      console.log(response);
+      if (!response.error) {
+        localStorage.setItem(environment.prefix + 'user_email',email);
+        localStorage.setItem(environment.prefix + 'user_password',password);
+        localStorage.setItem(environment.prefix + 'user_id',response.user.ID);
+        localStorage.setItem(environment.prefix + 'user_name',response.user.NAME);
+        localStorage.setItem(environment.prefix + 'user_lastname',response.user.LAST_NAME);
+        localStorage.setItem(environment.prefix + 'user_city',response.user.CITY_NAME);
+      } else {
+        localStorage.removeItem(environment.prefix + 'user_id');
+        localStorage.removeItem(environment.prefix + 'user_city');
+        localStorage.removeItem(environment.prefix + 'user_phone');
+        localStorage.removeItem(environment.prefix + 'user_email');
         localStorage.removeItem(environment.prefix + 'user_password');
         localStorage.removeItem(environment.prefix + 'user_name');
       }      
@@ -255,9 +282,9 @@ export class UserService {
     }     
   }
 
-  public async createUser(name:string, last_name:string, email:string, password:string, phone:string, sms:string, city:string) {
+  public async createUser(name:string, last_name:string, email:string, password:string, phone:string, sms:string, city:string, mode:string = "phone") {
     let user_id = localStorage.getItem(environment.prefix + 'user_id');
-    let response = await this.makeRequest("user.php",{name:name, last_name:last_name, email:email, user_id:user_id, password:password, phone:phone, sms:sms, city:city,action: 'createProfile'});
+    let response = await this.makeRequest("user.php",{name:name, last_name:last_name, email:email, user_id:user_id, password:password, phone:phone, sms:sms, city:city, mode:mode, action: 'createProfile'});
     if (response!=null) {
       console.log("createUser response:");
       console.log(response);
@@ -271,6 +298,19 @@ export class UserService {
   public async resetPassword(phone:string) {
     let user_id = localStorage.getItem(environment.prefix + 'user_id');
     let response = await this.makeRequest("user.php",{phone:phone, action: 'resetPassword'});
+    if (response!=null) {
+      console.log("resetPassword response:");
+      console.log(response);
+      if (!response.error) {
+        //
+      }      
+      return response;
+    }  else return false; 
+  }
+
+  public async resetPasswordByEmail(email:string) {
+    let user_id = localStorage.getItem(environment.prefix + 'user_id');
+    let response = await this.makeRequest("user.php",{email:email, action: 'resetPasswordByEmail'});
     if (response!=null) {
       console.log("resetPassword response:");
       console.log(response);
@@ -364,6 +404,11 @@ export class UserService {
 
   public async sendSms(phone:string) {
     let response = await this.makeRequest("user.php",{phone:phone, action: 'sendSms'});
+    return response;
+  }
+
+  public async sendEmail(email:string) {
+    let response = await this.makeRequestL("sendemailcode",{email:email, action: 'sendEmail'});
     return response;
   }
 
