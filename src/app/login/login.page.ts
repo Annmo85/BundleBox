@@ -17,9 +17,11 @@ export class LoginPage implements OnInit {
 
 
   ionicForm: FormGroup | undefined;
+  ionicForm1: FormGroup | undefined;
   @ViewChild('phone') phone! : IonInput;
   @ViewChild('password') password! : IonInput;
   phone_model: string = "";
+  current_segment: string = "phone";
 
   phone_error:string = "";
   pwd_error:string = "";
@@ -41,6 +43,11 @@ export class LoginPage implements OnInit {
   buildForm() {
     this.ionicForm = this.formBuilder.group({
       phone: ['', [Validators.required]],
+      password: ['', [Validators.required]],
+      usl: [true, [Validators.required]]
+    }) 
+    this.ionicForm1 = this.formBuilder.group({
+      email: ['', [Validators.required,Validators.email]],
       password: ['', [Validators.required]],
       usl: [true, [Validators.required]]
     })    
@@ -105,6 +112,59 @@ export class LoginPage implements OnInit {
 
   }
 
+  async submitForm1() {
+    this.phone_error = "";
+    this.pwd_error = "";
+    this.error_response ="";
+    this.usl_error ="";
+    console.log(this.ionicForm1!.value);
+    let email = this.ionicForm1!.value.email;
+    let password = this.ionicForm1!.value.password;
+    let usl = this.ionicForm1!.value.usl;
+
+    if (email=='') {
+      this.phone_error = "Email не может быть пустым!";
+    }
+    if (password=='') {
+      this.pwd_error = "Пароль не может быть пустым!";
+    }
+    if (!usl) {
+      this.usl_error = "Вы не согласились с условиями!";
+    }
+
+    if (email!='' && password !='' && usl) {
+
+      const loading = await this.loadingCtrl.create({
+        message: 'Подождите...',
+        mode:"ios"
+      });
+      loading.present();
+
+      this.userService.loginByEmail(email,password).then(async response=>{
+
+        loading.dismiss();        
+        if (response.error) {
+          this.error_response = response.message;
+          const toast = await this.toastController.create({
+            message: this.error_response,
+            duration: 2000,
+            color: "alert"
+          });
+          toast.present();
+        } else {
+          this.nav.navigateRoot(['/tabs/main']);
+        }
+
+
+      }).catch(err=>{
+        console.log("login.ts this.userService.login error:");
+        console.log(err);
+        loading.dismiss();
+      });
+    }
+
+  }
+
   pwdSetFocus() { 
     this.password.setFocus();
   }
@@ -115,6 +175,12 @@ export class LoginPage implements OnInit {
       component: UslPageComponent,
     });
     modal.present();
+  }
+
+
+  
+  changeForm(ev:any) {
+    this.current_segment = ev.detail.value;
   }
 
 }

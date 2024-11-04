@@ -51,9 +51,10 @@ div.text {
 }
 
 ion-header {
-    --background: transparent;
+    // --background: transparent;
+    --background: #CEE6FE;
     ion-toolbar {
-        --background: transparent;
+        --background: #CEE6FE;
         ion-title {
             font-family: 'Montserrat';
             font-style: normal;
@@ -81,3 +82,14 @@ code-input {
     --color: #2D2D2D;
     --item-border: 2px solid var(--ion-color-accent);;
 }
+
+ion-segment {
+    --background: var(--ion-color-accent);
+    background: var(--ion-color-accent);
+    max-width: 300px;
+}
+
+  
+  ion-segment-button.ios::part(indicator-background) {
+    background: #FFFFFF;
+  }

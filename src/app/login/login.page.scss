@@ -28,3 +28,14 @@ ion-content {
         }
     }
 }
+
+ion-segment {
+    --background: var(--ion-color-accent);
+    background: var(--ion-color-accent);
+    max-width: 300px;
+}
+
+  
+  ion-segment-button.ios::part(indicator-background) {
+    background: #FFFFFF;
+  }

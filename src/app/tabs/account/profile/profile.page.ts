@@ -66,6 +66,7 @@ export class ProfilePage implements OnInit {
   buildForm() {
     this.ionicForm = this.formBuilder.group({
       name: [this.profile.NAME, [Validators.required]],
+      phone: [this.profile.PHONE, [Validators.required]],
       last_name: [this.profile.LAST_NAME, [Validators.required]],
       email: [this.profile.EMAIL, [Validators.required,Validators.email]],
       city: [this.profile.CITY_VALUE, [Validators.required]],
