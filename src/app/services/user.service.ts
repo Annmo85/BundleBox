@@ -131,6 +131,11 @@ export class UserService {
     if (user_id === null) return false; else return true;
   }
 
+  public hasEmail() {
+    let user_email = localStorage.getItem(environment.prefix + 'user_email');
+    if (user_email === null || user_email === "") return false; else return true;
+  }
+
   public async login(phone:string, password:string) {
 
     let push_id = localStorage.getItem(environment.prefix + 'push_id');
@@ -143,6 +148,7 @@ export class UserService {
         localStorage.setItem(environment.prefix + 'user_password',password);
         localStorage.setItem(environment.prefix + 'user_id',response.user.ID);
         localStorage.setItem(environment.prefix + 'user_name',response.user.NAME);
+        localStorage.setItem(environment.prefix + 'user_email',response.user.EMAIL);
         localStorage.setItem(environment.prefix + 'user_lastname',response.user.LAST_NAME);
         localStorage.setItem(environment.prefix + 'user_city',response.user.CITY_NAME);
       } else {
@@ -251,6 +257,7 @@ export class UserService {
       console.log(response);
       if (!response.error) {
         //
+        localStorage.setItem(environment.prefix + 'user_email',response.user.EMAIL);
       }      
       return response;
     }  else return false; 
@@ -326,6 +333,7 @@ export class UserService {
     localStorage.removeItem(environment.prefix + 'user_password');
     localStorage.removeItem(environment.prefix + 'user_id');
     localStorage.removeItem(environment.prefix + 'user_name');
+    localStorage.removeItem(environment.prefix + 'user_email');
     localStorage.removeItem(environment.prefix + 'user_lastname');
     localStorage.removeItem(environment.prefix + 'user_login');
     localStorage.removeItem(environment.prefix + 'user_city');

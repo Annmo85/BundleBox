@@ -128,3 +128,12 @@ ion-content {
 swiper-slide {
     width: auto !important;
 }
+
+.card.error {
+    display: block !important;
+    background: #F75E5E !important;
+    color: #fff;
+    strong {
+        display: inline;
+    }
+}
