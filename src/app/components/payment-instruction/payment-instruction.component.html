@@ -13,7 +13,8 @@
 
       <p [innerHtml]="instruction_online_text"></p>
 
-      <app-button height="44" title="Перейти к оплате" (action)="gotoOnlinePayment()"></app-button>
+      <app-button height="44" title="Оплатить по СБП" (action)="gotoOnlinePayment()"></app-button><br>
+      <app-button height="44" title="Другой способ оплаты" (action)="gotoOnlinePayment2()"></app-button>
       
       <div class="insurance">
         <ion-checkbox [(ngModel)]="insurance" color="accent" mode="md"></ion-checkbox>
