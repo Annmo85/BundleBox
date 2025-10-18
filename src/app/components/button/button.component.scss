@@ -11,7 +11,7 @@ div.button {
     border-radius: 100px;
     font-weight: 600;
     font-size: 16px;
-    line-height: 20px;
+    line-height: 16px;
     letter-spacing: 0.001em;
     color: #FFFFFF;
     overflow: hidden;
@@ -34,9 +34,13 @@ div.button-outline {
     border-radius: 100px;
     font-weight: 600;
     font-size: 16px;
-    line-height: 20px;
+    line-height: 16px;
     letter-spacing: 0.001em;
     color: #2D2D2D;
     border: 2px solid #EE6F03;
     overflow: hidden;
+}
+
+img {
+    height: 35px;
 }

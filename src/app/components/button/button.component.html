@@ -1,8 +1,14 @@
 <div class="button ion-activatable" (click)="click()"  [style.height.px]="height" [ngClass]="{'disabled':disabled}" *ngIf="!outline">
+  <ng-contanger *ngIf="img!==''">
+    <img [src]="img">
+  </ng-contanger>
   <span>{{title}}</span>
   <ion-ripple-effect></ion-ripple-effect>
 </div>
 <div class="button-outline ion-activatable" (click)="click()"  [style.height.px]="height" [ngClass]="{'disabled':disabled}" *ngIf="outline">
+  <ng-contanger *ngIf="img!==''">
+    <img [src]="img">
+  </ng-contanger>
   <span>{{title}}</span>
   <ion-ripple-effect></ion-ripple-effect>
 </div>
