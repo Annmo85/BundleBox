@@ -221,4 +221,10 @@ export class PaymenDeliveryInstructionComponent  implements OnInit {
     await Browser.open({ url: 'https://bundlebox.ru/mobile/widget/delivery.php?id='+user_id+"&deal_id="+this.order_id+"&t="+(new Date()).getTime()});
     this.close();
   }
+
+  async gotoOnlinePayment2() {
+    let user_id = localStorage.getItem(environment.prefix + 'user_id');
+    await Browser.open({ url: 'https://bundlebox.ru/mobile/widget/delivery2.php?id='+user_id+"&deal_id="+this.order_id+"&t="+(new Date()).getTime()});
+    this.close();
+  }
 }

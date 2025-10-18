@@ -227,6 +227,13 @@ export class PaymentInstructionComponent implements OnInit {
     let insurance = this.insurance?1:0;
     await Browser.open({ url: 'https://bundlebox.ru/mobile/widget/payment.php?id='+user_id+"&deal_id="+this.order_id+"&insurance="+insurance+"&t="+(new Date()).getTime()});
     this.close();
+  }  
+
+  async gotoOnlinePayment2() {
+    let user_id = localStorage.getItem(environment.prefix + 'user_id');
+    let insurance = this.insurance?1:0;
+    await Browser.open({ url: 'https://bundlebox.ru/mobile/widget/payment2.php?id='+user_id+"&deal_id="+this.order_id+"&insurance="+insurance+"&t="+(new Date()).getTime()});
+    this.close();
   }
 
 }

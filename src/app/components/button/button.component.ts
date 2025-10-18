@@ -10,6 +10,7 @@ export class ButtonComponent  implements OnInit {
   @Output() action = new EventEmitter();
   @Input() title:string  = "";
   @Input() height:string  = "40";
+  @Input() img:string  = "";
   @Input() disabled:boolean  = false;
   @Input() outline:boolean  = false;
 
