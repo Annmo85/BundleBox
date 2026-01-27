@@ -21,6 +21,7 @@ import { Browser } from '@capacitor/browser';
 export class PaymentInstructionComponent implements OnInit {
 
   public order_id: any;
+  public order_sum: any;
   deal: any;
   order_info: any;
 

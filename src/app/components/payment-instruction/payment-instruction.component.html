@@ -13,7 +13,7 @@
 
       <p [innerHtml]="instruction_online_text"></p>
       <app-button height="44" title="Оплатить по СБП" (action)="gotoOnlinePayment()"  img="../../../assets/sbp.png"></app-button><br>
-      <app-button height="44" title="Оплата частями" (action)="gotoOnlinePayment2()" img="../../../assets/opl_chast.png"></app-button>
+      <app-button *ngIf="order_sum>=10000" height="44" title="Оплата частями" (action)="gotoOnlinePayment2()" img="../../../assets/opl_chast.png"></app-button>
       
       <div class="insurance">
         <ion-checkbox [(ngModel)]="insurance" color="accent" mode="md"></ion-checkbox>

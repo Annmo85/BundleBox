@@ -21,6 +21,7 @@ export class PaymenDeliveryInstructionComponent  implements OnInit {
 
 
   public order_id: any;
+  public order_sum: any;
   deal: any;
 
   intro_text: any = "";
