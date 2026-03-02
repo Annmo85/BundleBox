@@ -69,3 +69,6 @@ Thumbs.db
 
 resources/ios/**/*
 resources/android/**/*
+
+/docs
+proxy.conf.json
