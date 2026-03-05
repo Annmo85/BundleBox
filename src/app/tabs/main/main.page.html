@@ -8,6 +8,11 @@
     <div class="community">
       <div class="text">Сообщество</div>
 
+      <!-- Текстовый блок с призывом переходить в Telegram-каналы -->
+      <div class="text2">
+        Переходите в наши телеграм-каналы, там мы ежедневно публикуем актуальные акции и распродажи
+      </div>
+
       <div class="list">
 <!--         
           <div class="community-card ion-activatable" >
@@ -24,7 +29,7 @@
           </div> -->
 
         
-          <div class="community-card ion-activatable" (click)="openUrl('https://t.me/bigbundlebox')" >
+          <div class="community-card ion-activatable" (click)="openUrl('https://t.me/+RSYJlYufXGUwFTC3')" >
             <img class="flag1" src="../../../assets/eu_o.png">
             <svg xmlns="http://www.w3.org/2000/svg" width="56" height="48" fill="none" viewBox="0 0 56 48">
               <path fill="url(#a)" d="M51.226.892s5.18-2.02 4.748 2.886c-.143 2.02-1.438 9.09-2.446 16.737l-3.453 22.653s-.288 3.319-2.878 3.896c-2.59.577-6.476-2.02-7.196-2.598-.575-.432-10.792-6.925-14.39-10.1-1.007-.865-2.158-2.597.144-4.617l15.11-14.428c1.727-1.732 3.454-5.772-3.741-.866L16.978 28.162s-2.303 1.443-6.62.144l-9.353-2.885s-3.454-2.165 2.446-4.329C17.84 14.311 35.54 7.385 51.226.892Z"/>
@@ -73,8 +78,8 @@
     </div>
 
 
-    <!-- последние заказы-->
-    <div class="last_order" *ngIf="dashboardData.lastOrders.length>0">
+    <!-- последние заказы (скрыто)-->
+    <div class="last_order" *ngIf="false && dashboardData.lastOrders.length>0">
       <div class="text">Последние заказы</div>
       <div class="text2">Посмотрите что заказывают другие клиенты, возможно, вам что-то надо</div>
     
@@ -110,7 +115,7 @@
         </div>
 
       </div>
-      <div class="news_card" *ngFor="let news_item of dashboardData.news" (click)="openNewsItem(news_item)">
+      <div class="news_card" *ngFor="let news_item of newsList | slice:0:2" (click)="openNewsItem(news_item)">
 
         <div class="image" style='background-image: url("{{news_item.image}}")'></div>
         <div class="info">
@@ -143,8 +148,8 @@
 
     </div>
 
-    <!-- Акциии -->
-    <div class="actions_list">
+    <!-- Акции (скрыто) -->
+    <div class="actions_list" *ngIf="false">
       <div class="text">Акции
 
         <div class="button"  (click)="navigate(['/tabs/community'],{tab: 'actions'})">

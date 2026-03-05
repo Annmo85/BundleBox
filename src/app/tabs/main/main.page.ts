@@ -21,6 +21,11 @@ export class MainPage implements OnInit {
   is_load: boolean = false;
   dashboardData:any = null;
 
+  // Список новостей с безопасным типом для шаблона
+  get newsList(): any[] {
+    return (this.dashboardData?.news as any[]) || [];
+  }
+
   usd:number = 0;
   gbp:number = 0;
   eur:number = 0;

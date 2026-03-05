@@ -37,6 +37,29 @@ export class PaymentInstructionComponent implements OnInit {
 
   insurance: boolean = false;
 
+  // Вычисляем текст про проверку на складе с учётом типа заказа
+  get insuranceText(): string {
+    const baseText = (this.instruction_insurance ?? '').toString();
+
+    // Пытаемся определить, что это заказ из Китая по возможным полям сделки
+    const deal = this.order_info?.deal || {};
+    const isChinaOrder =
+      deal.CATEGORY_NAME === 'Заказы из Китая' ||
+      deal.TYPE === 'Заказы из Китая' ||
+      deal.PIPELINE_NAME === 'Заказы из Китая';
+
+    // Ищем в тексте цену 250 руб и подменяем её на нужную
+    const pricePattern = /250\s*руб/;
+
+    if (isChinaOrder) {
+      // Для заказов из Китая оставляем цену 250 руб
+      return baseText.replace(pricePattern, '250 руб');
+    }
+
+    // Для всех остальных типов заказов показываем цену 550 руб
+    return baseText.replace(pricePattern, '550 руб');
+  }
+
   constructor(private modalController: ModalController, private http: HttpClient, private plt: Platform, private loadingCtrl: LoadingController, private toastController: ToastController, private userService: UserService, private modalCtrl: ModalController) {
     this.userService.getPaymentsInfoEvents().subscribe(async res => {
       console.log("getPaymentsInfoEvents subscription", res);
