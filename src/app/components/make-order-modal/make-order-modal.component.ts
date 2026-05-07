@@ -12,14 +12,13 @@ export class MakeOrderModalComponent  implements OnInit {
   constructor(private modalCtrl:ModalController) { }
 
   ngOnInit() {}
-
-  
+ 
   openTg() {
     window.open("https://t.me/annabbox","_blank");
   }
 
-  openWa() {
-    window.open("https://wa.me/79025665111","_blank");
+  openMax() {
+    window.open("https://max.ru/u/f9LHodD0cOK84GzXHDeicQ8T-VZoi-O6vl7o-MTZIQUOKuaFEKwIykcbBM4","_blank");
   }
 
   openVb() {

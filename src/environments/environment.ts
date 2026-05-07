@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   prefix:'bbox_',
-  api_url: "https://bundlebox.ru/mobile/",
-  api_urlL: "https://bundlebox.ru/api/",
+  api_url: "/mobile/",
+  api_urlL: "/api/",
 };
 
 /*
