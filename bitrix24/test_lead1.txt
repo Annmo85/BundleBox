@@ -1,0 +1,127 @@
+1
+Array
+(
+    [NEW] => Ожидает выкупа
+    [PREPARATION] => Оплатите заказ
+    [PREPAYMENT_INVOICE] => Оплачено
+    [EXECUTING] => Отправлено магазином
+    [FINAL_INVOICE] => Получено на складе
+    [UC_DQZUKA] => Посылка отправлена
+    [UC_4NZEBU] => Оплатите доставку
+    [UC_WW865W] => Доставка оплачена
+    [UC_H3ZYIB] => Готовится к выдаче
+    [UC_MBDY88] => Получите заказ
+    [LOSE] => -
+    [WON] => Заказ завершен
+)
+
+2
+Array
+(
+    [event] => ONCRMDEALUPDATE
+    [data] => Array
+        (
+            [FIELDS] => Array
+                (
+                    [ID] => 21689
+                )
+
+        )
+
+    [ts] => 1695539240
+    [auth] => Array
+        (
+            [domain] => b24-hgi204.bitrix24.ru
+            [client_endpoint] => https://b24-hgi204.bitrix24.ru/rest/
+            [server_endpoint] => https://oauth.bitrix.info/rest/
+            [member_id] => 47de64abdd71a73c87f6626da1b7464a
+            [application_token] => loa9ch1ppk6zajrv5rsk26666p2y0t87
+        )
+
+)
+
+Array
+(
+    [ID] => 21689
+    [TITLE] => Vertbaudet 0000
+    [TYPE_ID] => SALE
+    [STAGE_ID] => NEW
+    [PROBABILITY] => 
+    [CURRENCY_ID] => RUB
+    [OPPORTUNITY] => 3323.00
+    [IS_MANUAL_OPPORTUNITY] => Y
+    [TAX_VALUE] => 
+    [LEAD_ID] => 
+    [COMPANY_ID] => 0
+    [CONTACT_ID] => 263
+    [QUOTE_ID] => 
+    [BEGINDATE] => 2023-09-24T03:00:00+03:00
+    [CLOSEDATE] => 2023-10-01T03:00:00+03:00
+    [ASSIGNED_BY_ID] => 515
+    [CREATED_BY_ID] => 515
+    [MODIFY_BY_ID] => 1
+    [DATE_CREATE] => 2023-09-24T04:01:08+03:00
+    [DATE_MODIFY] => 2023-09-24T10:07:19+03:00
+    [OPENED] => Y
+    [CLOSED] => N
+    [COMMENTS] => 
+    [ADDITIONAL_INFO] => 
+    [LOCATION_ID] => 
+    [CATEGORY_ID] => 0
+    [STAGE_SEMANTIC_ID] => P
+    [IS_NEW] => Y
+    [IS_RECURRING] => N
+    [IS_RETURN_CUSTOMER] => Y
+    [IS_REPEATED_APPROACH] => N
+    [SOURCE_ID] => 
+    [SOURCE_DESCRIPTION] => 
+    [ORIGINATOR_ID] => 
+    [ORIGIN_ID] => 
+    [MOVED_BY_ID] => 515
+    [MOVED_TIME] => 2023-09-24T04:01:08+03:00
+    [LAST_ACTIVITY_TIME] => 2023-09-24T04:01:08+03:00
+    [UTM_SOURCE] => 
+    [UTM_MEDIUM] => 
+    [UTM_CAMPAIGN] => 
+    [UTM_CONTENT] => 
+    [UTM_TERM] => 
+    [LAST_ACTIVITY_BY] => 515
+    [UF_CRM_1650939466873] => Array
+        (
+            [id] => 46729
+            [showUrl] => /bitrix/components/bitrix/crm.deal.show/show_file.php?ownerId=21689&fieldName=UF_CRM_1650939466873&dynamic=Y&fileId=46729
+            [downloadUrl] => /bitrix/components/bitrix/crm.deal.show/show_file.php?auth=1be10f65005c7086005b705a000000010000079ab1126bb1752d687c84a4cc6f9c67e7&ownerId=21689&fieldName=UF_CRM_1650939466873&dynamic=Y&fileId=46729
+        )
+
+    [UF_CRM_1651111014781] => 
+    [UF_CRM_1652412993929] => 
+    [UF_CRM_1652413077471] => 
+    [UF_CRM_INSTAGRAM] => 
+    [UF_CRM_TIKTOK] => 
+    [UF_CRM_I2CRM_CHAT] => 
+    [UF_CRM_1659871701648] => Array
+        (
+        )
+
+    [UF_CRM_1659879523001] => 
+    [UF_CRM_1659879763963] => 
+    [UF_CRM_1663669969647] => 
+    [UF_CRM_1663669994797] => 
+    [UF_CRM_1664092353750] => 
+    [UF_CRM_1668721376367] => 
+    [UF_CRM_1668784831705] => 
+    [UF_CRM_1668785031029] => 
+    [UF_CRM_1681845692836] => 
+    [UF_CRM_1685890838711] => 
+)
+
+Array
+(
+    [id] => 21689
+    [fields] => Array
+        (
+            [UF_CRM_1685890838711] => SOVA POST| остановка Волжская|ул. Лопатина, 4 |пн-вс 10:00-21:00 | ☎️ Telegram: +79648005656| @sova_post | Хранение 7 дней бесплатно| затем 5 руб/сутки
+        )
+
+)
+
