@@ -72,3 +72,9 @@ resources/android/**/*
 
 docs/
 proxy.conf.json
+bitrix24/firebase_key.json
+bitrix24/ozon_tokens.php
+
+# Локальная документация и инструкции для ИИ-агентов (не коммитить)
+DOCUMENTATION.md
+AGENTS.md
