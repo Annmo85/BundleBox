@@ -1,0 +1,10 @@
+<?php
+
+/* Ключ Token для озон доставки - отвечает за управление статусами заказов, отправленных через озон доставку */
+$OZON_DELIVERY_CLIENT_ID = "";
+$OZON_DELIVERY_TOKEN = "";
+
+/* Ключ Token для озон seller - отвечает выбор пункта выдачи на карте в приложении */
+$OZON_SELLER_TOKEN = "";
+$OZON_SELLER_CLIENT_ID = "";
+?>
