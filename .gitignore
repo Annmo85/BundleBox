@@ -78,3 +78,4 @@ bitrix24/ozon_tokens.php
 # Локальная документация и инструкции для ИИ-агентов (не коммитить)
 DOCUMENTATION.md
 AGENTS.md
+CHECKLIST.md
