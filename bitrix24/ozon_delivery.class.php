@@ -321,6 +321,96 @@
 		}
 
 		/**
+		 * Одна страница получения информации об отправлениях.
+		 *
+		 * POST /v1/posting/info
+		 *
+		 * @param array       $posting_numbers Список posting_number.
+		 * @param int         $limit           Размер страницы.
+		 * @param string|null $cursor          Указатель следующей страницы (из next_cursor).
+		 *
+		 * @return array{postings:array, next_cursor:?string, http_code:int}
+		 */
+		public function infoPostingPage(array $posting_numbers, $limit = 100, $cursor = null)
+		{
+			$token = $this->auth();
+			if ($token === '') {
+				return ['postings' => [], 'next_cursor' => null, 'http_code' => 0];
+			}
+
+			$pagination = ['limit' => (int) $limit];
+			if ($cursor !== null && $cursor !== '') {
+				$pagination['cursor'] = $cursor;
+			}
+
+			// API ожидает массив строк: приводим значения к string, чтобы
+			// числовые posting_number не уходили в JSON как числа.
+			$payload = [
+				'posting_numbers' => array_map('strval', array_values($posting_numbers)),
+				'pagination'      => $pagination,
+			];
+
+			$headers   = $this->baseHeaders();
+			$headers[] = 'Authorization: Bearer ' . $token;
+
+			$url = $this->api_url . '/v1/posting/info';
+
+			$res = $this->httpRequest($url, 'POST', $headers, $payload);
+			$this->debug('posting/info', $res, $url, $payload);
+
+			$postings = (isset($res['json']['postings']) && is_array($res['json']['postings']))
+				? $res['json']['postings']
+				: [];
+			$next = (isset($res['json']['next_cursor']) && $res['json']['next_cursor'] !== '')
+				? $res['json']['next_cursor']
+				: null;
+
+			return [
+				'postings'    => $postings,
+				'next_cursor' => $next,
+				'http_code'   => $res['http_code'],
+			];
+		}
+
+		/**
+		 * Получение информации об отправлениях с обходом всех страниц.
+		 *
+		 * @param array $posting_numbers Список posting_number.
+		 * @param int   $limit           Размер страницы.
+		 *
+		 * @return array Список отправлений (posting).
+		 */
+		public function infoPosting(array $posting_numbers, $limit = 100)
+		{
+			if (empty($posting_numbers)) {
+				return [];
+			}
+
+			$all    = [];
+			$cursor = null;
+			$page   = 0;
+
+			do {
+				if ($this->debug) {
+					echo "--- [OZON] posting/info (страница {$page}) ---\n";
+				}
+
+				$res    = $this->infoPostingPage($posting_numbers, $limit, $cursor);
+				$all    = array_merge($all, $res['postings']);
+				$cursor = $res['next_cursor'];
+				$page++;
+
+				if ($res['http_code'] !== 200 || $cursor === null || count($res['postings']) === 0) {
+					break;
+				}
+
+				sleep(1);
+			} while (true);
+
+			return $all;
+		}
+
+		/**
 		 * Поиск отправлений по статусам с обходом всех страниц (next_cursor).
 		 *
 		 * @param array $statuses Список статусов, например ['in_delivery_point'].
