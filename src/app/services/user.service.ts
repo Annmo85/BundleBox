@@ -131,6 +131,10 @@ export class UserService {
     if (user_id === null) return false; else return true;
   }
 
+  public getYandexMapKey(): string {
+    return localStorage.getItem(environment.prefix + 'yandex_map_key') || '';
+  }
+
   public hasEmail() {
     let user_email = localStorage.getItem(environment.prefix + 'user_email');
     if (user_email === null || user_email === "") return false; else return true;
@@ -342,6 +346,10 @@ export class UserService {
   public async loadNews(start:number = 0, limit: number = 10) {
     let user_id = localStorage.getItem(environment.prefix + 'user_id');
     let response = await this.makeRequest("dashboard.php",{start:start,limit:limit});
+    // Ключ Яндекс.Карт приходит с главной страницы — сохраняем его для карты выбора ПВЗ
+    if (response && typeof response.yandex_map_key === 'string' && response.yandex_map_key !== '') {
+      localStorage.setItem(environment.prefix + 'yandex_map_key', response.yandex_map_key);
+    }
     this.callPaymentsInfo(response);
     return response;
   }

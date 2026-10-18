@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonInput, ModalController, NavController, PopoverController, ToastController,IonicSlides } from '@ionic/angular';
 import {UserService} from '../../services/user.service';
+import {DeliveryServiceSheetComponent} from '../../components/delivery-service-sheet/delivery-service-sheet.component';
 import Swiper from 'swiper';
 import { Autoplay } from 'swiper/modules';
 @Component({
@@ -8,7 +9,7 @@ import { Autoplay } from 'swiper/modules';
   templateUrl: './account.page.html',
   styleUrls: ['./account.page.scss'],
 })
-export class AccountPage implements OnInit {
+export class AccountPage {
 
   swiperModules = [Autoplay, IonicSlides];
 
@@ -51,10 +52,6 @@ export class AccountPage implements OnInit {
 
   }
 
-  ngOnInit() {
-    
-  }
-
   ionViewWillEnter() {
     this.loadProfile();
     this.loadMyOrders();
@@ -83,8 +80,25 @@ export class AccountPage implements OnInit {
     })
   }
 
-  openPvzList() {
-    this.nav.navigateForward(['/tabs/account/select-pvz']);
+  async openPvzList() {
+    const modal = await this.modalCtrl.create({
+      component: DeliveryServiceSheetComponent,
+      mode: 'ios',
+      cssClass: 'makeOrderModal',
+      breakpoints: [0, 0.35, 0.9],
+      initialBreakpoint: 0.35,
+      handle: true,
+      backdropDismiss: true
+    });
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+
+    if (data === 'sova') {
+      this.nav.navigateForward(['/tabs/account/select-pvz']);
+    } else if (data === 'ozon') {
+      this.nav.navigateForward(['/tabs/account/select-pvz-ozon']);
+    }
   }
 
   openProfile() {

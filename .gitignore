@@ -74,6 +74,7 @@ docs/
 proxy.conf.json
 bitrix24/firebase_key.json
 bitrix24/ozon_tokens.php
+bitrix24/yandex_map_key.php
 
 # Локальная документация и инструкции для ИИ-агентов (не коммитить)
 DOCUMENTATION.md

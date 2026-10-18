@@ -1,0 +1,14 @@
+<app-header2 title="Выберите ПВЗ Озон" [has_back]="true"></app-header2>
+
+<ion-content [fullscreen]="true">
+
+  <div class="page-wrapper">
+    <div #mapContainer class="yandex-map"></div>
+
+    <div class="map-overlay" *ngIf="!map_ready">
+      <ion-spinner *ngIf="!map_error" name="crescent"></ion-spinner>
+      <div class="map-overlay-text">{{ map_error ? map_error : 'Загрузка карты…' }}</div>
+    </div>
+  </div>
+
+</ion-content>

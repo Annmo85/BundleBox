@@ -76,5 +76,13 @@
 	
 	$response['delivery_payment_information'] = $delivery_payment_information;
 	$response['order_payment_information'] = $order_payment_information;
+
+	// Ключ JavaScript API Яндекс.Карт. Хранится в отдельном файле (вне репозитория).
+	$yandex_map_key_file = __DIR__.'/yandex_map_key.php';
+	if (is_file($yandex_map_key_file)) {
+		require_once ($yandex_map_key_file);
+	}
+	$response['yandex_map_key'] = isset($YANDEX_MAP_KEY) ? $YANDEX_MAP_KEY : '';
+	
 	header("Content-type: application/json; charset=utf-8");	
 	echo json_encode($response);	

@@ -25,6 +25,7 @@ import {CollapsedOrderComponent} from '../collapsed-order/collapsed-order.compon
 import {BarcodeModalComponent} from '../barcode-modal/barcode-modal.component';
 import {OrderFormComponent} from '../order-form/order-form.component';
 import {RequestItemComponent} from '../request-item/request-item.component';
+import {DeliveryServiceSheetComponent} from '../delivery-service-sheet/delivery-service-sheet.component';
 
 import {ImageZoomPageModule} from '../../image-zoom/image-zoom.module'
 import { CommonModule } from '@angular/common';
@@ -66,6 +67,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     PaymenDeliveryInstructionComponent,
     CollapsedOrderComponent,
     BarcodeModalComponent,
+    DeliveryServiceSheetComponent,
   ],
   exports: [
     CommonModule,
@@ -91,9 +93,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     HelperPopoverComponent,    
     OfertaComponent,    
     PaymentInstructionComponent,    
-    PaymenDeliveryInstructionComponent,    
-    CollapsedOrderComponent,    
-    BarcodeModalComponent,    
+    PaymenDeliveryInstructionComponent,
+    CollapsedOrderComponent,
+    BarcodeModalComponent,
+    DeliveryServiceSheetComponent,
   ],
   providers: []
 })
