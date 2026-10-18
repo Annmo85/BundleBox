@@ -3,6 +3,48 @@
 <ion-content [fullscreen]="true">
 
   <div class="page-wrapper">
+    <div class="search-panel">
+      <div class="search-bar">
+        <ion-icon class="search-icon" name="search-outline"></ion-icon>
+        <input
+          class="search-input"
+          type="search"
+          inputmode="search"
+          placeholder="Поиск адреса или города"
+          autocomplete="off"
+          autocorrect="off"
+          spellcheck="false"
+          [value]="search_query"
+          (input)="onSearchInput($event)"
+          (keydown.enter)="onSearchSubmit($event)"
+        />
+        <ion-spinner *ngIf="search_loading" class="search-spinner" name="crescent"></ion-spinner>
+        <button
+          *ngIf="!search_loading && search_query.length > 0"
+          class="search-clear"
+          type="button"
+          aria-label="Очистить поиск"
+          (click)="clearSearch()"
+        >
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="search-error" *ngIf="search_error">{{ search_error }}</div>
+
+      <div class="search-results" *ngIf="search_results.length > 0">
+        <button
+          *ngFor="let result of search_results"
+          class="search-result"
+          type="button"
+          (click)="selectSearchResult(result)"
+        >
+          <span class="search-result-title">{{ result.title }}</span>
+          <span class="search-result-subtitle" *ngIf="result.subtitle">{{ result.subtitle }}</span>
+        </button>
+      </div>
+    </div>
+
     <div #mapContainer class="yandex-map"></div>
 
     <div class="map-overlay" *ngIf="!map_ready">
