@@ -51,6 +51,43 @@
       <ion-spinner *ngIf="!map_error" name="crescent"></ion-spinner>
       <div class="map-overlay-text">{{ map_error ? map_error : 'Загрузка карты…' }}</div>
     </div>
+
+    <div class="pvz-status" *ngIf="map_ready && pvz_loading">
+      <ion-spinner name="crescent"></ion-spinner>
+      <span>Поиск ПВЗ…</span>
+    </div>
+
+    <div class="pvz-error" *ngIf="map_ready && pvz_error && !pvz_loading">
+      {{ pvz_error }}
+    </div>
+
+    <div class="pvz-card" *ngIf="selected_pvz">
+      <div class="pvz-card-head">
+        <span class="pvz-card-title">{{ selected_pvz.name || 'ПВЗ Ozon' }}</span>
+        <button
+          class="pvz-card-close"
+          type="button"
+          aria-label="Закрыть"
+          (click)="clearSelectedPvz()"
+        >
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+      <div class="pvz-card-address" *ngIf="selected_pvz.address">
+        {{ selected_pvz.address }}
+      </div>
+      <div class="pvz-card-meta">
+        <span *ngIf="selected_pvz.delivery_point_number">
+          № {{ selected_pvz.delivery_point_number }}
+        </span>
+        <span *ngIf="selected_pvz.storage_period_days as storageDays">
+          хранение {{ storageDays }} дн.
+        </span>
+      </div>
+      <button class="pvz-card-submit" type="button" (click)="confirmSelectedPvz()">
+        Выбрать этот ПВЗ
+      </button>
+    </div>
   </div>
 
 </ion-content>

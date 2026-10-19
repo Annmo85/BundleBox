@@ -2,13 +2,20 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  EventEmitter,
   NgZone,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
 import type { LngLat, LngLatBounds, YMapEntity, YMapLocationRequest } from 'ymaps3';
-import { UserService } from '../../../services/user.service';
+import {
+  OzonPvzCluster,
+  OzonPvzMapItem,
+  OzonPvzPoint,
+  UserService,
+} from '../../../services/user.service';
 
 /**
  * Тип глобального объекта JS API 3.0 (подключается динамически,
@@ -56,6 +63,33 @@ interface YandexMapsDefaultUiTheme {
   YMapZoomControl: YMapZoomControlConstructor;
 }
 
+/** Feature ПВЗ в формате, который ожидает YMapClusterer. */
+interface PvzClustererFeature {
+  type: 'Feature';
+  id: string;
+  geometry: {
+    type: 'Point';
+    coordinates: LngLat;
+  };
+  properties: {
+    item: OzonPvzMapItem;
+  };
+}
+
+interface YMapClustererProps {
+  method: unknown;
+  features: PvzClustererFeature[];
+  marker: (feature: PvzClustererFeature) => YMapEntity<unknown>;
+  cluster: (coordinates: LngLat, features: PvzClustererFeature[]) => YMapEntity<unknown>;
+  maxZoom?: number;
+  tickTimeout?: number;
+}
+
+interface YandexMapsClusterer {
+  YMapClusterer: new (props: YMapClustererProps) => YMapEntity<unknown>;
+  clusterByGrid: (props: { gridSize: number }) => unknown;
+}
+
 const YANDEX_MAPS_URL = 'https://api-maps.yandex.ru/v3/';
 const YANDEX_GEOCODER_URL = 'https://geocode-maps.yandex.ru/1.x/';
 /** Пакет со стандартными контролами Яндекс.Карт 3.0. */
@@ -63,6 +97,25 @@ const YANDEX_MAPS_UI_THEME_PACKAGE = '@yandex/ymaps3-default-ui-theme';
 /** Его нет в загрузчике по умолчанию, поэтому подключаем через jsDelivr. */
 const YANDEX_MAPS_UI_THEME_CDN = 'https://cdn.jsdelivr.net/npm/{package}';
 const YANDEX_MAPS_UI_THEME_CDN_PACKAGE = '@yandex/ymaps3-default-ui-theme@0.0';
+/**
+ * Пакет кластеризации Яндекс.Карт 3.0. В стандартном загрузчике
+ * `ymaps3.import` его нет, поэтому подключаем UMD-сборку напрямую.
+ */
+const YANDEX_MAPS_CLUSTERER_UMD_URL =
+  'https://cdn.jsdelivr.net/npm/@yandex/ymaps3-clusterer@0.0/dist/index.umd.js';
+/** Имя глобальной переменной, которую создаёт UMD-сборка кластеризатора. */
+const YANDEX_MAPS_CLUSTERER_GLOBAL = '@yandex/ymaps3-clusterer';
+/** Размер ячейки кластеризации в пикселях экрана. */
+const PVZ_CLUSTER_GRID_SIZE = 64;
+/** Начиная с этого зума кластеризация отключается — показываем точки как есть. */
+const PVZ_CLUSTER_MAX_ZOOM = 17;
+
+/** Основной (синий) цвет маркеров ПВЗ. */
+const PVZ_MARKER_COLOR = '#0057FF';
+/** Синий цвет выбранного маркера ПВЗ. */
+const PVZ_MARKER_SELECTED_COLOR = '#00209F';
+/** Синий цвет маркеров кластеров. */
+const PVZ_CLUSTER_COLOR = 'rgba(0, 87, 255, 0.92)';
 
 /** Минимальная длина поискового запроса, с которой отправляем геокодер. */
 const SEARCH_MIN_LENGTH = 3;
@@ -95,6 +148,11 @@ const MAX_ADDRESS_ZOOM = 16;
   styleUrls: ['./select-pvz-ozon.page.scss'],
 })
 export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
+  /** Клик по маркеру ПВЗ: передаёт ID пункта выдачи. */
+  @Output() pvzClicked = new EventEmitter<number>();
+  /** Подтверждение выбора ПВЗ кнопкой в карточке: передаёт выбранный ПВЗ. */
+  @Output() pvzSelected = new EventEmitter<OzonPvzPoint>();
+
   @ViewChild('mapContainer', { static: false })
   mapContainer?: ElementRef<HTMLDivElement>;
 
@@ -111,6 +169,13 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
   /** Найденные варианты адреса. */
   search_results: GeocodeSearchResult[] = [];
 
+  /** Идёт запрос списка ПВЗ для текущего вьюпорта. */
+  pvz_loading: boolean = false;
+  /** Ошибка загрузки списка ПВЗ. */
+  pvz_error: string = '';
+  /** ПВЗ, выбранный нажатием на маркер. */
+  selected_pvz: OzonPvzPoint | null = null;
+
   private map?: YMapInstance;
   private marker?: YMapMarkerInstance;
   private ymaps3?: Ymaps3Api;
@@ -123,6 +188,16 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
   private searchRequestId = 0;
   /** Идентификатор последнего запроса ПВЗ: устаревшие ответы игнорируются. */
   private pvzRequestId = 0;
+  /** Последний ответ сервера: точки и кластеры. */
+  private pvzItems: OzonPvzMapItem[] = [];
+  /** Маркеры, добавленные на карту (fallback без кластеризатора). */
+  private pvzMarkers: YMapMarkerInstance[] = [];
+  /** Кластеризатор Яндекса, если пакет загрузился. */
+  private clusterer?: YMapEntity<unknown>;
+  /** Промис загрузки пакета кластеризации: грузим один раз за страницу. */
+  private clustererLoader?: Promise<YandexMapsClusterer>;
+  /** Счётчик перерисовок: устаревшие асинхронные рендеры игнорируются. */
+  private renderGeneration = 0;
   /** Результат поиска, выбранный до готовности карты. */
   private pendingResult?: GeocodeResult;
   /** Пользователь уже выбрал точку — не перебиваем её адресом из профиля. */
@@ -144,6 +219,7 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.cancelPendingSearch();
     this.cancelScheduledPvzList();
+    this.clearPvzMarkers();
     if (this.map) {
       this.map.destroy();
       this.map = undefined;
@@ -647,21 +723,21 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Загружает список ПВЗ для текущей видимой области карты
-   * через bitrix24/ozon_pvz.php.
-   * Пока полученный ответ только выводится в консоль.
+   * Загружает ПВЗ для текущей видимой области карты через
+   * bitrix24/ozon_pvz.php: сервер читает локальную SQLite-базу и,
+   * если точек много, отдаёт их кластерами.
    */
   async loadPvzList(): Promise<void> {
     const viewport = this.getPvzViewport();
     if (!viewport) {
-      console.log('PVZ: карта ещё не готова, видимая область недоступна');
       return;
     }
 
-    console.log('PVZ viewport:', viewport);
-
     // Карта может двигаться быстрее ответа сервера — применяем только последний запрос.
     const requestId = ++this.pvzRequestId;
+    this.zone.run(() => {
+      this.pvz_loading = true;
+    });
 
     try {
       const response = await this.userService.getOzonPvzList(viewport);
@@ -669,20 +745,349 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
         return;
       }
 
-      console.log('PVZ response:', response);
+      this.zone.run(() => {
+        this.pvz_loading = false;
 
-      if (response?.error) {
-        console.error('PVZ: ошибка загрузки списка ПВЗ:', response.message);
-        return;
-      }
+        if (response?.error) {
+          this.pvz_error = response.message || 'Не удалось загрузить список ПВЗ.';
+          return;
+        }
 
-      console.log('PVZ clusters:', response?.clusters ?? []);
+        this.pvz_error = '';
+        this.pvzItems = Array.isArray(response?.clusters) ? response.clusters : [];
+        void this.renderPvzItems();
+      });
     } catch (error) {
       if (requestId !== this.pvzRequestId) {
         return;
       }
       console.error('PVZ: не удалось загрузить список ПВЗ', error);
+      this.zone.run(() => {
+        this.pvz_loading = false;
+        this.pvz_error = 'Не удалось загрузить список ПВЗ. Попробуйте ещё раз.';
+      });
     }
+  }
+
+  /**
+   * Перерисовывает ПВЗ через YMapClusterer: точки и серверные кластеры
+   * уходят в кластеризатор как features, а Яндекс группирует их по сетке.
+   * Если пакет кластеризации не загрузился — работает ручная отрисовка.
+   */
+  private async renderPvzItems(): Promise<void> {
+    const api = this.ymaps3;
+    const map = this.map;
+    if (!api || !map) {
+      return;
+    }
+
+    const generation = ++this.renderGeneration;
+    let clustererPackage: YandexMapsClusterer | null = null;
+
+    try {
+      clustererPackage = await this.loadClustererPackage();
+    } catch (error) {
+      console.error('Yandex Maps clusterer load error', error);
+    }
+
+    // Пока грузился пакет, карту или данные могли обновить.
+    if (generation !== this.renderGeneration || this.map !== map) {
+      return;
+    }
+
+    this.clearPvzMarkers();
+
+    if (!clustererPackage) {
+      this.renderPvzItemsLegacy(api, map);
+      return;
+    }
+
+    const features = this.pvzItems.map((item, index) => this.toClustererFeature(item, index));
+
+    const clusterer = new clustererPackage.YMapClusterer({
+      method: clustererPackage.clusterByGrid({ gridSize: PVZ_CLUSTER_GRID_SIZE }),
+      features,
+      maxZoom: PVZ_CLUSTER_MAX_ZOOM,
+      tickTimeout: 100,
+      marker: (feature) => this.createPvzMarker(api, feature),
+      cluster: (coordinates, clusterFeatures) =>
+        this.createPvzClusterMarker(api, coordinates, clusterFeatures),
+    });
+
+    map.addChild(clusterer);
+    this.clusterer = clusterer;
+  }
+
+  /**
+   * Загружает пакет YMapClusterer UMD-скриптом с CDN.
+   * `ymaps3.import` этот пакет не знает и падает с «no loader for pkg».
+   */
+  private loadClustererPackage(): Promise<YandexMapsClusterer> {
+    if (this.clustererLoader) {
+      return this.clustererLoader;
+    }
+
+    const globalScope = window as unknown as Record<string, YandexMapsClusterer | undefined>;
+    const existing = globalScope[YANDEX_MAPS_CLUSTERER_GLOBAL];
+    if (existing) {
+      this.clustererLoader = Promise.resolve(existing);
+      return this.clustererLoader;
+    }
+
+    this.clustererLoader = new Promise<YandexMapsClusterer>((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = YANDEX_MAPS_CLUSTERER_UMD_URL;
+      script.async = true;
+      script.onload = () => {
+        const pkg = globalScope[YANDEX_MAPS_CLUSTERER_GLOBAL];
+        if (
+          pkg &&
+          typeof pkg.YMapClusterer === 'function' &&
+          typeof pkg.clusterByGrid === 'function'
+        ) {
+          resolve(pkg);
+        } else {
+          reject(new Error('ymaps3 clusterer is not available'));
+        }
+      };
+      script.onerror = () => {
+        this.clustererLoader = undefined;
+        reject(new Error('Failed to load ymaps3 clusterer script'));
+      };
+      document.head.appendChild(script);
+    });
+
+    return this.clustererLoader;
+  }
+
+  /** Преобразует элемент ответа сервера в feature для кластеризатора. */
+  private toClustererFeature(item: OzonPvzMapItem, index: number): PvzClustererFeature {
+    const id =
+      item.type === 'cluster'
+        ? `cluster-${index}-${item.lat}-${item.long}`
+        : `point-${item.delivery_point_id}`;
+
+    return {
+      type: 'Feature',
+      id,
+      geometry: {
+        type: 'Point',
+        coordinates: [item.long, item.lat],
+      },
+      properties: { item },
+    };
+  }
+
+  /** Маркер одиночного ПВЗ или серверного кластера. */
+  private createPvzMarker(api: Ymaps3Api, feature: PvzClustererFeature): YMapEntity<unknown> {
+    const item = feature.properties.item;
+
+    if (item.type === 'cluster') {
+      const element = this.createClusterElement(item.count);
+      element.addEventListener('click', (event: Event) => {
+        event.stopPropagation();
+        this.zoomToCluster(item);
+      });
+      return new api.YMapMarker({ coordinates: feature.geometry.coordinates }, element);
+    }
+
+    const isSelected =
+      this.selected_pvz !== null &&
+      this.selected_pvz.delivery_point_id === item.delivery_point_id;
+    const element = this.createMarkerElement(isSelected);
+    element.addEventListener('click', (event: Event) => {
+      event.stopPropagation();
+      this.selectPvz(item);
+    });
+
+    return new api.YMapMarker({ coordinates: feature.geometry.coordinates }, element);
+  }
+
+  /**
+   * Маркер кластера, собранного YMapClusterer. В счётчике учитываются
+   * и одиночные точки, и серверные кластеры (по их count).
+   */
+  private createPvzClusterMarker(
+    api: Ymaps3Api,
+    coordinates: LngLat,
+    features: PvzClustererFeature[]
+  ): YMapEntity<unknown> {
+    const count = features.reduce(
+      (sum, feature) =>
+        sum + (feature.properties.item.type === 'cluster' ? feature.properties.item.count : 1),
+      0
+    );
+
+    const element = this.createClusterElement(count);
+    element.addEventListener('click', (event: Event) => {
+      event.stopPropagation();
+      this.zoomToClusterFeatures(features);
+    });
+
+    return new api.YMapMarker({ coordinates }, element);
+  }
+
+  /** Запасная отрисовка без YMapClusterer (если пакет не загрузился). */
+  private renderPvzItemsLegacy(api: Ymaps3Api, map: YMapInstance): void {
+    for (const item of this.pvzItems) {
+      const coordinates: LngLat = [item.long, item.lat];
+      let element: HTMLElement;
+
+      if (item.type === 'cluster') {
+        element = this.createClusterElement(item.count);
+        element.addEventListener('click', (event: Event) => {
+          event.stopPropagation();
+          this.zoomToCluster(item);
+        });
+      } else {
+        const isSelected =
+          this.selected_pvz !== null &&
+          this.selected_pvz.delivery_point_id === item.delivery_point_id;
+        element = this.createMarkerElement(isSelected);
+        element.addEventListener('click', (event: Event) => {
+          event.stopPropagation();
+          this.selectPvz(item);
+        });
+      }
+
+      const marker = new api.YMapMarker({ coordinates }, element);
+      map.addChild(marker);
+      this.pvzMarkers.push(marker);
+    }
+  }
+
+  /** Снимает с карты кластеризатор и все маркеры ПВЗ. */
+  private clearPvzMarkers(): void {
+    const map = this.map;
+
+    if (map && this.clusterer) {
+      try {
+        map.removeChild(this.clusterer);
+      } catch {
+        // Кластеризатор уже снят вместе с картой.
+      }
+    }
+    this.clusterer = undefined;
+
+    if (map) {
+      for (const marker of this.pvzMarkers) {
+        try {
+          map.removeChild(marker);
+        } catch {
+          // Маркер уже снят вместе с картой.
+        }
+      }
+    }
+    this.pvzMarkers = [];
+  }
+
+  /**
+   * Приближает карту к границам серверного кластера — после этого
+   * загрузится следующий уровень детализации.
+   */
+  private zoomToCluster(cluster: OzonPvzCluster): void {
+    const { left_bottom, right_top } = cluster.bounds;
+    this.zoomToBounds(left_bottom.long, left_bottom.lat, right_top.long, right_top.lat);
+  }
+
+  /** Приближает карту к границам клиентского кластера YMapClusterer. */
+  private zoomToClusterFeatures(features: PvzClustererFeature[]): void {
+    let lonLeft = Infinity;
+    let lonRight = -Infinity;
+    let latBottom = Infinity;
+    let latTop = -Infinity;
+
+    for (const feature of features) {
+      const item = feature.properties.item;
+      if (item.type === 'cluster') {
+        const { left_bottom, right_top } = item.bounds;
+        lonLeft = Math.min(lonLeft, left_bottom.long);
+        lonRight = Math.max(lonRight, right_top.long);
+        latBottom = Math.min(latBottom, left_bottom.lat);
+        latTop = Math.max(latTop, right_top.lat);
+      } else {
+        const [long, lat] = feature.geometry.coordinates;
+        lonLeft = Math.min(lonLeft, long);
+        lonRight = Math.max(lonRight, long);
+        latBottom = Math.min(latBottom, lat);
+        latTop = Math.max(latTop, lat);
+      }
+    }
+
+    if (!Number.isFinite(lonLeft) || !Number.isFinite(latBottom)) {
+      return;
+    }
+
+    this.zoomToBounds(lonLeft, latBottom, lonRight, latTop);
+  }
+
+  /**
+   * Перемещает карту по границам. У кластера из близких точек границы
+   * могут быть нулевыми — добавляем отступ, иначе масштаб не изменится.
+   */
+  private zoomToBounds(
+    lonLeft: number,
+    latBottom: number,
+    lonRight: number,
+    latTop: number
+  ): void {
+    const map = this.map;
+    if (!map) {
+      return;
+    }
+
+    const minDelta = 0.001;
+    if (Math.abs(lonRight - lonLeft) < minDelta) {
+      lonLeft -= minDelta;
+      lonRight += minDelta;
+    }
+    if (Math.abs(latTop - latBottom) < minDelta) {
+      latBottom -= minDelta;
+      latTop += minDelta;
+    }
+
+    map.setLocation({
+      bounds: [
+        [lonLeft, latBottom],
+        [lonRight, latTop],
+      ],
+    });
+
+    this.scheduleLoadPvzList();
+  }
+
+  /** Выбор ПВЗ нажатием на маркер. */
+  selectPvz(point: OzonPvzPoint): void {
+    // Клик приходит из внутренних обработчиков YMapClusterer —
+    // возвращаем обновление состояния и эмит события в зону Angular.
+    this.zone.run(() => {
+      this.selected_pvz = point;
+      this.pvzClicked.emit(point.delivery_point_id);
+    });
+    void this.renderPvzItems();
+  }
+
+  /** Кнопка «Выбрать этот ПВЗ» в карточке: сообщает наружу выбранный ПВЗ. */
+  confirmSelectedPvz(): void {
+    const point = this.selected_pvz;
+    if (!point) {
+      return;
+    }
+
+    this.zone.run(() => {
+      this.pvzSelected.emit(point);
+    });
+  }
+
+  /** Сброс выбранного ПВЗ. */
+  clearSelectedPvz(): void {
+    if (this.selected_pvz === null) {
+      return;
+    }
+    this.zone.run(() => {
+      this.selected_pvz = null;
+    });
+    void this.renderPvzItems();
   }
 
   /**
@@ -720,15 +1125,55 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
     return [lon, lat];
   }
 
-  private createMarkerElement(): HTMLElement {
+  /**
+   * Маркер одиночного ПВЗ: синий круг с буквой «О».
+   * Выбранный ПВЗ выделяется размером и более тёмным цветом.
+   */
+  private createMarkerElement(selected: boolean = false): HTMLElement {
+    // Круглый маркер увеличенного размера — так его проще нажать.
+    const size = selected ? 32 : 26;
     const element = document.createElement('div');
-    element.style.width = '16px';
-    element.style.height = '16px';
+    element.style.width = `${size}px`;
+    element.style.height = `${size}px`;
     element.style.borderRadius = '50%';
-    element.style.background = '#EF7004';
+    element.style.boxSizing = 'border-box';
+    element.style.background = selected ? PVZ_MARKER_SELECTED_COLOR : PVZ_MARKER_COLOR;
     element.style.border = '3px solid #FFFFFF';
     element.style.boxShadow = '0 0 6px rgba(0, 0, 0, 0.4)';
     element.style.transform = 'translate(-50%, -50%)';
+    element.style.display = 'flex';
+    element.style.alignItems = 'center';
+    element.style.justifyContent = 'center';
+    element.style.color = '#FFFFFF';
+    element.style.font =
+      '700 13px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    element.style.userSelect = 'none';
+    element.style.cursor = 'pointer';
+    element.textContent = 'О';
+    return element;
+  }
+
+  /**
+   * Маркер кластера: круг с количеством ПВЗ внутри.
+   */
+  private createClusterElement(count: number): HTMLElement {
+    const size = count >= 100 ? 46 : count >= 10 ? 40 : 34;
+    const element = document.createElement('div');
+    element.style.width = `${size}px`;
+    element.style.height = `${size}px`;
+    element.style.borderRadius = '50%';
+    element.style.background = PVZ_CLUSTER_COLOR;
+    element.style.border = '2px solid #FFFFFF';
+    element.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.35)';
+    element.style.transform = 'translate(-50%, -50%)';
+    element.style.display = 'flex';
+    element.style.alignItems = 'center';
+    element.style.justifyContent = 'center';
+    element.style.color = '#FFFFFF';
+    element.style.font =
+      '600 13px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    element.style.cursor = 'pointer';
+    element.textContent = String(count);
     return element;
   }
 

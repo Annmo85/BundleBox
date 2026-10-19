@@ -20,15 +20,13 @@
 	 * Схема и SQL одинаковые, база совместима с обоими драйверами.
 	 *
 	 * Каждая характеристика ПВЗ — отдельный столбец; вложенные
-	 * coordinates/restrictions разложены по полям, расписание
-	 * дополнительно нормализовано в отдельную таблицу.
+	 * coordinates/restrictions разложены по полям.
 	 *
 	 * delivery_point_id уникален в пределах Ozon и используется как
 	 * первичный ключ — повторный запуск не создаёт дублей.
 	 *
-	 * Таблицы:
-	 *   ozon_delivery_points           — карточка ПВЗ (скалярные поля);
-	 *   ozon_delivery_point_schedule   — расписание работы ПВЗ (дата + период).
+	 * Таблица:
+	 *   ozon_delivery_points — карточка ПВЗ (скалярные поля).
 	 *
 	 * Запуск:
 	 *   php ozon_pvz_update_cron.php               # синхронизация с удалением
@@ -171,7 +169,6 @@
 			'restriction_max_price_amount',
 			'restriction_max_price_currency',
 			'shipment_method_ids_json',
-			'schedule_json',
 			'updated_at',
 		);
 	}
@@ -229,9 +226,6 @@
 		$max_price    = (isset($restrictions['max_price']) && is_array($restrictions['max_price']))
 			? $restrictions['max_price']
 			: array();
-		$schedule     = (isset($info['schedule']) && is_array($info['schedule']))
-			? $info['schedule']
-			: array();
 
 		// Идентификаторы методов доставки из /v1/delivery-point/list.
 		$methods = array();
@@ -264,51 +258,8 @@
 			'restriction_max_price_amount'   => ozonPvzText(ozonPvzGet($max_price, 'amount')),
 			'restriction_max_price_currency' => ozonPvzText(ozonPvzGet($max_price, 'currency_code')),
 			'shipment_method_ids_json'       => ozonPvzJson($methods),
-			'schedule_json'                  => ozonPvzJson($schedule),
 			'updated_at'                     => $updated_at,
 		);
-	}
-
-	/**
-	 * Сформировать строки расписания для таблицы ozon_delivery_point_schedule.
-	 *
-	 * @return array[] Каждый элемент: [delivery_point_id, schedule_date, from_local, to_local].
-	 */
-	function ozonPvzBuildScheduleRows($point_id, array $info)
-	{
-		$rows     = array();
-		$schedule = (isset($info['schedule']) && is_array($info['schedule']))
-			? $info['schedule']
-			: array();
-
-		foreach ($schedule as $day) {
-			if (!is_array($day)) {
-				continue;
-			}
-
-			$date    = isset($day['date']) ? (string) $day['date'] : '';
-			$periods = (isset($day['periods']) && is_array($day['periods'])) ? $day['periods'] : array();
-
-			if (empty($periods)) {
-				$rows[] = array($point_id, $date, null, null);
-				continue;
-			}
-
-			foreach ($periods as $period) {
-				if (!is_array($period)) {
-					continue;
-				}
-
-				$rows[] = array(
-					$point_id,
-					$date,
-					ozonPvzText(ozonPvzGet($period, 'from_local')),
-					ozonPvzText(ozonPvzGet($period, 'to_local')),
-				);
-			}
-		}
-
-		return $rows;
 	}
 
 	/* ------------------------------------------------------------------
@@ -326,10 +277,6 @@
 
 		/** @var SQLite3Stmt|PDOStatement|null */
 		private $upsert_stmt = null;
-		/** @var SQLite3Stmt|PDOStatement|null */
-		private $schedule_delete_stmt = null;
-		/** @var SQLite3Stmt|PDOStatement|null */
-		private $schedule_insert_stmt = null;
 
 		/** @var array delivery_point_id => true (что уже есть в базе) */
 		private $existing = array();
@@ -529,18 +476,12 @@
 					restriction_max_price_amount TEXT,
 					restriction_max_price_currency TEXT,
 					shipment_method_ids_json TEXT,
-					schedule_json TEXT,
 					updated_at TEXT NOT NULL
-				)',
-				'CREATE TABLE IF NOT EXISTS ozon_delivery_point_schedule (
-					delivery_point_id INTEGER NOT NULL,
-					schedule_date TEXT NOT NULL,
-					from_local TEXT,
-					to_local TEXT
 				)',
 				'CREATE INDEX IF NOT EXISTS idx_ozon_dp_number ON ozon_delivery_points(delivery_point_number)',
 				'CREATE INDEX IF NOT EXISTS idx_ozon_dp_active ON ozon_delivery_points(is_active)',
-				'CREATE INDEX IF NOT EXISTS idx_ozon_dps_point ON ozon_delivery_point_schedule(delivery_point_id)',
+				// Выборка ПВЗ по вьюпорту в ozon_pvz.php.
+				'CREATE INDEX IF NOT EXISTS idx_ozon_dp_coords ON ozon_delivery_points(latitude, longitude)',
 			);
 
 			foreach ($statements as $sql) {
@@ -549,6 +490,13 @@
 					return false;
 				}
 			}
+
+			// Чистим артефакты прежней схемы с расписанием. DROP COLUMN
+			// появился только в SQLite 3.35, поэтому ошибку игнорируем:
+			// оставшееся поле не мешает работе.
+			$legacy_error = '';
+			$this->exec('DROP TABLE IF EXISTS ozon_delivery_point_schedule', $legacy_error);
+			$this->exec('ALTER TABLE ozon_delivery_points DROP COLUMN schedule_json', $legacy_error);
 
 			return true;
 		}
@@ -651,36 +599,17 @@
 		}
 
 		/**
-		 * Подготовить запросы синхронизации карточки и расписания.
+		 * Подготовить запрос синхронизации карточки ПВЗ.
 		 */
 		private function prepareSyncStatements(&$error)
 		{
-			if ($this->upsert_stmt !== null
-				&& $this->schedule_delete_stmt !== null
-				&& $this->schedule_insert_stmt !== null) {
+			if ($this->upsert_stmt !== null) {
 				return true;
 			}
 
 			$this->upsert_stmt = $this->prepare(ozonPvzUpsertSql(), $error);
-			if ($this->upsert_stmt === false) {
-				return false;
-			}
 
-			$this->schedule_delete_stmt = $this->prepare(
-				'DELETE FROM ozon_delivery_point_schedule WHERE delivery_point_id = :id',
-				$error
-			);
-			if ($this->schedule_delete_stmt === false) {
-				return false;
-			}
-
-			$this->schedule_insert_stmt = $this->prepare(
-				'INSERT INTO ozon_delivery_point_schedule (delivery_point_id, schedule_date, from_local, to_local)'
-				. ' VALUES (:delivery_point_id, :schedule_date, :from_local, :to_local)',
-				$error
-			);
-
-			return $this->schedule_insert_stmt !== false;
+			return $this->upsert_stmt !== false;
 		}
 
 		/**
@@ -720,26 +649,6 @@
 					return false;
 				}
 
-				// Расписание перезаписываем целиком: удалить и вставить заново.
-				if (!$this->execute($this->schedule_delete_stmt, array('id' => $point_id), $error)) {
-					$error = 'Ошибка очистки расписания ПВЗ ' . $point_id . ': ' . $error;
-					return false;
-				}
-
-				foreach (ozonPvzBuildScheduleRows($point_id, $info) as $schedule_row) {
-					$schedule_params = array(
-						'delivery_point_id' => $schedule_row[0],
-						'schedule_date'     => $schedule_row[1],
-						'from_local'        => $schedule_row[2],
-						'to_local'          => $schedule_row[3],
-					);
-
-					if (!$this->execute($this->schedule_insert_stmt, $schedule_params, $error)) {
-						$error = 'Ошибка записи расписания ПВЗ ' . $point_id . ': ' . $error;
-						return false;
-					}
-				}
-
 				if (isset($this->existing[$point_id])) {
 					$stats['updated']++;
 				} else {
@@ -752,7 +661,7 @@
 		}
 
 		/**
-		 * Удалить ПВЗ, которых больше нет в списке Ozon, вместе с расписанием.
+		 * Удалить ПВЗ, которых больше нет в списке Ozon.
 		 */
 		public function deleteMissing(array $list_ids, array &$stats, &$error)
 		{
@@ -761,14 +670,6 @@
 			$list_map = array();
 			foreach ($list_ids as $list_id) {
 				$list_map[(int) $list_id] = true;
-			}
-
-			$schedule_delete = $this->prepare(
-				'DELETE FROM ozon_delivery_point_schedule WHERE delivery_point_id = :id',
-				$error
-			);
-			if ($schedule_delete === false) {
-				return false;
 			}
 
 			$point_delete = $this->prepare(
@@ -782,10 +683,6 @@
 			foreach (array_keys($this->existing) as $point_id) {
 				if (isset($list_map[$point_id])) {
 					continue;
-				}
-
-				if (!$this->execute($schedule_delete, array('id' => $point_id), $error)) {
-					return false;
 				}
 
 				if (!$this->execute($point_delete, array('id' => $point_id), $error)) {
@@ -804,9 +701,7 @@
 		 */
 		public function close()
 		{
-			$this->upsert_stmt          = null;
-			$this->schedule_delete_stmt = null;
-			$this->schedule_insert_stmt = null;
+			$this->upsert_stmt = null;
 
 			if ($this->driver === 'sqlite3' && ($this->db instanceof SQLite3)) {
 				$this->db->close();

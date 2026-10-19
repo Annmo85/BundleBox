@@ -19,17 +19,59 @@ export interface PvzViewportRequest {
   zoom: number;
 }
 
-/** Кластер ПВЗ из ответа Ozon Seller API. */
-export interface OzonPvzCluster {
-  [key: string]: any;
+/** Одиночный ПВЗ из ответа bitrix24/ozon_pvz.php. */
+export interface OzonPvzPoint {
+  type: 'point';
+  delivery_point_id: number;
+  name: string;
+  delivery_point_number?: string;
+  /** Тип точки Ozon: 'pvz' | 'postamat' и т.п. */
+  point_type?: string;
+  address?: string;
+  lat: number;
+  long: number;
+  is_bulky?: boolean;
+  storage_period_days?: number | null;
+  fitting_rooms_count?: number | null;
+  shipment_method_ids?: number[];
 }
+
+/** Кластер ПВЗ: несколько точек, сгруппированных по сетке карты. */
+export interface OzonPvzCluster {
+  type: 'cluster';
+  lat: number;
+  long: number;
+  count: number;
+  bounds: {
+    left_bottom: PvzViewportPoint;
+    right_top: PvzViewportPoint;
+  };
+}
+
+/** Элемент карты: либо одиночный ПВЗ, либо кластер. */
+export type OzonPvzMapItem = OzonPvzPoint | OzonPvzCluster;
 
 /** Ответ bitrix24/ozon_pvz.php в общем контракте проекта. */
 export interface OzonPvzResponse {
   error: boolean;
   message: string;
-  clusters: OzonPvzCluster[];
+  /** Точки и кластеры внутри запрошенного вьюпорта. */
+  clusters: OzonPvzMapItem[];
   http_code: number;
+  /** Зум, по которому сервер кластеризовал точки. */
+  zoom?: number;
+  /** Всего ПВЗ во вьюпорте. */
+  count?: number;
+  /** Сколько элементов вернулось в clusters. */
+  returned?: number;
+  /** Применялась ли кластеризация. */
+  clustered?: boolean;
+  /** Размер ячейки кластеризации в градусах. */
+  cell_degrees?: number;
+  /** Часть выборки отброшена предохранителем сервера. */
+  truncated?: boolean;
+  db_driver?: string;
+  db_updated_at?: string;
 }
 
 @Injectable({
@@ -488,9 +530,10 @@ export class UserService {
   }
 
   /**
-   * Запрашивает список ПВЗ Ozon для видимой области карты.
-   * Серверный обработчик — bitrix24/ozon_pvz.php.
-   * Ответ в общем контракте: {error: boolean, message: string, clusters: any[], http_code: number}.
+   * Запрашивает ПВЗ Ozon для видимой области карты.
+   * Серверный обработчик — bitrix24/ozon_pvz.php (читает локальную
+   * SQLite-базу и группирует плотные точки в кластеры).
+   * Ответ в общем контракте: {error, message, clusters, http_code} + метаданные.
    */
   public async getOzonPvzList(params:PvzViewportRequest):Promise<OzonPvzResponse> {
     let response = await this.makeRequest("ozon_pvz.php",params);
