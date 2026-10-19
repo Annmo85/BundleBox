@@ -55,6 +55,7 @@
 			'SECOND_NAME'=>$result['result']['SECOND_NAME'],
 			'LAST_NAME'=>$result['result']['LAST_NAME'],
 			'PVZ_VALUE'=>$result['result'][$pvz_field],
+			'DELIVERY_METHOD'=>$result['result'][$delivery_method_field],
 			'ADDRESS_VALUE'=>$address_value,
 			'CITY_VALUE'=>$result['result'][$city_field],
 			'INDEX_VALUE'=>$result['result'][$index_field],
@@ -83,13 +84,20 @@
 				
 				$response['pvz_list'][] = $pvz;
 			}
-			
+	
+		}
+
+		if ($result['result'][$delivery_method_field] === "115") {
+			$response['user']['PVZ'] = ["TITLE"=>"ПВЗ ОЗОН","DESCRIPTION"=>[$result['result'][$ozon_pvz_field]]];
+		} else {
+
+			//выберем наш
+			if ($response['user']['PVZ_VALUE']!='') {
+				foreach($response['pvz_list'] as $pvz) if ($pvz['ID']==$response['user']['PVZ_VALUE']) $response['user']['PVZ'] = $pvz;
+			}
 		}
 		
-		//выберем наш
-		if ($response['user']['PVZ_VALUE']!='') {
-			foreach($response['pvz_list'] as $pvz) if ($pvz['ID']==$response['user']['PVZ_VALUE']) $response['user']['PVZ'] = $pvz;
-		}
+
 		
 		//города
 		$response['citites']=$deliveryClass->regions;
