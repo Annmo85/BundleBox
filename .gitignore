@@ -76,6 +76,12 @@ bitrix24/firebase_key.json
 bitrix24/ozon_tokens.php
 bitrix24/yandex_map_key.php
 
+# Локальная база ПВЗ Ozon (SQLite3) — генерируется кроном ozon_pvz_update_cron.php
+bitrix24/ozon_pvz.sqlite
+bitrix24/ozon_pvz.sqlite-journal
+bitrix24/ozon_pvz.sqlite-wal
+bitrix24/ozon_pvz.sqlite-shm
+
 # Локальная документация и инструкции для ИИ-агентов (не коммитить)
 DOCUMENTATION.md
 AGENTS.md

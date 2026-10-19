@@ -48,6 +48,8 @@
 		private $debug;
 		/** @var string Полученный access_token (Bearer) */
 		private $access_token = '';
+		/** @var int Пауза между запросами к API, сек (0 — без паузы) */
+		private $request_delay = 1;
 
 		/**
 		 * @param array $config
@@ -60,6 +62,7 @@
 		 *   timeout       (int)    — общий таймаут, по умолчанию 30;
 		 *   connect_timeout (int)  — таймаут соединения, по умолчанию 10;
 		 *   ip_resolve    (string) — 'v4' | 'v6' | 'any', по умолчанию 'v4';
+		 *   request_delay (int)    — пауза между запросами, по умолчанию 1 сек;
 		 *   debug         (bool)   — по умолчанию false.
 		 */
 		public function __construct(array $config)
@@ -87,6 +90,7 @@
 			$this->connect_timeout = isset($config['connect_timeout']) ? (int) $config['connect_timeout'] : 10;
 			$this->ip_resolve      = isset($config['ip_resolve']) ? strtolower($config['ip_resolve']) : 'v4';
 			$this->debug           = !empty($config['debug']);
+			$this->request_delay   = isset($config['request_delay']) ? max(0, (int) $config['request_delay']) : 1;
 		}
 
 		/** Включить/выключить отладку. */
@@ -95,10 +99,34 @@
 			$this->debug = (bool) $debug;
 		}
 
+		/** Задать паузу между запросами к API (сек). */
+		public function setRequestDelay($seconds)
+		{
+			$this->request_delay = max(0, (int) $seconds);
+		}
+
+		/** Текущая пауза между запросами к API (сек). */
+		public function getRequestDelay()
+		{
+			return $this->request_delay;
+		}
+
 		/** Заданы ли client_id и client_secret. */
 		public function hasCredentials()
 		{
 			return $this->client_id !== '' && $this->client_secret !== '';
+		}
+
+		/**
+		 * Выдержать паузу между запросами (защита от лимитов API).
+		 * Публичный метод — вызывающий код может делать паузы между
+		 * собственными запросами (например, между чанками ПВЗ).
+		 */
+		public function pause()
+		{
+			if ($this->request_delay > 0) {
+				sleep($this->request_delay);
+			}
 		}
 
 		/**
@@ -404,7 +432,7 @@
 					break;
 				}
 
-				sleep(1);
+				$this->pause();
 			} while (true);
 
 			return $all;
@@ -442,10 +470,280 @@
 					break;
 				}
 
-				sleep(1);
+				$this->pause();
 			} while (true);
 
 			return $all;
+		}
+
+		/**
+		 * Одна страница списка всех пунктов выдачи Ozon.
+		 *
+		 * POST /v1/delivery-point/list
+		 *
+		 * @param int         $limit  Размер страницы.
+		 * @param string|null $cursor Указатель следующей страницы (из next_cursor).
+		 *
+		 * @return array{delivery_points:array, next_cursor:?string, http_code:int, error:string}
+		 */
+		public function listDeliveryPointsPage($limit = 100, $cursor = null)
+		{
+			$token = $this->auth();
+			if ($token === '') {
+				return [
+					'delivery_points' => [],
+					'next_cursor'     => null,
+					'http_code'       => 0,
+					'error'           => 'Не удалось получить access_token Ozon Доставка',
+				];
+			}
+
+			$pagination = ['limit' => (int) $limit];
+			if ($cursor !== null && $cursor !== '') {
+				$pagination['cursor'] = $cursor;
+			}
+
+			$payload = ['pagination' => $pagination];
+
+			$headers   = $this->baseHeaders();
+			$headers[] = 'Authorization: Bearer ' . $token;
+
+			$url = $this->api_url . '/v1/delivery-point/list';
+
+			$res = $this->httpRequest($url, 'POST', $headers, $payload);
+			$this->debug('delivery-point/list', $res, $url, $payload);
+
+			$points = (isset($res['json']['delivery_points']) && is_array($res['json']['delivery_points']))
+				? $res['json']['delivery_points']
+				: [];
+			$next = (isset($res['json']['next_cursor']) && $res['json']['next_cursor'] !== '')
+				? $res['json']['next_cursor']
+				: null;
+
+			$error = '';
+			if ($res['error'] !== '') {
+				$error = $res['error'];
+			} elseif ($res['http_code'] !== 200) {
+				$error = 'Ozon API вернул HTTP ' . $res['http_code'];
+			}
+
+			return [
+				'delivery_points' => $points,
+				'next_cursor'     => $next,
+				'http_code'       => $res['http_code'],
+				'error'           => $error,
+			];
+		}
+
+		/**
+		 * Полный список пунктов выдачи с обходом всех страниц (next_cursor).
+		 *
+		 * Пауза между страницами задаётся в конфиге (request_delay, по умолчанию 1 сек).
+		 *
+		 * @param int         $limit Размер страницы.
+		 * @param string|null $error Текст ошибки (по ссылке), '' — без ошибок.
+		 *
+		 * @return array Список элементов delivery_points:
+		 *               [['delivery_point_id' => int, 'shipment_method_ids' => int[]], ...].
+		 */
+		public function listDeliveryPoints($limit = 100, &$error = null)
+		{
+			$all    = [];
+			$cursor = null;
+			$page   = 0;
+			$error  = '';
+
+			do {
+				if ($this->debug) {
+					echo "--- [OZON] delivery-point/list (страница {$page}) ---\n";
+				}
+
+				$res = $this->listDeliveryPointsPage($limit, $cursor);
+
+				foreach ($res['delivery_points'] as $point) {
+					if (isset($point['delivery_point_id'])) {
+						$all[] = $point;
+					}
+				}
+
+				$cursor = $res['next_cursor'];
+				$page++;
+
+				if ($res['error'] !== '') {
+					$error = $res['error'];
+					break;
+				}
+
+				if ($res['http_code'] !== 200 || $cursor === null || count($res['delivery_points']) === 0) {
+					break;
+				}
+
+				$this->pause();
+			} while (true);
+
+			return $all;
+		}
+
+		/**
+		 * Идентификаторы ВСЕХ пунктов выдачи Ozon.
+		 *
+		 * @param int         $limit Размер страницы.
+		 * @param string|null $error Текст ошибки (по ссылке), '' — без ошибок.
+		 *
+		 * @return int[]
+		 */
+		public function getDeliveryPointIds($limit = 100, &$error = null)
+		{
+			$points = $this->listDeliveryPoints($limit, $error);
+			$ids    = [];
+
+			foreach ($points as $point) {
+				if (isset($point['delivery_point_id'])) {
+					$ids[(int) $point['delivery_point_id']] = true;
+				}
+			}
+
+			return array_keys($ids);
+		}
+
+		/**
+		 * Информация о пунктах выдачи Ozon (не более 100 идентификаторов за запрос).
+		 *
+		 * POST /v1/delivery-point/info
+		 *
+		 * @param array $delivery_point_ids Идентификаторы ПВЗ (от 1 до 100 значений).
+		 *
+		 * @return array{delivery_points:array, http_code:int, error:string}
+		 */
+		public function infoDeliveryPoints(array $delivery_point_ids)
+		{
+			$ids = [];
+			foreach ($delivery_point_ids as $id) {
+				if (is_numeric($id)) {
+					$ids[(int) $id] = true;
+				}
+			}
+			$ids = array_keys($ids);
+
+			if (empty($ids)) {
+				return [
+					'delivery_points' => [],
+					'http_code'       => 0,
+					'error'           => 'Пустой список идентификаторов ПВЗ',
+				];
+			}
+
+			if (count($ids) > 100) {
+				return [
+					'delivery_points' => [],
+					'http_code'       => 0,
+					'error'           => 'За один запрос допускается не более 100 идентификаторов ПВЗ',
+				];
+			}
+
+			$token = $this->auth();
+			if ($token === '') {
+				return [
+					'delivery_points' => [],
+					'http_code'       => 0,
+					'error'           => 'Не удалось получить access_token Ozon Доставка',
+				];
+			}
+
+			$payload = ['delivery_point_ids' => $ids];
+
+			$headers   = $this->baseHeaders();
+			$headers[] = 'Authorization: Bearer ' . $token;
+
+			$url = $this->api_url . '/v1/delivery-point/info';
+
+			$res = $this->httpRequest($url, 'POST', $headers, $payload);
+			$this->debug('delivery-point/info', $res, $url, $payload);
+
+			$points = (isset($res['json']['delivery_points']) && is_array($res['json']['delivery_points']))
+				? $res['json']['delivery_points']
+				: [];
+
+			$error = '';
+			if ($res['error'] !== '') {
+				$error = $res['error'];
+			} elseif ($res['http_code'] !== 200) {
+				$error = 'Ozon API вернул HTTP ' . $res['http_code'];
+			}
+
+			return [
+				'delivery_points' => $points,
+				'http_code'       => $res['http_code'],
+				'error'           => $error,
+			];
+		}
+
+		/**
+		 * Информация о пунктах выдачи с автоматической разбивкой на чанки.
+		 *
+		 * Чанк — не более 100 идентификаторов (ограничение Ozon).
+		 * Между чанками выдерживается пауза request_delay (по умолчанию 1 сек).
+		 *
+		 * @param array $delivery_point_ids Идентификаторы ПВЗ.
+		 * @param int   $chunk_size         Размер чанка (1..100), по умолчанию 100.
+		 *
+		 * @return array{delivery_points:array, failed_chunks:int, errors:array}
+		 */
+		public function getDeliveryPointsInfo(array $delivery_point_ids, $chunk_size = 100)
+		{
+			$ids = [];
+			foreach ($delivery_point_ids as $id) {
+				if (is_numeric($id)) {
+					$ids[(int) $id] = true;
+				}
+			}
+			$ids = array_keys($ids);
+
+			$chunk_size = (int) $chunk_size;
+			if ($chunk_size < 1 || $chunk_size > 100) {
+				$chunk_size = 100;
+			}
+
+			$chunks = empty($ids) ? [] : array_chunk($ids, $chunk_size);
+
+			$all           = [];
+			$errors        = [];
+			$failed_chunks = 0;
+			$last_index    = count($chunks) - 1;
+
+			foreach ($chunks as $index => $chunk) {
+				if ($this->debug) {
+					echo "--- [OZON] delivery-point/info (чанк {$index}, ПВЗ: " . count($chunk) . ") ---\n";
+				}
+
+				$res = $this->infoDeliveryPoints($chunk);
+
+				if ($res['error'] !== '' || $res['http_code'] !== 200) {
+					$failed_chunks++;
+					$errors[] = [
+						'chunk'     => $index,
+						'ids'       => count($chunk),
+						'http_code' => $res['http_code'],
+						'error'     => $res['error'] !== ''
+							? $res['error']
+							: 'Ozon API вернул HTTP ' . $res['http_code'],
+					];
+				}
+
+				foreach ($res['delivery_points'] as $point) {
+					$all[] = $point;
+				}
+
+				if ($index < $last_index) {
+					$this->pause();
+				}
+			}
+
+			return [
+				'delivery_points' => $all,
+				'failed_chunks'   => $failed_chunks,
+				'errors'          => $errors,
+			];
 		}
 	}
 ?>

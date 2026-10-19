@@ -121,6 +121,8 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
   private searchTimer?: number;
   private pvzListTimer?: number;
   private searchRequestId = 0;
+  /** Идентификатор последнего запроса ПВЗ: устаревшие ответы игнорируются. */
+  private pvzRequestId = 0;
   /** Результат поиска, выбранный до готовности карты. */
   private pendingResult?: GeocodeResult;
   /** Пользователь уже выбрал точку — не перебиваем её адресом из профиля. */
@@ -645,10 +647,11 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Загружает список ПВЗ для текущей видимой области карты.
-   * Пока только выводит параметры области в консоль.
+   * Загружает список ПВЗ для текущей видимой области карты
+   * через bitrix24/ozon_pvz.php.
+   * Пока полученный ответ только выводится в консоль.
    */
-  loadPvzList(): void {
+  async loadPvzList(): Promise<void> {
     const viewport = this.getPvzViewport();
     if (!viewport) {
       console.log('PVZ: карта ещё не готова, видимая область недоступна');
@@ -656,6 +659,30 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
     }
 
     console.log('PVZ viewport:', viewport);
+
+    // Карта может двигаться быстрее ответа сервера — применяем только последний запрос.
+    const requestId = ++this.pvzRequestId;
+
+    try {
+      const response = await this.userService.getOzonPvzList(viewport);
+      if (requestId !== this.pvzRequestId) {
+        return;
+      }
+
+      console.log('PVZ response:', response);
+
+      if (response?.error) {
+        console.error('PVZ: ошибка загрузки списка ПВЗ:', response.message);
+        return;
+      }
+
+      console.log('PVZ clusters:', response?.clusters ?? []);
+    } catch (error) {
+      if (requestId !== this.pvzRequestId) {
+        return;
+      }
+      console.error('PVZ: не удалось загрузить список ПВЗ', error);
+    }
   }
 
   /**
@@ -666,7 +693,7 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
     this.cancelScheduledPvzList();
     this.pvzListTimer = window.setTimeout(() => {
       this.pvzListTimer = undefined;
-      this.loadPvzList();
+      void this.loadPvzList();
     }, PVZ_RELOAD_DEBOUNCE_MS);
   }
 

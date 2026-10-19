@@ -4,6 +4,34 @@ import { environment } from 'src/environments/environment';
 import { Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 
+/** Точка видимой области карты (долгота/широта) в формате Ozon Seller API. */
+export interface PvzViewportPoint {
+  lat: number;
+  long: number;
+}
+
+/** Параметры запроса списка ПВЗ Ozon (bitrix24/ozon_pvz.php). */
+export interface PvzViewportRequest {
+  viewport: {
+    left_bottom: PvzViewportPoint;
+    right_top: PvzViewportPoint;
+  };
+  zoom: number;
+}
+
+/** Кластер ПВЗ из ответа Ozon Seller API. */
+export interface OzonPvzCluster {
+  [key: string]: any;
+}
+
+/** Ответ bitrix24/ozon_pvz.php в общем контракте проекта. */
+export interface OzonPvzResponse {
+  error: boolean;
+  message: string;
+  clusters: OzonPvzCluster[];
+  http_code: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -456,6 +484,16 @@ export class UserService {
   public async getCities() {
     let user_id = localStorage.getItem(environment.prefix + 'user_id');
     let response = await this.makeRequest("delivery_calc.php",{user_id:user_id, action: 'getCities'});
+    return response;
+  }
+
+  /**
+   * Запрашивает список ПВЗ Ozon для видимой области карты.
+   * Серверный обработчик — bitrix24/ozon_pvz.php.
+   * Ответ в общем контракте: {error: boolean, message: string, clusters: any[], http_code: number}.
+   */
+  public async getOzonPvzList(params:PvzViewportRequest):Promise<OzonPvzResponse> {
+    let response = await this.makeRequest("ozon_pvz.php",params);
     return response;
   }
 
