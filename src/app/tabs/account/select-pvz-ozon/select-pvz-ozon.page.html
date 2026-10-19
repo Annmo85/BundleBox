@@ -84,7 +84,12 @@
           хранение {{ storageDays }} дн.
         </span>
       </div>
-      <button class="pvz-card-submit" type="button" (click)="confirmSelectedPvz()">
+      <button
+        class="pvz-card-submit"
+        type="button"
+        [disabled]="pvz_saving"
+        (click)="confirmSelectedPvz()"
+      >
         Выбрать этот ПВЗ
       </button>
     </div>

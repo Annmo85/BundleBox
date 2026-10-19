@@ -31,6 +31,8 @@
 	$dom_field = "UF_CRM_1702312072251";
 	$kv_field = "UF_CRM_1702312081707";
 	$reg_mode_field = "UF_CRM_1730652051548";
+	$delivery_method_field = "UF_CRM_1789886330774";
+	$ozon_pvz_field = "UF_CRM_1790311631445";
 	
 	$smsru = new SMSRU('797CD0B2-0676-DE9E-1432-F8178F6361C1');
 	
@@ -192,15 +194,33 @@
 		$response = $result;
 		
 	}	else if (isset($request['user_id']) && isset($request['action']) && $request['action']==='setPvz') {
-		$result = CRest::call('crm.contact.update',["id"=> $request['user_id'], 'fields'=>[$pvz_field=>$request['pvz']['ID']]]);
+		$result = CRest::call('crm.contact.update',[
+			"id"=> $request['user_id'], 
+			'fields'=>[
+				$pvz_field=>$request['pvz']['ID'],
+				$delivery_method_field=>117
+			]
+		]);
 		$title = $request['pvz']['TITLE'];
-		$result1 = CRest::call('crm.livefeedmessage.add', ['fields'=>["ENTITYID"=> $request['user_id'], "ENTITYTYPEID"=>3, 'POST_TITLE'=>'Пользователь выбрал пункт ПВЗ в приложении', 'MESSAGE'=>"Пользователь сменил ПВЗ в приложении. Новый город {$title}"]]);
+		$result1 = CRest::call('crm.livefeedmessage.add', ['fields'=>["ENTITYID"=> $request['user_id'], "ENTITYTYPEID"=>3, 'POST_TITLE'=>'Пользователь выбрал пункт ПВЗ SOVA POST в приложении', 'MESSAGE'=>"Пользователь сменил ПВЗ в приложении. Новый пункт {$title}"]]);
+		$response = $result;
+		
+	}	else if (isset($request['user_id']) && isset($request['action']) && $request['action']==='setPvzOzon') {
+		$result = CRest::call('crm.contact.update',[
+			"id"=> $request['user_id'], 
+			'fields'=>[
+				$ozon_pvz_field=>$request['pvz'],
+				$delivery_method_field=>115
+			]
+		]);
+		$title = $request['pvz'];
+		$result1 = CRest::call('crm.livefeedmessage.add', ['fields'=>["ENTITYID"=> $request['user_id'], "ENTITYTYPEID"=>3, 'POST_TITLE'=>'Пользователь выбрал пункт ПВЗ в приложении', 'MESSAGE'=>"Пользователь сменил ПВЗ в приложении. Новый пункт {$title}"]]);
 		$response = $result;
 		
 	}	else if (isset($request['user_id']) && isset($request['action']) && $request['action']==='setCity') {
 		$result = CRest::call('crm.contact.update',["id"=> $request['user_id'], 'fields'=>[$city_field=>$request['city']]]);
 		$title = $request['city'];
-		$result1 = CRest::call('crm.livefeedmessage.add', ['fields'=>["ENTITYID"=> $request['user_id'], "ENTITYTYPEID"=>3, 'POST_TITLE'=>'Пользователь обновил свой город в приложении', 'MESSAGE'=>"Пользователь обновил свой город в приложении. Новый пункт {$title}"]]);
+		$result1 = CRest::call('crm.livefeedmessage.add', ['fields'=>["ENTITYID"=> $request['user_id'], "ENTITYTYPEID"=>3, 'POST_TITLE'=>'Пользователь обновил свой город в приложении', 'MESSAGE'=>"Пользователь обновил свой город в приложении. Новый город {$title}"]]);
 		$response = $result;
 		
 	}	else if (isset($request['email']) && isset($request['action']) && $request['action']==='resetPasswordByEmail') {

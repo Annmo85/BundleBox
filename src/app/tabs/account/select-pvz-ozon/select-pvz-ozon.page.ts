@@ -9,6 +9,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { NavController, ToastController } from '@ionic/angular';
 import type { LngLat, LngLatBounds, YMapEntity, YMapLocationRequest } from 'ymaps3';
 import {
   OzonPvzCluster,
@@ -150,8 +151,6 @@ const MAX_ADDRESS_ZOOM = 16;
 export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
   /** Клик по маркеру ПВЗ: передаёт ID пункта выдачи. */
   @Output() pvzClicked = new EventEmitter<number>();
-  /** Подтверждение выбора ПВЗ кнопкой в карточке: передаёт выбранный ПВЗ. */
-  @Output() pvzSelected = new EventEmitter<OzonPvzPoint>();
 
   @ViewChild('mapContainer', { static: false })
   mapContainer?: ElementRef<HTMLDivElement>;
@@ -173,6 +172,8 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
   pvz_loading: boolean = false;
   /** Ошибка загрузки списка ПВЗ. */
   pvz_error: string = '';
+  /** Идёт сохранение выбранного ПВЗ (блокирует кнопку «Установить»). */
+  pvz_saving: boolean = false;
   /** ПВЗ, выбранный нажатием на маркер. */
   selected_pvz: OzonPvzPoint | null = null;
 
@@ -205,7 +206,12 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
   /** CDN для пакета UI-темы регистрируется один раз на всё приложение. */
   private static uiThemeCdnRegistered = false;
 
-  constructor(private userService: UserService, private zone: NgZone) {}
+  constructor(
+    private userService: UserService,
+    private zone: NgZone,
+    private toastController: ToastController,
+    private nav: NavController
+  ) {}
 
   ngOnInit(): void {
     this.loadProfile();
@@ -1067,16 +1073,60 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
     void this.renderPvzItems();
   }
 
-  /** Кнопка «Выбрать этот ПВЗ» в карточке: сообщает наружу выбранный ПВЗ. */
-  confirmSelectedPvz(): void {
+  /**
+   * Кнопка «Установить» в карточке ПВЗ: сохраняет выбранный пункт выдачи
+   * в профиле (user.php, action=setPvzOzon) и возвращает на предыдущий экран.
+   */
+  async confirmSelectedPvz(): Promise<void> {
     const point = this.selected_pvz;
-    if (!point) {
+    if (!point || this.pvz_saving) {
+      return;
+    }
+
+    // В контакт Битрикс24 пишется полный адрес пункта выдачи строкой,
+    // в конец которой добавляется номер ПВЗ.
+    const address = this.getPvzAddressWithNumber(point);
+    if (address === '') {
       return;
     }
 
     this.zone.run(() => {
-      this.pvzSelected.emit(point);
+      this.pvz_saving = true;
     });
+
+    try {
+      await this.userService.updatePvzOzon(address);
+
+      const toast = await this.toastController.create({
+        message: 'Информация обновлена.',
+        duration: 2000,
+        color: 'accent',
+      });
+      this.nav.back();
+      toast.present();
+    } finally {
+      this.zone.run(() => {
+        this.pvz_saving = false;
+      });
+    }
+  }
+
+  /**
+   * Полный адрес ПВЗ с номером пункта выдачи в конце.
+   * Пример: «г. Москва, ул. Ленина, д. 1, № 12345».
+   */
+  private getPvzAddressWithNumber(point: OzonPvzPoint): string {
+    const address = (point.address || point.name || '').trim();
+    if (address === '') {
+      return '';
+    }
+
+    const number = (point.delivery_point_number || '').trim();
+    if (number === '') {
+      return address;
+    }
+
+    return `${address}, № ${number}`;
   }
 
   /** Сброс выбранного ПВЗ. */

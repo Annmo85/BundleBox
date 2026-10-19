@@ -280,6 +280,19 @@ export class UserService {
     }  else return false; 
   }
 
+  public async updatePvzOzon(pvz:any) {
+    let user_id = localStorage.getItem(environment.prefix + 'user_id');
+    let response = await this.makeRequest("user.php",{pvz:pvz, user_id:user_id, action: 'setPvzOzon'});
+    if (response!=null) {
+      console.log("updatePvz response:");
+      console.log(response);
+      if (!response.error) {
+        //
+      }      
+      return response;
+    }  else return false; 
+  }
+
   public async updateCity(city:any) {
     let user_id = localStorage.getItem(environment.prefix + 'user_id');
     let response = await this.makeRequest("user.php",{city:city, user_id:user_id, action: 'setCity'});
