@@ -5,6 +5,6 @@ $OZON_DELIVERY_CLIENT_ID = "";
 $OZON_DELIVERY_TOKEN = "";
 
 /* Ключ Token для озон seller - отвечает выбор пункта выдачи на карте в приложении */
-$OZON_SELLER_TOKEN = "";
 $OZON_SELLER_CLIENT_ID = "";
+$OZON_SELLER_API_KEY  = ""; //Вероятно значение надо обновлять периодически
 ?>

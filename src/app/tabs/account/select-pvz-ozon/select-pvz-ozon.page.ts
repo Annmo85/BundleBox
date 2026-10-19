@@ -639,7 +639,8 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
         left_bottom: { lat: latBottom, long: longLeft },
         right_top: { lat: latTop, long: longRight },
       },
-      zoom: map.zoom,
+      // Ozon ожидает целочисленный зум, поэтому округляем float-значение карты.
+      zoom: Math.round(map.zoom),
     };
   }
 
