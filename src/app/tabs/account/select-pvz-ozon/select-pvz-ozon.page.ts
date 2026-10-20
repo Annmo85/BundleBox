@@ -129,6 +129,8 @@ const SEARCH_RESULTS_LIMIT = 7;
  * гасит промежуточные кадры анимации/панорамирования.
  */
 const PVZ_RELOAD_DEBOUNCE_MS = 300;
+/** Сколько ждём загрузку JS API, прежде чем показать ошибку с origin. */
+const MAP_INIT_TIMEOUT_MS = 15000;
 
 /**
  * Приблизительные границы России, используются, когда адрес
@@ -184,6 +186,7 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
   private profileLoaded = false;
   private viewReady = false;
   private mapInitialized = false;
+  private initTimeout?: number;
   private searchTimer?: number;
   private pvzListTimer?: number;
   private searchRequestId = 0;
@@ -225,6 +228,7 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.cancelPendingSearch();
     this.cancelScheduledPvzList();
+    this.clearInitTimeout();
     this.clearPvzMarkers();
     if (this.map) {
       this.map.destroy();
@@ -270,7 +274,29 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+    const origin = this.getLocationOrigin();
+
+    // Яндекс проверяет HTTP Referer: для схемы capacitor://localhost ключ
+    // отклоняется (403), поэтому сразу показываем причину, а не ждём таймаут.
+    if (window.location.protocol === 'capacitor:') {
+      this.map_error =
+        `Приложение работает с origin ${origin}. Для Яндекс.Карт нужен https-origin: ` +
+        'задайте iosScheme: "https" в capacitor.config.ts, выполните npx cap sync ios и пересоберите приложение.';
+      return;
+    }
+
     this.mapInitialized = true;
+    this.initTimeout = window.setTimeout(() => {
+      this.initTimeout = undefined;
+      if (this.map_ready) {
+        return;
+      }
+      this.zone.run(() => {
+        this.map_error =
+          `Яндекс.Карты не загрузились (origin: ${origin}). ` +
+          'Проверьте ключ API и ограничение по HTTP Referer.';
+      });
+    }, MAP_INIT_TIMEOUT_MS);
 
     this.loadYmaps()
       .then(async (api: Ymaps3Api) => {
@@ -280,8 +306,11 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
       })
       .catch((error: unknown) => {
         this.mapInitialized = false;
+        this.clearInitTimeout();
         this.zone.run(() => {
-          this.map_error = 'Не удалось загрузить Яндекс.Карты. Проверьте подключение к интернету.';
+          this.map_error =
+            `Не удалось загрузить Яндекс.Карты (origin: ${origin}). ` +
+            'Проверьте ключ API и ограничение по HTTP Referer.';
         });
         console.error('Yandex Maps load error', error);
       });
@@ -309,6 +338,7 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
     );
 
     this.map = map;
+    this.clearInitTimeout();
 
     this.zone.run(() => {
       this.map_ready = true;
@@ -1173,6 +1203,21 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
     }
 
     return [lon, lat];
+  }
+
+  private clearInitTimeout(): void {
+    if (this.initTimeout !== undefined) {
+      window.clearTimeout(this.initTimeout);
+      this.initTimeout = undefined;
+    }
+  }
+
+  private getLocationOrigin(): string {
+    const origin = window.location.origin;
+    if (origin && origin !== 'null') {
+      return origin;
+    }
+    return `${window.location.protocol}//${window.location.host}`;
   }
 
   /**

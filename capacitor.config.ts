@@ -5,7 +5,8 @@ const config: CapacitorConfig = {
   appName: 'BundleBox',
   webDir: 'www',
   server: {
-    androidScheme: 'https'
+    androidScheme: 'https',
+    iosScheme: 'https'
   }
 };
 
