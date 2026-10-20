@@ -1264,6 +1264,10 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private loadYmaps(): Promise<Ymaps3Api> {
+    // Карта, её config/тайлы и геокодер проверяют Referer.
+    // Перехватываем fetch к доменам Яндекса и шлём их нативно с Referer.
+    this.installYandexFetchBridge();
+
     const existing = (window as unknown as { ymaps3?: Ymaps3Api }).ymaps3;
     if (existing) {
       return Promise.resolve(existing);
@@ -1271,10 +1275,6 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
     if (this.ymaps3Loader) {
       return this.ymaps3Loader;
     }
-
-    // Внутренние запросы JS API (config, тайлы) тоже проверяют Referer,
-    // поэтому перехватываем fetch к доменам Яндекса и шлём их нативно.
-    this.installYandexFetchBridge();
 
     // Загрузчик JS API 3.0 грузим через CapacitorHttp, а не тегом <script>:
     // WKWebView в Capacitor не подставляет Referer для запросов из WebView,
@@ -1405,6 +1405,7 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
       const host = new URL(url, window.location.href).hostname;
       return (
         host === 'api-maps.yandex.ru' ||
+        host === 'geocode-maps.yandex.ru' ||
         host === 'core-renderer-tiles.maps.yandex.net' ||
         host.endsWith('.maps.yandex.net')
       );
