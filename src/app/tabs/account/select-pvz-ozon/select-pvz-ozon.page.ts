@@ -9,6 +9,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { Capacitor, CapacitorHttp } from '@capacitor/core';
 import { NavController, ToastController } from '@ionic/angular';
 import type { LngLat, LngLatBounds, YMapEntity, YMapLocationRequest } from 'ymaps3';
 import {
@@ -275,15 +276,6 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
     }
 
     const origin = this.getLocationOrigin();
-
-    // Яндекс проверяет HTTP Referer: для схемы capacitor://localhost ключ
-    // отклоняется (403), поэтому сразу показываем причину, а не ждём таймаут.
-    if (window.location.protocol === 'capacitor:') {
-      this.map_error =
-        `Приложение работает с origin ${origin}. Для Яндекс.Карт нужен https-origin: ` +
-        'задайте iosScheme: "https" в capacitor.config.ts, выполните npx cap sync ios и пересоберите приложение.';
-      return;
-    }
 
     this.mapInitialized = true;
     this.initTimeout = window.setTimeout(() => {
@@ -593,11 +585,7 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
       lang: 'ru_RU',
     });
 
-    // Ключ геокодера ограничен по HTTP Referer, поэтому явно отправляем origin
-    // страницы: https://localhost (Android), capacitor://localhost (iOS).
-    const response = await fetch(`${YANDEX_GEOCODER_URL}?${params.toString()}`, {
-      referrerPolicy: 'strict-origin-when-cross-origin',
-    });
+    const response = await fetch(`${YANDEX_GEOCODER_URL}?${params.toString()}`);
     if (!response.ok) {
       return null;
     }
@@ -653,9 +641,7 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
       params.set('spn', '1,1');
     }
 
-    const response = await fetch(`${YANDEX_GEOCODER_URL}?${params.toString()}`, {
-      referrerPolicy: 'strict-origin-when-cross-origin',
-    });
+    const response = await fetch(`${YANDEX_GEOCODER_URL}?${params.toString()}`);
     if (!response.ok) {
       return [];
     }
@@ -1286,28 +1272,187 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
       return this.ymaps3Loader;
     }
 
-    this.ymaps3Loader = new Promise<Ymaps3Api>((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = this.getYmapsUrl();
-      script.async = true;
-      // Для ключей JS API 3.0 важен HTTP Referer — отправляем origin приложения.
-      script.referrerPolicy = 'strict-origin-when-cross-origin';
-      script.onload = () => {
-        const api = (window as unknown as { ymaps3?: Ymaps3Api }).ymaps3;
-        if (api) {
-          resolve(api);
-        } else {
-          reject(new Error('ymaps3 is not available'));
+    // Внутренние запросы JS API (config, тайлы) тоже проверяют Referer,
+    // поэтому перехватываем fetch к доменам Яндекса и шлём их нативно.
+    this.installYandexFetchBridge();
+
+    // Загрузчик JS API 3.0 грузим через CapacitorHttp, а не тегом <script>:
+    // WKWebView в Capacitor не подставляет Referer для запросов из WebView,
+    // а ключу v3 Referer обязателен. Нативный запрос позволяет задать его явно.
+    this.ymaps3Loader = this.fetchYmapsScript()
+      .then((scriptText) => {
+        if (!scriptText) {
+          throw new Error('Empty Yandex Maps script');
         }
-      };
-      script.onerror = () => {
+
+        // Загрузчик самодостаточен и создаёт window.ymaps3.
+        // eslint-disable-next-line no-eval
+        (0, eval)(scriptText);
+
+        const api = (window as unknown as { ymaps3?: Ymaps3Api }).ymaps3;
+        if (!api) {
+          throw new Error('ymaps3 is not available');
+        }
+        return api;
+      })
+      .catch((error: unknown) => {
         this.ymaps3Loader = undefined;
-        reject(new Error('Failed to load Yandex Maps script'));
-      };
-      document.head.appendChild(script);
-    });
+        throw error;
+      });
 
     return this.ymaps3Loader;
+  }
+
+  /**
+   * Загружает JS-код JS API 3.0 нативно, с явным HTTP Referer,
+   * разрешённым в настройках ключа.
+   */
+  private async fetchYmapsScript(): Promise<string> {
+    const referer = this.getYmapsReferer();
+    console.info('Yandex Maps: загрузка JS API', {
+      origin: this.getLocationOrigin(),
+      referer,
+    });
+
+    const response = await CapacitorHttp.request({
+      method: 'GET',
+      url: this.getYmapsUrl(),
+      headers: {
+        Referer: referer,
+        Accept: 'application/javascript, text/javascript, */*',
+      },
+      responseType: 'text',
+      connectTimeout: 15000,
+      readTimeout: 15000,
+    });
+
+    if (response.status !== 200) {
+      console.error('Yandex Maps: HTTP ' + response.status, response.data);
+      throw new Error(`Yandex Maps script: HTTP ${response.status}`);
+    }
+
+    return typeof response.data === 'string' ? response.data : '';
+  }
+
+  /**
+   * Referer для запроса ключа v3. Если WebView работает с https-origin,
+   * отправляем его; для нативных схем (capacitor://) подставляем
+   * разрешённый в ключе домен.
+   */
+  private getYmapsReferer(): string {
+    const origin = this.getLocationOrigin();
+    if (!origin.startsWith('http://') && !origin.startsWith('https://')) {
+      return 'https://localhost/';
+    }
+    return origin.endsWith('/') ? origin : `${origin}/`;
+  }
+
+  /**
+   * WKWebView не добавляет Referer к запросам из WebView, а внутренние
+   * запросы JS API 3.0 (`/v3/config`, тайлы) проверяют его так же, как
+   * загрузчик. Перехватываем fetch только для доменов Яндекса и выполняем
+   * их через CapacitorHttp с явным Referer.
+   */
+  private installYandexFetchBridge(): void {
+    if (!Capacitor.isNativePlatform()) {
+      // В браузере Referer подставляет сам WebView, а CapacitorHttp на web
+      // использует fetch — патчить его нельзя, иначе получим рекурсию.
+      return;
+    }
+
+    const globalWindow = window as unknown as { __yandexFetchBridge?: boolean };
+    if (globalWindow.__yandexFetchBridge) {
+      return;
+    }
+    globalWindow.__yandexFetchBridge = true;
+
+    const originalFetch = window.fetch.bind(window);
+
+    window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+      const url =
+        typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
+
+      if (!this.isYandexRequestUrl(url)) {
+        return originalFetch(input as RequestInfo, init);
+      }
+
+      const method = (
+        init?.method ?? (input instanceof Request ? input.method : 'GET')
+      ).toUpperCase();
+
+      const response = await CapacitorHttp.request({
+        method,
+        url,
+        headers: {
+          Referer: this.getYmapsReferer(),
+          ...(init?.headers ? this.headersToRecord(init.headers) : {}),
+        },
+        data: typeof init?.body === 'string' ? init.body : undefined,
+        responseType: 'arraybuffer',
+        connectTimeout: 15000,
+        readTimeout: 30000,
+      });
+
+      const hasBody = response.status !== 204 && response.status !== 205;
+      return new Response(hasBody ? this.toArrayBuffer(response.data) : null, {
+        status: response.status,
+      });
+    };
+  }
+
+  private isYandexRequestUrl(url: string): boolean {
+    try {
+      const host = new URL(url, window.location.href).hostname;
+      return (
+        host === 'api-maps.yandex.ru' ||
+        host === 'core-renderer-tiles.maps.yandex.net' ||
+        host.endsWith('.maps.yandex.net')
+      );
+    } catch {
+      return false;
+    }
+  }
+
+  private headersToRecord(headers: HeadersInit): Record<string, string> {
+    const record: Record<string, string> = {};
+    if (headers instanceof Headers) {
+      headers.forEach((value, key) => {
+        record[key] = value;
+      });
+    } else if (Array.isArray(headers)) {
+      for (const [key, value] of headers) {
+        record[key] = value;
+      }
+    } else {
+      Object.assign(record, headers);
+    }
+    return record;
+  }
+
+  /**
+   * CapacitorHttp на native возвращает бинарные данные строкой base64,
+   * на web — ArrayBuffer. Приводим оба варианта к ArrayBuffer для Response.
+   */
+  private toArrayBuffer(data: unknown): ArrayBuffer {
+    if (data instanceof ArrayBuffer) {
+      return data;
+    }
+    if (ArrayBuffer.isView(data)) {
+      return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength) as ArrayBuffer;
+    }
+    if (typeof data === 'string') {
+      try {
+        const binary = atob(data);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i += 1) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        return bytes.buffer;
+      } catch {
+        return new TextEncoder().encode(data).buffer;
+      }
+    }
+    return new ArrayBuffer(0);
   }
 
   private getYmapsUrl(): string {
