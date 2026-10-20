@@ -1,24 +1,24 @@
 PODS:
-  - Capacitor (5.7.4):
+  - Capacitor (5.7.8):
     - CapacitorCordova
   - CapacitorApp (5.0.7):
     - Capacitor
-  - CapacitorBrowser (5.1.0):
+  - CapacitorBrowser (5.2.1):
     - Capacitor
-  - CapacitorCamera (5.0.9):
+  - CapacitorCamera (5.0.10):
     - Capacitor
-  - CapacitorClipboard (5.0.7):
+  - CapacitorClipboard (5.0.8):
     - Capacitor
-  - CapacitorCordova (5.7.4)
-  - CapacitorFilesystem (5.2.1):
+  - CapacitorCordova (5.7.8)
+  - CapacitorFilesystem (5.2.2):
     - Capacitor
   - CapacitorHaptics (5.0.7):
     - Capacitor
   - CapacitorKeyboard (5.0.8):
     - Capacitor
-  - CapacitorLocalNotifications (5.0.7):
+  - CapacitorLocalNotifications (5.0.8):
     - Capacitor
-  - CapacitorPushNotifications (5.1.1):
+  - CapacitorPushNotifications (5.1.2):
     - Capacitor
   - CapacitorStatusBar (5.0.7):
     - Capacitor
@@ -129,17 +129,17 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/status-bar"
 
 SPEC CHECKSUMS:
-  Capacitor: 4fe9adf012caceb4c71ffea2f1f4d005cdcbeea7
+  Capacitor: 747aadb4fa786f460d8cd9d0557cb81440a13747
   CapacitorApp: 17fecd0e6cb23feafac7eb0939417389038b0979
-  CapacitorBrowser: 7a0fb6a1011abfaaf2dfedfd8248f942a8eda3d6
-  CapacitorCamera: 4892c5c392f60039d853dde78bc50ba19fbd113e
-  CapacitorClipboard: 45e5e25f2271f98712985d422776cdc5a779cca1
-  CapacitorCordova: a6e87fccc0307dee7aec1560ec9398485f2b0ce7
-  CapacitorFilesystem: 9f3e3c7fea2fff12f46dd5b07a2914f2103e4cfc
+  CapacitorBrowser: bac3132be6506411704149f9f2099843ffe470a0
+  CapacitorCamera: d333715364b5d85422c627aae6db87ef6161352c
+  CapacitorClipboard: 03628c89fe70d06d36288ee4eff7e205a6e81e53
+  CapacitorCordova: 31ab98dca2ddcee051027a1afe7e8c85c82f7297
+  CapacitorFilesystem: 202b158a878462ab4f401d0eb4d9644c67927333
   CapacitorHaptics: 7c7c206f0c96a628fed073830c96d28c4b2e772e
   CapacitorKeyboard: aec619a578235c6ce279075009a2689c2cf5c42c
-  CapacitorLocalNotifications: c58afadd159f6bc540ef9b3cbdbc82510a2bf112
-  CapacitorPushNotifications: 2327900bc002f5ff49ee6d2231796d0635b4a1b0
+  CapacitorLocalNotifications: 5827dfaf75a52f7d29ac3a56d92cfc52b5073540
+  CapacitorPushNotifications: 18108623c4f6a2629e7560c07c157820a511bcdd
   CapacitorStatusBar: f390fbb49b82ffb754ea4b3cf71dc8b048baf3e7
   Firebase: 63ce8ece0d43743dc28eacac0c6867a2d7fd5a9d
   FirebaseCore: dc5c7badf99d47613c52b2e3a57a64cd187f8554
