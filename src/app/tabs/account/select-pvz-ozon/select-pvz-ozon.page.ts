@@ -1431,8 +1431,15 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * CapacitorHttp на native возвращает бинарные данные строкой base64,
-   * на web — ArrayBuffer. Приводим оба варианта к ArrayBuffer для Response.
+   * Приводит данные CapacitorHttp к ArrayBuffer для конструктора Response.
+   *
+   * Особенность native-реализации: для ответов с content-type application/json
+   * `responseType` игнорируется и `data` приходит уже разобранным объектом.
+   * В этом случае сериализуем его обратно в JSON-байты, иначе `response.json()`
+   * на клиенте упадёт с «Unexpected end of JSON input».
+   *
+   * Для бинарных ответов (тайлы карты) native возвращает base64-строку,
+   * на web — ArrayBuffer.
    */
   private toArrayBuffer(data: unknown): ArrayBuffer {
     if (data instanceof ArrayBuffer) {
@@ -1452,6 +1459,9 @@ export class SelectPvzOzonPage implements OnInit, AfterViewInit, OnDestroy {
       } catch {
         return new TextEncoder().encode(data).buffer;
       }
+    }
+    if (typeof data === 'number' || typeof data === 'boolean' || typeof data === 'object') {
+      return new TextEncoder().encode(JSON.stringify(data) ?? '').buffer;
     }
     return new ArrayBuffer(0);
   }
