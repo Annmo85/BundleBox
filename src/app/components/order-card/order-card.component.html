@@ -68,6 +68,12 @@
         <div class="sum">{{_order.DELIVERY_COST}}</div>
       </div>
 
+      <div class="pos" *ngIf="_order.OZON_DELIVERY_COST && _order.OZON_DELIVERY_COST!=''">
+        <div class="label">Доставка в ПВЗ OZON</div>
+        <div class="dotted"></div>
+        <div class="sum">{{_order.OZON_DELIVERY_COST}}</div>
+      </div>
+
       <div class="pos" *ngIf="_order.WEIGHT && _order.WEIGHT!=''">
         <div class="label">Вес</div>
         <div class="dotted"></div>

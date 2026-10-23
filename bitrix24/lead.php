@@ -50,6 +50,9 @@
 	
 	//К оплате (мультипоинт)
 	//UF_CRM_1668785031029		
+
+	//Стоимость доставки озон
+	//UF_CRM_1792768329923
 	
 	
 	//Внешний трек - видимый
@@ -130,7 +133,7 @@
 
 
 		$users=[];
-		$result = CRest::call('crm.deal.list',['select'=>['*','UF_CRM_1728921873900','UF_CRM_1663669969647','UF_CRM_1664092353750','UF_CRM_1668785031029','UF_CRM_1681845692836','UF_CRM_1670510435755','UF_CRM_1670510894504','UF_CRM_1668784831705','UF_CRM_1668721376367','UF_CRM_1652413077471','UF_CRM_1659879523001','UF_CRM_1663669994797','UF_CRM_1659879763963'],"order"=> [ "DATE_CREATE"=> "DESC" ], 'filter' => ['ID'=>$request['order_id'],'CONTACT_ID' => $request['user_id']]]);
+		$result = CRest::call('crm.deal.list',['select'=>['*','UF_CRM_1728921873900','UF_CRM_1792768329923','UF_CRM_1663669969647','UF_CRM_1664092353750','UF_CRM_1668785031029','UF_CRM_1681845692836','UF_CRM_1670510435755','UF_CRM_1670510894504','UF_CRM_1668784831705','UF_CRM_1668721376367','UF_CRM_1652413077471','UF_CRM_1659879523001','UF_CRM_1663669994797','UF_CRM_1659879763963'],"order"=> [ "DATE_CREATE"=> "DESC" ], 'filter' => ['ID'=>$request['order_id'],'CONTACT_ID' => $request['user_id']]]);
 		foreach ($result['result'] as $lead) {
 
 				$user_result = CRest::call('crm.contact.get',[ "id"=> $lead['CONTACT_ID']]);
@@ -191,6 +194,7 @@
 					'CUSTOMER' => $lead['UF_CRM_1668784831705'],
 					'CUSTOMER' =>trim($response['contact']['NAME'].' '.$response['contact']['LAST_NAME']),
 					'MULTIPOINT_PRICE' => $lead['UF_CRM_1668785031029'],
+					'OZON_DELIVERY_PRICE' => $lead['UF_CRM_1792768329923'],
 					'OUTER_TRACKNUMBER_TEXT' => "Трек-номер",
 					'OUTER_TRACKNUMBER' => $lead['UF_CRM_1681845692836']?$lead['UF_CRM_1681845692836']:'',
 					'SUM'=>round($lead['OPPORTUNITY'],0) . " ₽",
@@ -271,12 +275,15 @@
 				//Оплата доставки
 				$flash = false;
 				$response['deal']['PAY_DELIVERY'] = $flash;
-				if ($stage=='Оплатите доставку') {
+				if ($stage=='Оплатите доставку' || $stage=='Завершен' || $stage=='Доставка оплачена' || $stage=='Готовится к выдаче' || $stage=='Получите заказ'  || $stage=='Заказ завершен' ) {
 					$flash = true;
 					$response['deal']['PAY_DELIVERY'] = $flash;
 					$response['deal']['DELIVERY_PRICE'] = $lead['UF_CRM_1663669994797'].' ₽';
+					$response['deal']['OZON_DELIVERY_PRICE'] = $lead['UF_CRM_1792768329923']?number_format($lead['UF_CRM_1792768329923'],2).' ₽':'';
 					$response['deal']['DELIVERY_TEXT'] = "Доставка";
 					$response['deal']['DELIVERY_TITLE'] = "Доставка";					
+					$response['deal']['DELIVERY_TITLE_OZON'] = "Доставка в ПВЗ OZON";		
+					$response['deal']['DELIVERY_TEXT_OZON'] = "Доставка OZON";			
 					$response['deal']['DELIVERY_BUTTON'] = "payment";					
 				}
 				
@@ -286,6 +293,8 @@
 					$response['deal']['DELIVERY_PRICE'] = round($lead['OPPORTUNITY'],0).' ₽';
 					$response['deal']['DELIVERY_TEXT'] = "";
 					$response['deal']['DELIVERY_TITLE'] = "К оплате";	
+					$response['deal']['DELIVERY_TITLE_OZON'] = "";		
+					$response['deal']['DELIVERY_TEXT_OZON'] = "";						
 					$response['deal']['DELIVERY_BUTTON'] = "order";						
 				}
 

@@ -115,7 +115,7 @@
 	
 		$users=[];
 		$response['deals_for_payement'] = [];
-		$result = CRest::call('crm.deal.list',['select'=>['*','UF_CRM_1652413077471','UF_CRM_1670510435755','UF_CRM_1670510894504','UF_CRM_1663669969647','UF_CRM_1663669994797','UF_CRM_1659879523001','UF_CRM_1664092353750','UF_CRM_1668785031029','UF_CRM_1668784831705','UF_CRM_1668721376367','UF_CRM_1659879763963'],"order"=> [ "DATE_CREATE"=> "DESC" ], 'filter' => ['CONTACT_ID' => $request['id'], '!STAGE_ID'=>"WON"]]);
+		$result = CRest::call('crm.deal.list',['select'=>['*','UF_CRM_1652413077471','UF_CRM_1792768329923','UF_CRM_1670510435755','UF_CRM_1670510894504','UF_CRM_1663669969647','UF_CRM_1663669994797','UF_CRM_1659879523001','UF_CRM_1664092353750','UF_CRM_1668785031029','UF_CRM_1668784831705','UF_CRM_1668721376367','UF_CRM_1659879763963'],"order"=> [ "DATE_CREATE"=> "DESC" ], 'filter' => ['CONTACT_ID' => $request['id'], '!STAGE_ID'=>"WON"]]);
 		foreach ($result['result'] as $lead) {
 				
 
@@ -198,6 +198,7 @@
 					'FLASH'=>$flash,
 					'WEIGHT'=>$lead['UF_CRM_1663669969647']?$lead['UF_CRM_1663669969647']:"",
 					'DELIVERY_COST'=>$lead['UF_CRM_1663669994797']?$lead['UF_CRM_1663669994797']:"",					
+					'OZON_DELIVERY_COST'=>$lead['UF_CRM_1792768329923']?number_format($lead['UF_CRM_1792768329923'],2):"",					
 					'FLAG'=>$flag,
 					'PAYEMENT_ORDER_IMAGE'=>$payement_order_image,
 					'PAYEMENT_DELIVERY_IMAGE'=>$payement_delivery_image,
@@ -205,6 +206,7 @@
 					'PARCEL' => $lead['UF_CRM_1664092353750'],
 					'CUSTOMER' => $lead['UF_CRM_1668784831705'],
 					'MULTIPOINT_PRICE' => $lead['UF_CRM_1668785031029'],
+					'OZON_DELIVERY_PRICE' => $lead['UF_CRM_1792768329923'],
 					'STAGE_HELPER'=>$stage_helper,
 					'SUM'=>round($lead['OPPORTUNITY'],0) . " руб",
 					'SUMD'=>round($lead['OPPORTUNITY'],0),

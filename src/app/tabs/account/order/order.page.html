@@ -34,11 +34,17 @@
             <div class="dotted"></div>
             <div class="value">{{order_info.deal.PARCEL_ID}}</div>
           </div>
-          <div class="pos" *ngIf="order_info.deal.PAY_DELIVERY">
+          <!-- <div class="pos" *ngIf="order_info.deal.PAY_DELIVERY"> -->
+          <div class="pos" *ngIf="order_info.deal.DELIVERY_PRICE && order_info.deal.DELIVERY_PRICE!=''">
             <div class="label">{{order_info.deal.DELIVERY_TITLE}}</div>
             <div class="dotted"></div>
             <div class="value">{{order_info.deal.DELIVERY_PRICE}}</div>
           </div>
+          <div class="pos" *ngIf="order_info.deal.PAY_DELIVERY && order_info.deal.OZON_DELIVERY_PRICE && order_info.deal.OZON_DELIVERY_PRICE!=''">
+            <div class="label">{{order_info.deal.DELIVERY_TITLE_OZON}}</div>
+            <div class="dotted"></div>
+            <div class="value">{{order_info.deal.OZON_DELIVERY_PRICE}}</div>
+          </div>          
           <div class="pos" *ngIf="order_info.deal.OUTER_TRACKNUMBER!=''" (click)="copyToClip(order_info.deal.OUTER_TRACKNUMBER)">
             <div class="label">{{order_info.deal.OUTER_TRACKNUMBER_TEXT}}</div>
             <div class="dotted"></div>
